@@ -1,0 +1,46 @@
+{
+  "name": "ctl-sms-students",
+  "version": "1.0.0",
+  "description": "Campus Technologies Limited Student Management System",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "^3.0.0"
+  },
+  "bolt": {
+    "displayName": "Students",
+    "main": "bolt-server.js",
+    "index": "/",
+    "system": true,
+    "extensions": {
+      "/students": "/",
+      "student": "/"
+    },
+    "files": {
+      "icon": "assets/pages/img/icon.png"
+    },
+    "public": ["assets"],
+    "tags": ["students", "student", "ctl", "ctl-sms", "ctl-sms-students", "ctl-sms-plugins"],
+    "collections": {
+      "students": "*",
+      "student-guardian": {
+        "guests": "*",
+        "tenants": ["ctl-sms-guardians"]
+      }
+    },
+    "hooks": {
+      "bolt/app-starting": "/app-starting",
+      "bolt/user-deleted": "/user-deleted",
+      "bolt/user-updated": "/user-updated"
+    },
+    "dependencies": {
+      "ctl-sms-home": "*"
+    }
+  },
+  "author": "Campus Technologies Limited",
+  "license": "ISC"
+}

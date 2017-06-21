@@ -1,0 +1,37 @@
+{
+  "name": "ctl-sms-staff",
+  "version": "1.0.0",
+  "description": "Campus Technologies Limited Student Management System - Staff Module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "^3.0.0"
+  },
+  "bolt": {
+    "displayName": "Staff",
+    "main": "bolt-server.js",
+    "index": "/",
+    "system": true,
+    "extensions": {
+      "/staff": "/"
+    },
+    "files": {
+      "icon": "assets/pages/img/icon.png"
+    },
+    "public": ["assets"],
+    "ini": "/startup",
+    "tags": ["staff", "ctl", "ctl-sms", "ctl-sms-staff", "ctl-sms-plugins"],
+    "collections": {
+      "staff": "*"
+    },
+    "dependencies": {
+      "ctl-sms-home": "*"
+    }
+  },
+  "author": "Campus Technologies Limited",
+  "license": "ISC"
+}
