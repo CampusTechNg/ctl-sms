@@ -44,7 +44,7 @@ app.post('/app-starting', function(req, res){
 
 //Route
 app.get('/', function(req, res){
-	request(process.env.BOLT_ADDRESS + '/api/apps?tags=ctl-sms-plugins', function(error, response, body){
+	request(process.env.BOLT_ADDRESS + '/api/checks/visible-apps/' + req.user.name + '?tags=ctl-sms-plugins', function(error, response, body){
 		body = JSON.parse(body);
 		var plugins = body.body;
         plugins.sort(function(a, b){

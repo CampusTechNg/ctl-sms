@@ -23,10 +23,14 @@
       "icon": "assets/pages/img/icon.png"
     },
     "public": ["assets"],
-    "ini": "/startup",
     "tags": ["staff", "ctl", "ctl-sms", "ctl-sms-staff", "ctl-sms-plugins"],
     "collections": {
       "staff": "*"
+    },
+    "hooks": {
+      "bolt/app-starting": "/app-starting",
+      "bolt/user-deleted": "/user-deleted",
+      "bolt/user-updated": "/user-updated"
     },
     "dependencies": {
       "ctl-sms-home": "*"

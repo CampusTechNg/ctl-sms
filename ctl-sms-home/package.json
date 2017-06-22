@@ -23,7 +23,8 @@
       "icon": "assets/global/img/icon.png"
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting"
+      "bolt/app-starting": "/app-starting",
+      "bolt/app-installed": "/app-installed"
     },
     "index": "/",
     "startup": true,

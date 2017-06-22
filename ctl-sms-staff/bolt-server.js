@@ -1,3 +1,4 @@
+var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 var request = require('request');
@@ -27,7 +28,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 //Set Static Path
-app.use("**/public", express.static(path.join(__dirname, 'public')));
 app.use("**/assets", express.static(path.join(__dirname, 'assets')));
 
 //Middleware to check for the app root directory of an app
@@ -41,9 +41,10 @@ app.use(function(req, res, next){
 	next();
 });
 
-app.post('/startup', function(req, res){
-	appname = req.body.appName;
-	apptoken = req.body.appToken;
+app.post('/app-starting', function(req, res){
+	var event = req.body;
+	appname = event.body.appName;
+	apptoken = event.body.appToken;
 });
 
 //Route

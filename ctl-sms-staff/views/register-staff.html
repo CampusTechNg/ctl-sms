@@ -32,14 +32,29 @@
                 </div>
             </div>
             <div class="portlet-body form">
-                <form method="post" role="form" id="register_staff" autocomplete="off" action="{{app_root}}/register-staff">
+                <form role="form" id="register_staff" autocomplete="off">
                     <div class="form-body">
                         <div class="row">
-                            <div class="col-md-12 col-sm-12">
+                            <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
                                     <input class="form-control" name="username" id="username" type="text" maxlength="20">
                                     <label for="username">
                                         Userame <span class="required">*</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group form-md-line-input form-md-floating-label">
+                                    <select name="role" class="form-control" id="role">
+                                        <option value=""></option>
+                                        <option value="management">Management</option>
+                                        <option value="center_head">Center Head</option>
+                                        <option value="front_desk">Front Desk</option>
+                                        <option value="faculty">Faculty</option>
+                                        <option value="auxilliary_staff">Auxilliary Staff</option>
+                                    </select>
+                                    <label for="role">
+                                        Role <span class="required">*</span>
                                     </label>
                                 </div>
                             </div>
@@ -75,8 +90,8 @@
                                 <div class="form-group form-md-line-input form-md-floating-label">
                                     <select name="gender" class="form-control" id="gender">
                                         <option value=""></option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
                                     <label for="gender">
                                         Gender <span class="required">*</span>
@@ -329,10 +344,27 @@ var FormValidationMd = function() {
                     success: function(response) {
                         if(response.code === 0){
                             //second, create an staff role
+                            var rolenm = $("#role option:selected").val();
+                            var dataBody;
+                            if (rolenm === 'management') {
+                                dataBody = { name: "management", isAdmin: true, displayName: "Management", description: "A member of the school management" };
+                            }
+                            else if (rolenm === 'center_head') {
+                                dataBody = { name: "center_head", isAdmin: true, displayName: "Center Head", description: "The center head" };
+                            }
+                            else if (rolenm === 'front_desk') {
+                                dataBody = { name: "front_desk", isAdmin: false, displayName: "Front Desk", description: "A member of the front desk team" };
+                            }
+                            else if (rolenm === 'faculty') {
+                                dataBody = { name: "faculty", isAdmin: false, displayName: "Faculty", description: "A member of the faculty" };
+                            }
+                            else if (rolenm === 'auxilliary_staff') {
+                                dataBody = { name: "auxilliary_staff", isAdmin: false, displayName: "Auxilliary Staff", description: "A member of the auxilliary staff" };
+                            }
                             $.ajax({
                                 url: "{{bolt_root}}/api/roles",
                                 type: 'POST',
-                                data: { name: "teacher", isAdmin: false, displayName: "Teacher", description: "A registered teacher" },
+                                data: dataBody,
                                 headers: {'X-Bolt-App-Token': '{{app_token}}'},
                                 success: function(response2, status2, xhr2) {
                                     if(response2.code === 0 || response2.code === 301){
@@ -341,7 +373,7 @@ var FormValidationMd = function() {
                                         $.ajax({
                                             url: "{{bolt_root}}/api/user-roles",
                                             type: "POST",
-                                            data: { user: response.body.name, role: "teacher" },
+                                            data: { user: response.body.name, role: rolenm },
                                             headers: {'X-Bolt-App-Token': '{{app_token}}'},
                                             success: function(response3, status3, xhr3) {
                                                 if(response3.code === 0){
