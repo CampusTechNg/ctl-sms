@@ -47,127 +47,104 @@ app.post('/app-starting', function(req, res){
 	apptoken = event.body.appToken;
 });
 
-app.post('/hooks/student-registered', function(req, res){
-	var event = req.body;
-	//post to /api/dashboard
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/students/find', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {query:{}}}, 
-		function(error, response, body) {
-		var students = body.body;
-
-		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
-			headers: {'X-Bolt-App-Token': apptoken},
-			json: {background: '#00ff00', caption: students.length, message: 'registered students'}}, 
-			function(error, response, body) {
-				
-			});
-	});
-		
-});
-
 //Route
 app.get('/', function(req, res){
 	res.render('index', {
-		student_menu: 'selected',
-		student_active: 'active',
+		register_visitor_menu: 'selected',
+		register_visitor_active: 'active',
 		app_root: req.app_root
 	});
 });
 
-app.get('/register-student', function(req, res){
-	//make a request to get all registered guardians
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/guardians/find', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}, app: 'ctl-sms-guardians'}}, 
-		function(error, response, body) {
-			var guardians = body.body;
-
-			res.render('register-student', {
-				register_student_menu: 'selected',
-				register_student_active: 'active',
-				app_root: req.app_root,
-				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS,
-				guardians: guardians
-			});
-		});
-});
-
-app.get('/view-students', function(req, res){
+/*app.get('/register-guardian', function(req, res){
+	//make a request to get all registered students
 	request.post({
 		url: process.env.BOLT_ADDRESS + '/api/db/students/find', 
 		headers: {'X-Bolt-App-Token': apptoken},
+		json: {object:{}, app: 'ctl-sms-students'}}, 
+		function(error, response, body) {
+			var students = body.body;
+
+			res.render('register-guardian', {
+				register_guardian_menu: 'selected',
+				register_guardian_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				students: students
+			});
+		});
+});*/
+
+app.get('/view-visits', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/guardians/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
 		json: {object:{}}}, 
 		function(error, response, body) {
-		var students = body.body;
+		var guardians = body.body;
 
-		res.render('view-students', {
-			view_students_menu: 'selected',
-			view_students_active: 'active',
+		res.render('view-guardians', {
+			view_visits_menu: 'selected',
+			view_visits_active: 'active',
 			app_root: req.app_root,
 			app_token: apptoken,
 			bolt_root: process.env.BOLT_ADDRESS,
-			students: students
+			guardians: guardians
 		});
 	});
 });
 
-app.get('/edit-student/:name', function(req, res){
+app.get('/edit-guardian/:name', function(req, res){
 	var name = req.params.name;
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/students/findone', 
+		url: process.env.BOLT_ADDRESS + '/api/db/guardians/findone', 
 		headers: {'X-Bolt-App-Token': apptoken},
 		json: {object:{name: name}}}, 
 		function(error, response, body) {
-		var student = body.body;
+		var guardian = body.body;
 
 		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/guardians/find', 
+			url: process.env.BOLT_ADDRESS + '/api/db/students/find', 
 			headers: {'X-Bolt-App-Token': apptoken},
-			json: {object:{}, app: 'ctl-sms-guardians'}}, 
+			json: {object:{}, app: 'ctl-sms-students'}}, 
 			function(error2, response2, body2) {
-				var guardians = body2.body;
+				var students = body2.body;
 
-				if (student) {
+				if (guardian) {
 					request.post({
 						url: process.env.BOLT_ADDRESS + '/api/db/student-guardian/find', 
 						headers: {'X-Bolt-App-Token': apptoken},
-						json: {object:{ward: student.name}} 
+						json: {object:{guardian: guardian.name}, app: "ctl-sms-students"} 
 					}, 
 					function (error3, response3, body3) {
 						var relationships = body3.body;
 
 						if (relationships) {
-							student.guardians = relationships.map(function(r) {
-								return r.guardian;
+							guardian.wards = relationships.map(function(r) {
+								return r.ward;
 							});
 						}
 
-						res.render('edit-student', {
-							register_student_menu: 'selected',
-							register_student_active: 'active',
+						res.render('edit-guardian', {
+							view_guardians_menu: 'selected',
+							view_guardians_active: 'active',
 							app_root: req.app_root,
 							app_token: apptoken,
 							bolt_root: process.env.BOLT_ADDRESS,
-							guardians: guardians,
-							student: student,
-							isMale: (student ? student.gender.toLowerCase() == 'male' : null)
+							wards: students,
+							guardian: guardian
 						});
 					});
 				} else {
-					res.render('edit-student', {
-						register_student_menu: 'selected',
-						register_student_active: 'active',
+					res.render('edit-guardian', {
+						view_guardians_menu: 'selected',
+						view_guardians_active: 'active',
 						app_root: req.app_root,
 						app_token: apptoken,
 						bolt_root: process.env.BOLT_ADDRESS,
-						guardians: guardians,
-						student: student,
-						isMale: (student ? student.gender.toLowerCase() == 'male' : null)
+						wards: students,
+						guardian: guardian
 					});
 				}
 			});

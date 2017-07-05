@@ -4,6 +4,9 @@ var path = require('path');
 var request = require('request');
 var exphbs = require('express-handlebars');
 
+var sockets = require('bolt-internal-sockets');
+var utils = require('bolt-internal-utils');
+
 var app = express();
 
 var appname;
@@ -40,6 +43,16 @@ app.use(function(req, res, next){
 app.post('/app-starting', function(req, res){
 	var event = req.body;
 	appname = event.body.appName;
+
+	utils.Events.sub('bolt/dashboard-card-posted', { route: "x/bolt/hooks/bolt/dashboard-card-posted" }, req.genAppToken('bolt'), function(eventError, eventResponse){});
+});
+
+app.post('/hooks/dashboard-card-posted', function(req, res){
+	var event = req.body;
+	console.log('yayyy, dashboard-card-posted');
+	console.log(event);
+
+	
 });
 
 //Route

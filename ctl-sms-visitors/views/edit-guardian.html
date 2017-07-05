@@ -15,7 +15,7 @@
 <!-- BEGIN PAGE TITLE-->
 <div class="container-fluid">
     <div class="col-md-12">
-        <h3 class="page-title"> Edit Student Record</h3>
+        <h3 class="page-title"> Edit Guardian Record</h3>
     </div>
 </div>
 <!-- END PAGE TITLE-->
@@ -31,125 +31,47 @@
                     <span class="caption-subject bold uppercase"> Registeration Form</span>
                 </div>
                 <div class="actions">
-                    <a href="{{app_root}}/view-students" class="btn btn-default m-icon">
+                    <a href="{{app_root}}/view-guardians" class="btn btn-default m-icon">
                         <i class="m-icon-swapleft"></i> Go Back
                     </a>
                 </div>
             </div>
             <div class="portlet-body form">
-                <form role="form" id="edit_student" autocomplete="off">
+                <form role="form" id="edit_guardian" autocomplete="off">
                     <div class="form-body">
                         <div class="row">
-                            <div class="col-md-6 col-sm-6">
+                            <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="fullname" id="fullname" type="text" value="{{student.displayName}}" maxlength="60">
+                                    <input class="form-control" name="fullname" id="fullname" type="text" value="{{guardian.displayName}}" maxlength="60">
                                     <label for="fullname">
                                         Full Name <span class="required">*</span>
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <select name="gender" class="form-control" id="gender">
-                                        <option value=""></option>
-                                        {{#if isMale}}
-                                        <option value="male" selected>Male</option>
-                                        <option value="female">Female</option>
-                                        {{else}}
-                                        <option value="male">Male</option>
-                                        <option value="female" selected>Female</option>
-                                        {{/if}}
-                                    </select>
-                                    <label for="gender">
-                                        Gender <span class="required">*</span>
-                                    </label>
-                                </div>
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="dob" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" id="dob" value="{{student.dob}}">
-                                    <label for="dob">Date of birth</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="email" type="email" class="form-control" id="email" value="{{student.email}}" maxlength="100">
-                                    <label for="email">Email</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="phone" type="text" class="form-control" id="phone" value="{{student.phone}}" maxlength="20">
+                                    <input name="phone" type="text" class="form-control" id="phone" value="{{guardian.phone}}" maxlength="20">
                                     <label for="phone">Phone</label>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="address" type="text" class="form-control" id="address" value="{{student.address}}" maxlength="250">
-                                    <label for="address">
-                                        Contact address <span class="required">*</span>
-                                    </label>
+                                    <input name="email" type="email" class="form-control" id="email" value="{{guardian.email}}" maxlength="100">
+                                    <label for="email">Email</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-md-line-input">
-                                    <select name="guardians" id="guardians" class="form-control select2-multiple" multiple>
-                                        {{#each guardians}}
+                                    <select name="guardians" id="wards" class="form-control select2-multiple" multiple>
+                                        {{#each wards}}
                                         <option value="{{name}}">{{displayName}}</option>
                                         {{/each}}
                                     </select>
-                                    <label for="multiple" class="control-label">Name of Guardian(s)</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="admission_date" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" id="admission_date">
-                                    <label for="admission_date">
-                                        Date of admission <span class="required">*</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <select name="status" class="form-control" id="status">
-                                        <option value=""></option>
-                                        <option selected value="Active">Active</option>
-                                        <option value="Suspended">Suspended</option>
-                                    </select>
-                                    <label for="status">
-                                        Student's status <span class="required">*</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                                <p><span class="label label-danger">NOTE!</span></p>
-                                <p>
-                                    1. Image size should not be more than 1MB.<br>
-                                    2. Image dimension should be 192px X 192px
-                                </p>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="fileinput fileinput-new" data-provides="fileinput">
-                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;">
-                                        <img src="{{bolt_root}}/{{student.displayPic}}">
-                                    </div>
-                                    <div>
-                                        <span class="btn red btn-outline btn-file">
-                                            <span class="fileinput-new"> Select image </span>
-                                            <span class="fileinput-exists"> Change </span>
-                                            <input value="" id="dp2" name="dp2" type="hidden"><input id="dp" name="dp" type="file"> </span>
-                                        <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput" style=""> Remove </a>
-                                    </div>
+                                    <label for="multiple" class="control-label">Name of Ward(s)</label>
                                 </div>
                             </div>
                         </div>
@@ -186,7 +108,7 @@
 
 var FormValidationMd = function() {
     var handleValidation2 = function() {
-        var form1 = $('#edit_student');
+        var form1 = $('#edit_guardian');
         var error1 = $('.alert-danger', form1);
         var success1 = $('.alert-success', form1);
 
@@ -199,34 +121,12 @@ var FormValidationMd = function() {
                 fullname: {
                 required: 'Full name is required',
                 minlength: 'Enter at least 2 characters'
-                },
-                gender: {
-                required: 'Gender is required',
-                },
-                email: {
-                email: 'Enter a valid email',
-                },
-                address: {
-                required: 'Contact address is required'
                 }
             },
             rules: {
                 fullname: {
                 minlength: 2,
                 required: true
-                },
-                gender: {
-                required: true,
-                },
-                address: {
-                required: true,
-                minlength: 2
-                },
-                email: {
-                email: true,
-                },
-                phone: {
-                maxlength: 20
                 }
             },
 
@@ -267,38 +167,23 @@ var FormValidationMd = function() {
 
                 var formData = new FormData();
 
-                var files = $("#dp").get(0).files;
-
-                if (files.length > 0){
-                    // loop through all the selected files and add them to the formData object
-                    for (var i = 0; i < files.length; i++) {
-                        var file = files[i];
-
-                        // add the files to formData object for the data payload
-                        formData.append('dp', file, file.name);
-                    }
-               }
-
                 var displayname = $("#fullname").val();
                 var email = $("#email").val();
                 var phone = $("#phone").val();
 
-                var gender = $("#gender").val();
-                var dob = $("#dob").val();
-                var address = $("#address").val();
-                var guardians = []; 
-                $('#guardians :selected').each(function(i, selected){ 
-                  //guardians[i] = $(selected).text(); 
-                  guardians[i] = selected.value; 
+                var wards = []; 
+                $('#wards :selected').each(function(i, selected){ 
+                  //wards[i] = $(selected).text(); 
+                  wards[i] = selected.value; 
                 });
 
                 formData.append('dn', displayname);
                 formData.append('email', email);
                 formData.append('phone', phone);
                     
-                //update student as a bolt user
+                //update guardian as a bolt user
                 $.ajax({
-                    url: '{{bolt_root}}/api/users/{{student.name}}',
+                    url: '{{bolt_root}}/api/users/{{guardian.name}}',
                     type: 'PUT',
                     data: formData,
                     processData: false,
@@ -309,10 +194,10 @@ var FormValidationMd = function() {
                     success: function(response) {
                         if(response.code === 0){
                             $.ajax({
-                                url: "{{bolt_root}}/api/db/students/update",
+                                url: "{{bolt_root}}/api/db/guardians/update",
                                 type: 'POST',
-                                data: JSON.stringify({ object: { name: "{{student.name}}" }, 
-                                    values: {address: address, displayName: displayname, displayPic: response.body.displayPic, dob: dob, email: email, gender: gender, phone: phone}}),
+                                data: JSON.stringify({ object: { name: "{{guardian.name}}" }, 
+                                    values: {displayName: displayname, email: email, phone: phone}}),
                                 //processData: false,
                                 dataType: 'json',
                                 contentType: 'application/json',
@@ -322,17 +207,17 @@ var FormValidationMd = function() {
                                         $.ajax({
                                             url: '{{bolt_root}}/api/db/student-guardian/remove',
                                             type: 'POST',
-                                            data: JSON.stringify({object: {ward: "{{student.name}}"}}),
+                                            data: JSON.stringify({object: {guardian: "{{guardian.name}}"}, app: "ctl-sms-students"}),
                                             dataType: 'json',
                                             contentType: 'application/json',
                                             headers: {'X-Bolt-App-Token': '{{app_token}}'},
                                             success: function(response3, status3, xhr3){
                                                 if (response3.code === 0) {
-                                                    guardians.forEach(function (g) {
+                                                    wards.forEach(function (w) {
                                                         $.ajax({
                                                             url: '{{bolt_root}}/api/db/student-guardian/insert',
                                                             type: 'POST',
-                                                            data: JSON.stringify({object: {guardian: g, ward: "{{student.name}}"}}),
+                                                            data: JSON.stringify({object: {guardian: "{{guardian.name}}", ward: w}, app: "ctl-sms-students"}),
                                                             dataType: 'json',
                                                             contentType: 'application/json',
                                                             headers: {'X-Bolt-App-Token': '{{app_token}}'},
@@ -343,14 +228,14 @@ var FormValidationMd = function() {
 
                                                     //Sweet alert
                                                     swal({
-                                                        title: "Student Updated!",
+                                                        title: "Guardian Updated!",
                                                         text: displayname + " has been updated.",
                                                         type: "success",
                                                         showCancelButton: false,
                                                         closeOnConfirm: true
                                                     }, function(isConfirm){
                                                         if (isConfirm) {
-                                                            window.location.href="{{app_root}}/view-students";
+                                                            window.location.href="{{app_root}}/view-guardians";
                                                         }
                                                     });
                                                 }
@@ -394,7 +279,7 @@ $(document).ready(function(){
 
         FormValidationMd.init();
 
-        var student = {{{json student}}};
+        var guardian = {{{json guardian}}};
 
         var before='<span class="select2 select2-container select2-container--bootstrap" dir="ltr">' +
         '<span class="selection">' +
@@ -407,17 +292,17 @@ $(document).ready(function(){
         '<span class="dropdown-wrapper" aria-hidden="true"></span>' +
         '</span>';
         var during = '';
-        $('#guardians option:not(:selected)').each(function(i, option){ 
-            if (student.guardians.indexOf(option.value) > -1) {
-                $("#guardians option[value=" + option.value + "]").attr('selected', 'selected');
-                //$("#guardians").val(option.value);
+        $('#wards option:not(:selected)').each(function(i, option){ 
+            if (guardian.wards.indexOf(option.value) > -1) {
+                $("#wards option[value=" + option.value + "]").attr('selected', 'selected');
+                //$("#wards").val(option.value);
 
                 during += '<li class="select2-selection__choice" title="' + option.text +
                 '"><span class="select2-selection__choice__remove" role="presentation">×</span>' +
                 option.text + '</li>';
             }
         });
-        $('#guardians').after(before + during + after);
+        $('#wards').after(before + during + after);
     });
 </script>
 

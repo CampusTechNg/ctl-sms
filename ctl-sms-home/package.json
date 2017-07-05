@@ -24,7 +24,8 @@
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",
-      "bolt/app-installed": "/app-installed"
+      "bolt/app-installed": "/app-installed",
+      "bolt/dashboard-card-posted": "/hooks/dashboard-card-posted"
     },
     "index": "/",
     "startup": true,

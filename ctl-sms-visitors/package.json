@@ -1,5 +1,5 @@
 {
-  "name": "ctl-sms-students",
+  "name": "ctl-sms-visitors",
   "version": "1.0.0",
   "description": "Campus Technologies Limited Student Management System",
   "main": "server.js",
@@ -12,32 +12,27 @@
     "express-handlebars": "^3.0.0"
   },
   "bolt": {
-    "displayName": "Students",
+    "displayName": "Visitors",
     "main": "bolt-server.js",
     "index": "/",
     "system": true,
     "extensions": {
-      "/students": "/",
-      "student": "/"
+      "/guardians": "/",
+      "/guardian": "/"
     },
     "files": {
       "icon": "assets/pages/img/icon.png"
     },
-    "order": 0,
-    "public": ["assets"],
-    "tags": ["students", "student", "ctl", "ctl-sms", "ctl-sms-students", "ctl-sms-plugins"],
-    "collections": {
-      "students": "*",
-      "student-guardian": {
-        "guests": "*",
-        "tenants": ["ctl-sms-guardians"]
-      }
-    },
     "hooks": {
       "bolt/app-starting": "/app-starting",
       "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated",
-      "ctl-sms-students/student-registered": "/hooks/student-registered"
+      "bolt/user-updated": "/user-updated"
+    },
+    "order": 1,
+    "public": ["assets"],
+    "tags": ["visitors", "visitor", "ctl", "ctl-sms", "ctl-sms-visitors", "ctl-sms-plugins"],
+    "collections": {
+      "visitors": "*"
     },
     "dependencies": {
       "ctl-sms-home": "*"
