@@ -9,7 +9,7 @@ var utils = require('bolt-internal-utils');
 
 var app = express();
 
-var appname;
+var appname, appToken;
 
 app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt environment
 
@@ -43,16 +43,9 @@ app.use(function(req, res, next){
 app.post('/app-starting', function(req, res){
 	var event = req.body;
 	appname = event.body.appName;
+	appToken = event.body.appToken;
 
 	utils.Events.sub('bolt/dashboard-card-posted', { route: "x/bolt/hooks/bolt/dashboard-card-posted" }, req.genAppToken('bolt'), function(eventError, eventResponse){});
-});
-
-app.post('/hooks/dashboard-card-posted', function(req, res){
-	var event = req.body;
-	console.log('yayyy, dashboard-card-posted');
-	console.log(event);
-
-	
 });
 
 //Route
@@ -77,7 +70,9 @@ app.get('/', function(req, res){
 
 app.get('/frame', function(req, res){
 	res.render('frame', {
-		app_root: req.app_root
+		app_root: req.app_root,
+		app_token: appToken,
+		bolt_root: process.env.BOLT_ADDRESS
 	});
 });
 

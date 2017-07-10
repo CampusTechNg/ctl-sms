@@ -1,7 +1,7 @@
 {
   "name": "ctl-sms-visitors",
   "version": "1.0.0",
-  "description": "Campus Technologies Limited Student Management System",
+  "description": "Campus Technologies Limited Student Management System - Visitors' Module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,22 +17,25 @@
     "index": "/",
     "system": true,
     "extensions": {
-      "/guardians": "/",
-      "/guardian": "/"
+      "/visitors": "/",
+      "/visitor": "/"
     },
     "files": {
       "icon": "assets/pages/img/icon.png"
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",
-      "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated"
+      "bolt/app-collection-inserted": "/hooks/bolt/visits-modified",
+      "bolt/app-collection-removed": "/hooks/bolt/visits-modified",
+      "bolt/app-collection-updated": "/hooks/bolt/visits-modified",
+      "bolt/app-collection-replaced": "/hooks/bolt/visits-modified"
     },
-    "order": 1,
+    "order": 3,
     "public": ["assets"],
     "tags": ["visitors", "visitor", "ctl", "ctl-sms", "ctl-sms-visitors", "ctl-sms-plugins"],
     "collections": {
-      "visitors": "*"
+      "visitors": "*",
+      "visits": "*"
     },
     "dependencies": {
       "ctl-sms-home": "*"

@@ -23,7 +23,7 @@
     "files": {
       "icon": "assets/pages/img/icon.png"
     },
-    "order": 0,
+    "order": 1,
     "public": ["assets"],
     "tags": ["students", "student", "ctl", "ctl-sms", "ctl-sms-students", "ctl-sms-plugins"],
     "collections": {
@@ -37,7 +37,8 @@
       "bolt/app-starting": "/app-starting",
       "bolt/user-deleted": "/user-deleted",
       "bolt/user-updated": "/user-updated",
-      "ctl-sms-students/student-registered": "/hooks/student-registered"
+      "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted-or-removed",
+      "bolt/app-collection-removed": "/hooks/bolt/app-collection-inserted-or-removed"
     },
     "dependencies": {
       "ctl-sms-home": "*"

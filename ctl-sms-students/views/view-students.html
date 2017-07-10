@@ -111,7 +111,7 @@
                                     <a href="#myModal1" role="button" data-id="{{@index}}" data-toggle="modal" class="btn dark btn-xs btn-outline sbold uppercase view-more">
                                         <i class="fa fa-eye"></i> <span class="hidden-xs"> View </span>
                                     </a>
-                                    <a href="{{../ app_root}}/payments/{{name}}" class="btn dark btn-xs btn-outline sbold uppercase">
+                                    <a href="{{../bolt_root}}/apps/ctl-sms-finance?route=payment-summary%2F{{name}}" class="btn dark btn-xs btn-outline sbold uppercase">
                                         <i class="fa fa-money"></i> <span class="hidden-xs"> Payments </span>
                                     </a>
                                 </td>
@@ -199,6 +199,7 @@
 </div>
 <!-- End of Modal -->
 <!-- END PAGE CONTENT-->
+{{> copyright }}
  
 {{> sub_footer }}
 

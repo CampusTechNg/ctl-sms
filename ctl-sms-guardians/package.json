@@ -12,7 +12,7 @@
     "express-handlebars": "^3.0.0"
   },
   "bolt": {
-    "displayName": "Guardians",
+    "displayName": "Parents",
     "main": "bolt-server.js",
     "index": "/",
     "system": true,
@@ -28,7 +28,7 @@
       "bolt/user-deleted": "/user-deleted",
       "bolt/user-updated": "/user-updated"
     },
-    "order": 0,
+    "order": 1,
     "public": ["assets"],
     "tags": ["guardians", "guardian", "ctl", "ctl-sms", "ctl-sms-guardians", "ctl-sms-plugins"],
     "collections": {

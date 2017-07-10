@@ -1,0 +1,42 @@
+{
+  "name": "ctl-sms-school-admin",
+  "version": "1.0.0",
+  "description": "Campus Technologies Limited Student Management System - School Admin Module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "^3.0.0"
+  },
+  "bolt": {
+    "displayName": "School Admin",
+    "main": "bolt-server.js",
+    "index": "/",
+    "system": true,
+    "extensions": {
+      "/school-admin": "/"
+    },
+    "files": {
+      "icon": "assets/pages/img/icon.png"
+    },
+    "order": 0,
+    "public": ["assets"],
+    "tags": ["school-admin", "ctl", "ctl-sms", "ctl-sms-school-admin", "ctl-sms-plugins"],
+    "collections": {
+      "school-admin": "*"
+    },
+    "hooks": {
+      "bolt/app-starting": "/app-starting",
+      "bolt/user-deleted": "/user-deleted",
+      "bolt/user-updated": "/user-updated"
+    },
+    "dependencies": {
+      "ctl-sms-home": "*"
+    }
+  },
+  "author": "Campus Technologies Limited",
+  "license": "ISC"
+}

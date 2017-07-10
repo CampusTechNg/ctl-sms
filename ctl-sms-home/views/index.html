@@ -24,7 +24,6 @@
         <!-- BEGIN THEME LAYOUT STYLES -->
         <link href="{{app_root}}/assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
         <link href="{{app_root}}/assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
-        <!-- <link href="{{app_root}}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" /> -->
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="{{app_root}}/assets/pages/img/icon.png" /> 
     </head>
@@ -423,11 +422,9 @@
                             </div>
                             <!-- END SIDEBAR TOGGLER BUTTON -->
                         </li>
-                        <li style="background-color:#364150;padding: 14px 0;border-top: 3px solid transparent;">&nbsp;</li>
-                        <!-- <li style="background-color:#2B3643;padding: 14px 0;border-top: 3px solid #36C6D3;">&nbsp;</li> -->
-                        <li>&nbsp;</li>
+                        <li class="heading"><h3 class="uppercase">&nbsp;</h3></li>
                         {{#each plugins}}
-                        <li class="nav-item">
+                        <li class="nav-item" > <!-- style="box-shadow: inset 3px 0 #32C5D2;" -->
                         <!-- <li class="nav-item active open"> -->
                             <a href="/apps/{{name}}" target="main_frame" class="nav-link">
                                 <!-- <i class="icon-user"></i> -->
@@ -450,10 +447,10 @@
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
 
-                <iframe style="min-height: 555px; width: 100%; margin: 0;" src="{{app_root}}/frame" frameborder="0" seamless='seamless' name="main_frame">
-                    
-                </iframe>
-                <noframes>Your browser does NOT support frames.</noframes>
+                    <iframe class="main_frame" src="{{app_root}}/frame" frameborder="0" seamless='seamless' name="main_frame"> <!-- min-height: 555px;-->
+                        
+                    </iframe>
+                    <noframes>Your browser does NOT support frames.</noframes>
 
                 </div>
                 <!-- END CONTENT BODY -->
@@ -1026,13 +1023,6 @@
         </div>
         <!-- END CONTAINER -->
 
-
-
-
-
-
-
-
         <!-- BEGIN FOOTER -->
         <!-- <div class="page-footer" style="background-color: #364150;">
             <div class="page-footer-inner" style="color: #fff;"> 
@@ -1042,14 +1032,7 @@
                 <i class="icon-arrow-up"></i>
             </div>
         </div> -->
-        <div class="page-footer" style="background-color: red;">
-            <div class="page-footer-inner" style="color: #fff;"> 
-                2017 &copy; Campus Technologies Limited
-            </div>
-            <div class="scroll-to-top">
-                <i class="icon-arrow-up"></i>
-            </div>
-        </div>
+      
         <!-- END FOOTER -->
         <!--[if lt IE 9]>
             <script src="{{app_root}}/assets/global/plugins/respond.min.js"></script>
@@ -1072,6 +1055,34 @@
         <script src="{{app_root}}/assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
         <script src="{{app_root}}/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
         <!-- END THEME LAYOUT SCRIPTS -->
-    </body>
 
+        <script type="text/javascript">
+            $(document).ready(function(){
+                function resizeFrame() {
+                    var main_frame = $('.main_frame');
+                    var window_height = $(window).height();
+                    var window_width = $(window).width();
+                    var page_header = $('.page-header').height();
+                    var min_height;
+
+                    if( window_width < 481 ) {
+                        min_height = window_height - 100;
+                        main_frame.attr('style', 'min-height:' + min_height + 'px');
+                        main_frame.attr({width:'100%'});
+                    }
+                    else {
+                        min_height = window_height - page_header;
+                        main_frame.attr('style', 'min-height:' + min_height + 'px');
+                        main_frame.attr({width:'100%'});
+                    }
+                }
+
+                resizeFrame();
+
+                $( window ).resize(function() {
+                    resizeFrame();
+                });
+            });
+        </script>
+    </body>
 </html>

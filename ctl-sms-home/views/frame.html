@@ -36,7 +36,7 @@
 
 </head>
 
-<body style="background-color: red;overflow-x: hidden;margin: 0;">
+<body style="background-color: #fff;overflow-x: hidden;margin: 0;">
 
 <!-- BEGIN PAGE HEADER-->
 <!-- BEGIN PAGE BAR -->
@@ -55,7 +55,7 @@
 <!-- END PAGE HEADER-->
 
 <!-- BEGIN DASHBOARD STATS 1-->
-<div class="container-fluid">
+<div class="container-fluid" id="home-cards">
     
 </div>
 <div class="clearfix"></div>
@@ -295,6 +295,16 @@
     </div>
 </div>
 
+<!-- BEGIN FOOTER -->
+<div class="page-footer" style="background-color: #fff; margin-top:200px;border-top: 1px solid #e7ecf1 !important;"> <!--364150-->
+    <div class="page-footer-inner" style="color: #2f353b; text-align:center;float:none;display:block;"> 
+        2017 &copy; Campus Technologies Limited
+    </div>
+    <div class="scroll-to-top">
+        <i class="icon-arrow-up"></i>
+    </div>
+</div>
+<!-- END FOOTER -->
     
 <!--[if lt IE 9]>
     <script src="{{app_root}}/assets/global/plugins/respond.min.js"></script>
@@ -347,11 +357,69 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="{{app_root}}/assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
 <script src="{{bolt_root}}/socket.io/socket.io.js" type="text/javascript"></script>
-<script src="{{bolt_root}}/public/bolt/native/js/events.js" type="text/javascript"></script>
+<script src="{{bolt_root}}/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
 <script type="text/javascript">
-    Bolt.EventManager.on("bolt/dashboard-card-posted", function(event){
-        console.log(event);
-        alert(event);
+    Bolt.Events.on("bolt/dashboard-card-posted", function(event){
+        if (event.token != '{{app_token}}') return;
+        var card = event.body;
+
+        if (card.app.indexOf('ctl-sms-') !== 0) return;
+
+        var elems = $('#card_' + card.app);
+
+        if (typeof elems.length == 'undefined' || elems.length == 0) {
+            var count = $("#home-cards").children().length;
+            if (count == 8) {
+                $('#home-cards div:last').remove();
+            }
+
+            var card_frame =    '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' +
+                                '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ card.background +' !important" href="{{bolt_root}}/apps/' + card.app + '">' +
+                                '<div class="visual"><img src="{{bolt_root}}/files/' + card.app + '/icon"></div>' +
+                                '<div class="details">' +
+                                '<div class="number">' +
+                                '<span id="card_' + card.app + '" data-counter="counterup" data-value="' + card.caption + '">' + card.caption + '</span></div>' +
+                                '<div class="desc"> ' + card.message + ' </div></div>' +
+                                '</a>' +
+                                '</div>';
+            $( "#home-cards" ).prepend(card_frame);
+        } else {
+            $('#card_' + card.app).attr('data-value', card.caption);
+            $('#card_' + card.app).text(card.caption);
+        }    
+    });
+    $(document).ready(function(){
+        $.ajax({
+            url: '{{bolt_root}}/api/db/cards/find',
+            type: 'POST',
+            data: JSON.stringify({app: 'bolt-module-dashboard', query: {}}),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response, status, xhr){
+                if (response.code === 0) {
+                    var cards = response.body;
+                    cards = cards.reverse().filter(function(card){
+                        return card.app.indexOf('ctl-sms-') === 0;
+                    });
+                    for (index = 0; index < cards.length && index < 8; index++) {
+                        var card = cards[index];
+                        var card_frame =    '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' +
+                                            '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ card.background +' !important" href="{{bolt_root}}/apps/' + card.app + '">' +
+                                            '<div class="visual"><img src="{{bolt_root}}/files/' + card.app + '/icon"></div>' +
+                                            '<div class="details">' +
+                                            '<div class="number">' +
+                                            '<span id="card_' + card.app + '" data-counter="counterup" data-value="' + card.caption + '">' + card.caption + '</span></div>' +
+                                            '<div class="desc"> ' + card.message + ' </div></div>' +
+                                            '</a>' +
+                                            '</div>';
+                        $( "#home-cards" ).append(card_frame);
+                    }
+                }
+            },
+            error: function(xhr, status, err) {}
+        });
+        
     });
 </script>
 <!-- END PAGE LEVEL SCRIPTS -->

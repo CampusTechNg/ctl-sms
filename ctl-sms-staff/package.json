@@ -22,7 +22,7 @@
     "files": {
       "icon": "assets/pages/img/icon.png"
     },
-    "order": 0,
+    "order": 1,
     "public": ["assets"],
     "tags": ["staff", "ctl", "ctl-sms", "ctl-sms-staff", "ctl-sms-plugins"],
     "collections": {

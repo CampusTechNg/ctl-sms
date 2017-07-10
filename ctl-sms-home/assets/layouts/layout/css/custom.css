@@ -1,0 +1,21 @@
+@charset "UTF-8";
+.main_frame {
+    /*min-height: 609px;*/
+    /*width: 100%;
+    margin: 0;*/
+}
+/*@media (max-height: 1024px) {
+    .main_frame {
+        min-height: 898px;
+    }
+}
+@media (max-height: 950px) {
+    .main_frame {
+        min-height: 609px;
+    }
+}
+@media (max-height: 640px) {
+    .main_frame {
+        min-height: 473px;
+    }
+}*/

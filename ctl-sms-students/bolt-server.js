@@ -47,25 +47,27 @@ app.post('/app-starting', function(req, res){
 	apptoken = event.body.appToken;
 });
 
-app.post('/hooks/student-registered', function(req, res){
+app.post('/hooks/bolt/app-collection-inserted-or-removed', function(req, res){
 	var event = req.body;
-	//post to /api/dashboard
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/students/find', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {query:{}}}, 
-		function(error, response, body) {
-		var students = body.body;
-
+	
+	if (event.body.collection == 'students') {
+		//post to /api/dashboard
 		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
+			url: process.env.BOLT_ADDRESS + '/api/db/students/find', 
 			headers: {'X-Bolt-App-Token': apptoken},
-			json: {background: '#00ff00', caption: students.length, message: 'registered students'}}, 
+			json: {query:{}}}, 
 			function(error, response, body) {
-				
-			});
-	});
-		
+			var students = body.body;
+
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {background: '#8E44AD', caption: students.length, message: 'registered students'}}, 
+				function(error, response, body) {
+					
+				});
+		});
+	}
 });
 
 //Route

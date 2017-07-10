@@ -1,0 +1,185 @@
+{{> header}}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+    <link href="/public/ctl-sms-home/assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="/public/ctl-sms-home/assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+    <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<div class="container-fluid">
+    <div class="col-md-12">
+        <h3 class="page-title"> Edit Guardian Record</h3>
+    </div>
+</div>
+<!-- END PAGE TITLE-->
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="container-fluid">
+    <div class="col-md-12 ">
+        <!-- Begin: life time stats -->
+        <div class="portlet light portlet-fit portlet-datatable bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-list font-green"></i>
+                    <span class="caption-subject font-green sbold uppercase">List of Registered Guardians</span>
+                </div>
+                <div class="actions">
+                    <div class="btn-group">
+                        <a href="{{app_root}}/register-guardian" class="btn green">
+                            <i class="fa fa-plus"></i> <span class="hidden-xs"> Add Guardian</span>
+                        </a>
+                    </div>
+                    <div class="btn-group">
+                        <a href="" class="btn red" id="delete_btn">
+                            <i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span>
+                        </a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn blue" href="javascript:;" data-toggle="dropdown">
+                            <i class="fa fa-cog"></i>
+                            <span class="hidden-xs"> Tools </span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right" id="sample_3_tools">
+                            <li>
+                                <a href="javascript:;" data-action="0" class="tool-action">
+                                    <i class="icon-printer"></i> Print</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-action="1" class="tool-action">
+                                    <i class="icon-check"></i> Copy</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-action="2" class="tool-action">
+                                    <i class="icon-doc"></i> PDF</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-action="3" class="tool-action">
+                                    <i class="icon-paper-clip"></i> Excel</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-action="4" class="tool-action">
+                                    <i class="icon-cloud-upload"></i> CSV</a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li>
+                                <a href="javascript:;" data-action="5" class="tool-action">
+                                    <i class="icon-refresh"></i> Reload</a>
+                            </li>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-container">
+                    <table class="table table-striped table-bordered table-hover table-checkable" id="sample_3">
+                        <thead>
+                            <tr>
+                                <th class="table-checkbox" width="5%">
+                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        <input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" />
+                                        <span></span>
+                                    </label>
+                                </th>
+                                <th> Full name </th>
+                                <th> Date in </th>
+                                <th> Time in </th>
+                                <th> Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each visits}}
+                            <tr>
+                                <td>
+                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        <input type="checkbox" class="checkboxes" value="{{_id}}" />
+                                        <span></span>
+                                    </label>
+                                </td>
+                                <td> {{displayName}} </td>
+                                <td> {{toDate dateIn}} </td>
+                                <td> {{toTime dateIn}} </td>
+                                <td> 
+                                    <a class="btn dark btn-xs btn-outline sbold uppercase" onclick="signout('{{visitor}}')">
+                                        <i class="fa fa-logout"></i> <span class="hidden-xs"> Signout </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- End: life time stats -->
+    </div>
+</div>
+<!-- END PAGE CONTENT-->
+{{> copyright }}
+ 
+{{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/public/ctl-sms-home/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/public/ctl-sms-home/assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/pages/scripts/components-select2.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+<script type="text/javascript">
+    function signout(id) {
+        var visits = {{{json visits}}};
+        for(index = 0; index < visits.length; index++) {
+            var v = visits[index];
+            if (v.visitor == id) {
+                v.dateOut = new Date();
+                $.ajax({
+                    url: "{{bolt_root}}/api/db/visits/update?visitor=" + id,
+                    type: 'POST',
+                    data: { values: {dateOut: v.dateOut} },
+                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                    success: function(response, status, xhr) {
+                        if(response.code === 0){
+                            swal({
+                                title: "Visitor Signed Out!",
+                                text: v.displayName + " has been signed out.",
+                                type: "success",
+                                showCancelButton: false,
+                                closeOnConfirm: true
+                            }, function(isConfirm){
+                                if (isConfirm) {
+                                    window.location.href="{{app_root}}/signout-visitor";
+                                }
+                            });
+                        }
+                        else {
+                            sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                        }
+                    }, 
+                    error: function(xhr2, status2, err2){
+                        alert(xhr2.responseText);
+                    }
+                });
+                break;
+            }
+        }
+    }
+</script>
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+ {{> footer }}
