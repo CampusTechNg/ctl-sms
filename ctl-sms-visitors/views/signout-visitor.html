@@ -108,7 +108,7 @@
                                 <td> {{toDate dateIn}} </td>
                                 <td> {{toTime dateIn}} </td>
                                 <td> 
-                                    <a class="btn dark btn-xs btn-outline sbold uppercase" onclick="signout('{{visitor}}')">
+                                    <a class="btn dark btn-xs btn-outline sbold uppercase" onclick="signout('{{visitorId}}')">
                                         <i class="fa fa-logout"></i> <span class="hidden-xs"> Signout </span>
                                     </a>
                                 </td>
@@ -147,10 +147,10 @@
         var visits = {{{json visits}}};
         for(index = 0; index < visits.length; index++) {
             var v = visits[index];
-            if (v.visitor == id) {
+            if (v.visitorId == id) {
                 v.dateOut = new Date();
                 $.ajax({
-                    url: "{{bolt_root}}/api/db/visits/update?visitor=" + id,
+                    url: "{{bolt_root}}/api/db/visits/update?visitorId=" + id,
                     type: 'POST',
                     data: { values: {dateOut: v.dateOut} },
                     headers: {'X-Bolt-App-Token': '{{app_token}}'},

@@ -2,6 +2,7 @@
 
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    <link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS -->
 
 {{> sub_header}}
@@ -11,7 +12,7 @@
 <!-- BEGIN PAGE TITLE-->
 <div class="container-fluid">
     <div class="col-md-12">
-        <h3 class="page-title"> Register Visitors</h3>
+        <h3 class="page-title"> Add Category</h3>
     </div>
 </div>
 <!-- END PAGE TITLE-->
@@ -23,78 +24,53 @@
         <div class="portlet light bordered">
             <div class="portlet-title">
                 <div class="caption font-green">
-                    <i class="icon-magnifier font-green"></i>
-                    <span class="caption-subject bold uppercase"> Search Previous Visit</span>
-                </div>
-            </div>
-            <div class="portlet-body form">
-                <form role="form" method="" autocomplete="off">
-                    <div class="form-body">
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <div class="input-group">
-                                        <div class="input-group-control">
-                                            <input class="form-control" name="search_name" id="search_name" type="text">
-                                            <label for="search_name">Visitor's name</label>
-                                        </div>
-                                        <span class="input-group-btn btn-right">
-                                            <button class="btn green" type="button">Search</button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- END SAMPLE FORM PORTLET-->
-    </div>
-
-    <div class="col-md-12 ">
-        <!-- BEGIN SAMPLE FORM PORTLET-->
-        <div class="portlet light bordered">
-            <div class="portlet-title">
-                <div class="caption font-green">
                     <i class="icon-layers font-green"></i>
-                    <span class="caption-subject bold uppercase"> Register New Visit</span>
+                    <span class="caption-subject bold uppercase"> Add New Category</span>
                 </div>
             </div>
             <div class="portlet-body form">
-                <form role="form" id="register_visitors" autocomplete="off">
+                <form role="form" id="add_category" autocomplete="off">
                     <div class="form-body">
                         <div class="row">
-                            <div class="col-md-12 col-sm-12">
+                            <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="fullname" id="fullname" type="text" maxlength="60">
-                                    <label for="fullname">
-                                        Full Name <span class="required">*</span>
+                                    <select name="category" class="form-control" id="category">
+                                        <option value=""></option>
+                                        {{#each categories}}
+                                        <option value="{{_id}}">{{displayName}}</option>
+                                        {{/each}}
+                                    </select>
+                                    <label for="category">
+                                        Category (if applicable)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group form-md-line-input form-md-floating-label">
+                                    <input class="form-control" name="name" id="name" type="text" maxlength="300">
+                                    <label for="name">
+                                        Category name <span class="required">*</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 col-sm-6">
+                            <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="phone" type="text" class="form-control" id="phone" maxlength="20">
-                                    <label for="phone">Phone</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="email" type="email" class="form-control" id="email" maxlength="100">
-                                    <label for="email">Email</label>
+                                    <input class="form-control" name="description" id="description" type="text" maxlength="300">
+                                    <label for="description">
+                                        Description <span class="required">*</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="purpose_of_visit" id="purpose_of_visit" type="text" maxlength="60">
-                                    <label for="purpose_of_visit">
-                                        Purpose of visit <span class="required">*</span>
-                                    </label>
+                                <div class="form-group form-md-line-input">
+                                    <label class="control-label">Tags</label>
+                                    <select multiple data-role="tagsinput" id="tags">
+                                        
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -115,25 +91,21 @@
 {{> sub_footer }}
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js" type="text/javascript"></script>
 <script src="/public/ctl-sms-home/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-<!-- <script type="text/javascript">
-window.onload = function() {
-    document.getElementById("username").focus();
-};
-</script> -->
-
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+
 <script type="text/javascript">
 var FormValidationMd = function() {
     var handleValidation2 = function() {
-        var form1 = $('#register_visitors');
+        var form1 = $('#add_category');
         var error1 = $('.alert-danger', form1);
         var success1 = $('.alert-success', form1);
 
@@ -143,31 +115,19 @@ var FormValidationMd = function() {
             focusInvalid: false, // do not focus the last invalid input
             ignore: "", // validate all fields including form hidden input
             messages: {
-                fullname: {
-                required: 'Full name is required',
-                minlength: 'Enter at least 2 characters'
+                name: {
+                required: 'Category name is required'
                 },
-                email: {
-                email: 'Enter a valid email',
-                },
-                purpose_of_visit: {
-                required: 'Purpose of visit is required'
+                description: {
+                required: 'Description of category is required',
                 }
             },
             rules: {
-                fullname: {
-                minlength: 2,
+                name: {
                 required: true
                 },
-                email: {
-                email: true,
-                },
-                phone: {
-                maxlength: 20
-                },
-                purpose_of_visit: {
+                description: {
                 required: true,
-                maxlength: 250
                 }
             },
 
@@ -203,50 +163,42 @@ var FormValidationMd = function() {
             },
 
             submitHandler: function(form) {
-
                 success1.show();
                 error1.hide();
 
-                var displayname = $("#fullname").val();
-                var email = $("#email").val();
-                var phone = $("#phone").val();
-                var purpose = $("#purpose_of_visit").val();
+                var parentId = null;
+                if($('#category option').is(":selected")) {
+                    parentId = $('#category').val();
+                }
+
+                var displayName = $("#name").val();
+                var description = $("#description").val();
+
+                var tags = []; 
+                $('#tags :selected').each(function(i, selected){
+                  tags.push(selected.value); 
+                });
                     
+                //create staff as a bolt user
                 $.ajax({
-                    url: '{{bolt_root}}/api/db/visitors/insert',
+                    url: '{{bolt_root}}/api/db/categories/insert',
                     type: 'POST',
-                    data: JSON.stringify({ object: { displayName: displayname, email: email, phone: phone }}),
+                    data: JSON.stringify({ object: { parentId: parentId, displayName: displayName, description: description, tags: tags }}),
                     dataType: 'json',
                     contentType: 'application/json',
                     headers: {'X-Bolt-App-Token': '{{app_token}}'},
                     success: function(response) {
                         if(response.code === 0){
-                            var result = response.body;
-                            $.ajax({
-                                url: "{{bolt_root}}/api/db/visits/insert",
-                                type: 'POST',
-                                data: { object: {displayName: displayname,purpose: purpose, dateIn: new Date(), visitorId: result.insertedIds[0]} },
-                                headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                success: function(response2, status2, xhr2) {
-                                    if(response2.code === 0){
-                                        swal({
-                                            title: "Visitor Registered!",
-                                            text: displayname + " has been registered and signed in.",
-                                            type: "success",
-                                            showCancelButton: false,
-                                            closeOnConfirm: true
-                                        }, function(isConfirm){
-                                            if (isConfirm) {
-                                                window.location.href="{{app_root}}/";
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
-                                    }
-                                }, 
-                                error: function(xhr2, status2, err2){
-                                    alert(xhr2.responseText);
+                            //Sweet alert
+                            swal({
+                                title: "Category Created!",
+                                text: displayName + " has been created.",
+                                type: "success",
+                                showCancelButton: false,
+                                closeOnConfirm: true
+                            }, function(isConfirm){
+                                if (isConfirm) {
+                                    window.location.href="{{app_root}}/add-category";
                                 }
                             });
                         }

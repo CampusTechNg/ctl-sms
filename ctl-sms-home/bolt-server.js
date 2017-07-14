@@ -44,8 +44,6 @@ app.post('/app-starting', function(req, res){
 	var event = req.body;
 	appname = event.body.appName;
 	appToken = event.body.appToken;
-
-	utils.Events.sub('bolt/dashboard-card-posted', { route: "x/bolt/hooks/bolt/dashboard-card-posted" }, req.genAppToken('bolt'), function(eventError, eventResponse){});
 });
 
 //Route
@@ -59,8 +57,9 @@ app.get('/', function(req, res){
           return parseInt(orderA, 10) - parseInt(orderB, 10);
         });
         var scope = {
-          address: process.env.BOLT_ADDRESS,
           app_root: req.app_root,
+          app_token: appToken,
+		  bolt_root: process.env.BOLT_ADDRESS,
           plugins: plugins,
           user: req.user
         };

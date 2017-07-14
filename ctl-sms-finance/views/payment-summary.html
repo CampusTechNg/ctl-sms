@@ -30,11 +30,11 @@
                 <div class="portlet light bordered">
                     <div class="portlet-body form">
                         <div class="profile-userpic">
-                            <img class="img-responsive" src="{{app_root}}/assets/pages/img/avatar.png">
+                            <img class="img-responsive" src="{{bolt_root}}/{{student.displayPic}}">
                         </div>
                         <div class="profile-usertitle">
-                            <div class="profile-usertitle-name"> Marcus Doe </div>
-                            <div class="profile-usertitle-job"> NIIT/17892/17 </div>
+                            <div class="profile-usertitle-name"> {{student.displayName}} </div>
+                            <div class="profile-usertitle-job"> {{student.name}} </div>
                         </div> 
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         </div>
                         <div class="actions">
                             <div class="btn-group">
-                                <a href="{{app_root}}/make-payment" class="btn green">
+                                <a href="{{app_root}}/make-payment/{{student.name}}" class="btn green">
                                     <i class="fa fa-plus"></i> <span class="hidden-xs"> New Payment</span>
                                 </a>
                             </div>
@@ -62,51 +62,32 @@
                             <table class="table table-hover table-light" id="sample_3">
                                 <thead>
                                     <tr>
-                                        <th> Program/Course </th>
+                                        <th> Invoice </th>
                                         <th> Payment Status </th>
                                         <th> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {{#each invoices}}
                                     <tr>
-                                        <td> Web Development/Web Design </td>
-                                        <td>
+                                        <td> {{displayName}} </td>
+                                        <td> 
+                                            {{#if paymentCompleted}}
                                             <span class="badge badge-empty badge-success"></span>
                                             Completed
-                                        </td>
-                                        <td> 
-                                            <a href="{{app_root}}/make-payment#tab_2" class="btn green-haze btn-xs uppercase"> 
-                                                <span class="hidden-xs">Proceed</span>
-                                                <span><i class="fa fa-long-arrow-right"></i></span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td> MMS - Network Engineering </td>
-                                        <td> 
+                                            {{else}}
                                             <span class="badge badge-empty badge-warning"></span>
                                             Outstanding
+                                            {{/if}}
                                         </td>
                                         <td> 
-                                            <a href="{{app_root}}/make-payment#tab_2" class="btn green-haze btn-xs uppercase"> 
+                                            <a href="{{../app_root}}/invoice/{{../student.name}}/{{_id}}" class="btn green-haze btn-xs uppercase"> 
                                                 <span class="hidden-xs">Proceed</span>
                                                 <span><i class="fa fa-long-arrow-right"></i></span>
                                             </a>
                                         </td>
                                     </tr> 
-                                    <tr>
-                                        <td> A+ </td>
-                                        <td>
-                                            <span class="badge badge-empty badge-success"></span>
-                                            Completed
-                                        </td>
-                                        <td> 
-                                            <a href="{{app_root}}/make-payment#tab_2" class="btn green-haze btn-xs uppercase"> 
-                                                <span class="hidden-xs">Proceed</span>
-                                                <span><i class="fa fa-long-arrow-right"></i></span>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    {{/each}}
                                 </tbody>
                             </table>
                         </div>  
@@ -128,9 +109,9 @@
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script type="text/javascript">
-window.onload = function() {
+/*window.onload = function() {
     document.getElementById("school_name").focus();
-};
+};*/
 </script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>

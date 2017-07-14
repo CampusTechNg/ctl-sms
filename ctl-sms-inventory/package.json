@@ -1,7 +1,7 @@
 {
-  "name": "ctl-sms-finance",
+  "name": "ctl-sms-inventory",
   "version": "1.0.0",
-  "description": "Campus Technologies Limited Student Management System - Finance Module",
+  "description": "Campus Technologies Limited Student Management System - Inventory Module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,21 +12,22 @@
     "express-handlebars": "^3.0.0"
   },
   "bolt": {
-    "displayName": "Finance",
+    "displayName": "Inventory",
     "main": "bolt-server.js",
     "index": "/",
     "system": true,
     "extensions": {
-      "/finance": "/"
+      "/inventory": "/"
     },
     "files": {
       "icon": "assets/pages/img/icon.png"
     },
-    "order": 2,
+    "order": 1,
     "public": ["assets"],
-    "tags": ["school-admin", "ctl", "ctl-sms", "ctl-sms-school-admin", "ctl-sms-plugins"],
+    "tags": ["inventory", "ctl", "ctl-sms", "ctl-sms-inventory", "ctl-sms-plugins"],
     "collections": {
-      "invoices": "*"
+      "categories": "*",
+      "items": "*"
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",

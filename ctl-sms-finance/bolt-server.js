@@ -52,132 +52,77 @@ app.get('/', function(req, res){
 	res.render('index', {
 		finance_menu: 'selected',
 		finance_active: 'active',
-		app_root: req.app_root
+		app_root: req.app_root,
+		app_token: apptoken,
+		bolt_root: process.env.BOLT_ADDRESS
 	});
 });
 
 app.get('/payment-summary/:name', function(req, res){
-	res.render('payment-summary', {
-		finance_menu: 'selected',
-		finance_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
-});
-
-app.get('/make-payment', function(req, res){
-	res.render('make-payment', {
-		finance_menu: 'selected',
-		finance_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
-});
-
-/*app.get('/view-staff', function(req, res){
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
+		url: process.env.BOLT_ADDRESS + '/api/db/students/findone?name=' + req.params.name, 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}}}, 
+		json: {app: 'ctl-sms-students'}}, 
 		function(error, response, body) {
-		var staff = body.body;
+			var student = body.body;
 
-		if(staff) {
-			var getUserInfo = function(index) {
-				if (index >= staff.length) {
-					res.render('view-staff', {
-						view_staff_menu: 'selected',
-						view_staff_active: 'active',
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/db/invoices/find?student=' + student.name, 
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {}}, 
+				function(error, response, body) {
+					var invoices = body.body;
+					invoices.forEach(function (inv) {
+						if (inv.payments) {
+							var paid = inv.payments.map(function(pay) { return pay.amount; })
+								.reduce(function(sum, value) {return sum + value;});
+
+							if (paid >= inv.totalAmount) {
+								inv.paymentCompleted = true;
+							}
+						}
+					});
+
+					res.render('payment-summary', {
+						finance_menu: 'selected',
+						finance_active: 'active',
 						app_root: req.app_root,
 						app_token: apptoken,
 						bolt_root: process.env.BOLT_ADDRESS,
-						staff: staff
+						student: student,
+						invoices: invoices
 					});
-				}
-				else {
-					request({
-						url: process.env.BOLT_ADDRESS + '/api/users/' + staff[index].name, 
-						headers: {'X-Bolt-App-Token': apptoken}
-					},
-					function(errorUsers, responseUsers, bodyUsers) {
-						bodyUsers = JSON.parse(bodyUsers);
-						var user = bodyUsers.body;
-						staff[index].userInfo = user;
-						getUserInfo(++index);
-					});
-				}	
-			};
-
-			getUserInfo(0);
-		}
-		else {
-			res.render('view-staff', {
-				view_staff_menu: 'selected',
-				view_staff_active: 'active',
-				app_root: req.app_root,
-				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS,
-				staff: []
-			});
-		}
-	});
-});*/
-
-app.get('/edit-school-profile', function(req, res){
-	res.render('edit-school-profile', {
-		school_profile_menu: 'selected',
-		school_profile_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
+				});
+		});
 });
 
-/*app.get('/edit-profile/:name', function(req, res){
-	var name = req.params.name;
+app.get('/make-payment/:name', function(req, res){
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/school-profile/findone', 
+		url: process.env.BOLT_ADDRESS + '/api/db/categories/find', 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{name: name}}}, 
+		json: {object:{}, app: 'ctl-sms-inventory'}}, 
 		function(error, response, body) {
-		var staff = body.body;
+			var categories = body.body;
 
-		if(staff) {
-			request({
-				url: process.env.BOLT_ADDRESS + '/api/users/' + name, 
-				headers: {'X-Bolt-App-Token': apptoken}
-			},
-			function(errorUser, responseUser, bodyUser) {
-				bodyUser = JSON.parse(bodyUser);
-				var user = bodyUser.body;
-				staff.userInfo = user;
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/db/students/findone?name=' + req.params.name, 
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {app: 'ctl-sms-students'}}, 
+				function(error, response, body) {
+					var student = body.body;
 
-				var scope = {
-					school_profile_menu: 'selected',
-					school_profile_active: 'active',
-					app_root: req.app_root,
-					app_token: apptoken,
-					bolt_root: process.env.BOLT_ADDRESS,
-					staff: staff,
-					isMale: staff.gender == 'male' || staff.gender == 'Male'
-				};
-
-				res.render('edit-profile', scope);
-			});
-		}
-		else {
-			res.render('edit-profile', {
-				school_profile_menu: 'selected',
-				school_profile_active: 'active',
-				app_root: req.app_root,
-				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS
-			});
-		}
-	});
-});*/
+					res.render('make-payment', {
+						finance_menu: 'selected',
+						finance_active: 'active',
+						app_root: req.app_root,
+						app_token: apptoken,
+						bolt_root: process.env.BOLT_ADDRESS,
+						categories: categories,
+						student: student
+					});
+				});
+		});
+});
 
 app.get('*', function(req, res){
 	res.render('404', {

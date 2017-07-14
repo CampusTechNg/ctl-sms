@@ -14,7 +14,7 @@
         <h3 class="page-title"> Make Payment</h3>
     </div>
     <div class="col-md-4 col-sm-4 text-right hidden-xs">
-        <a href="{{app_root}}/payment-summary" class="btn btn-default m-icon">
+        <a href="{{app_root}}/payment-summary/{{student.name}}" class="btn btn-default m-icon">
             <i class="m-icon-swapleft"></i> Payment Summary
         </a>
     </div>
@@ -38,70 +38,98 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab_1">
-                            <form role="form" method="" autocomplete="off">
-                                <div class="form-body">
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-12">
-                                            <div class="form-group form-md-line-input form-md-floating">
-                                                <input type="text" value="Marcus Doe Peterson" class="form-control" id="form_control_1" readonly="readonly">
-                                                <label for="form_control_1">Full name</label>
-                                            </div>
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="form-group form-md-line-input form-md-floating">
+                                            <input type="text" value="{{student.displayName}}" class="form-control" id="fullname" readonly="readonly">
+                                            <label for="fullname">Full name</label>
                                         </div>
                                     </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group form-md-line-input form-md-floating">
-                                                <select class="form-control" id="form_control_1">
-                                                    <option value="">- Select -</option>
-                                                    <option value="">Course 1 - N50,000</option>
-                                                    <option value="">Course 2 - N70,000</option>
-                                                    <option value="">Course 3 - N150,000</option>
-                                                    <option value="">Course 4 - N1,500,000</option>
-                                                </select>
-                                                <label for="form_control_1">
-                                                    Course <span class="required">*</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group form-md-line-input form-md-floating">
-                                                <select class="form-control" id="form_control_1">
-                                                    <option value="">- Select -</option>
-                                                    <option value="">Scholarship 1 - N2,000</option>
-                                                    <option value="">Scholarship 2 - N4,000</option>
-                                                    <option value="">Scholarship 3 - N10,000</option>
-                                                    <option value="">Scholarship 4 - N15,000</option>
-                                                </select>
-                                                <label for="form_control_1">
-                                                    Scholarship category <span class="required">*</span>
-                                                </label>
-                                            </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-5">
+                                        <div class="form-group form-md-line-input form-md-floating">
+                                            <select class="form-control" id="category">
+                                                <option value="">- Select -</option>
+                                                {{#each categories}}
+                                                <option value="{{_id}}">{{displayName}}</option>
+                                                {{/each}}
+                                            </select>
+                                            <label for="category">
+                                                Category <span class="required">*</span>
+                                            </label>
                                         </div>
                                     </div>
+                                    <div class="col-md-5 col-sm-5">
+                                        <div class="form-group form-md-line-input form-md-floating">
+                                            <select class="form-control" id="item">
+                                                <option value="">- Select -</option>
+                                            </select>
+                                            <label for="item">
+                                                Item <span class="required">*</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <div class="form-actions noborder">
+                                            <button type="button" id="add_item" class="btn btn-sm green"><i class="fa fa-plus"></i> Add</button>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group form-md-line-input form-md-floating">
-                                                <input type="text" class="form-control" id="form_control_1">
-                                                <label for="form_control_1">Amount paid</label>
-                                                <span class="help-block">Enter amount paid</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="form-group form-md-line-input form-md-floating">
-                                                <input type="text" class="form-control" id="form_control_1">
-                                                <label for="form_control_1">Remarks</label>
-                                                <span class="help-block">Enter remarks if any</span>
-                                            </div>
+                                <div class="row">
+                                    <div class="col-md-12" id="invoice">
+                                        <h4>Added Items</h4>
+                                        <div class="table-container">
+                                            <table class="table table-hover table-light" id="sample_3">
+                                                <thead>
+                                                    <tr>
+                                                        <th> Category </th>
+                                                        <th> Item </th>
+                                                        <th width="10%"> Qty </th>
+                                                        <th width="13%"> Amount </th>
+                                                        <th width="13%"> Discount </th>
+                                                        <th width="13%"> Sub Total </th>
+                                                        <th> Action </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="item_row">
+                                                    
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-actions noborder">
-                                    <button type="submit" class="btn green">Submit</button>
-                                    <button type="reset" class="btn default">Cancel</button>
+
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                            <input type="text" class="form-control" id="total_amount" readonly>
+                                            <label for="total_amount">Total amount</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                            <input type="text" class="form-control" id="amount_paid" maxlength="20">
+                                            <label for="amount_paid">Amount paid</label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </form>
+                                <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                            <input type="text" class="form-control" id="remark" maxlength="300">
+                                            <label for="remark">Remark</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions noborder" id="send_payment">
+                                <button type="button" id="submit" class="btn green">Submit</button>
+                                <button type="reset" class="btn default">Cancel</button>
+                            </div>
                         </div>
                         <div class="tab-pane" id="tab_2">
                             <div class="actions pull-right">
@@ -241,9 +269,9 @@
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script type="text/javascript">
-window.onload = function() {
+/*window.onload = function() {
     document.getElementById("school_name").focus();
-};
+};*/
 </script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
@@ -252,241 +280,226 @@ window.onload = function() {
 <!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 
 <script type="text/javascript">
-var FormValidationMd = function() {
-    var handleValidation2 = function() {
-        var form1 = $('#school_profile');
-        var error1 = $('.alert-danger', form1);
-        var success1 = $('.alert-success', form1);
+$(document).ready(function() {
 
-        form1.validate({
-            errorElement: 'span', //default input error message container
-            errorClass: 'help-block help-block-error', // default input error message class
-            focusInvalid: false, // do not focus the last invalid input
-            ignore: "", // validate all fields including form hidden input
-            messages: {
-                school_name: {
-                required: 'School name is required',
-                minlength: 'Enter at least 2 characters'
-                },
-                address: {
-                required: 'School address is required',
-                minlength: 'Enter at least 2 characters'
-                },
-                phone: {
-                required: 'School phone number is required'
-                },
-                email: {
-                email: 'Enter a valid email address'
-                },
-                website: {
-                url: 'Enter a valid URL'
+    var itemsForCat = [];
+
+    function elemVisibility() {
+        if( $('#total_amount').val() === '' || $('#total_amount').val() == 0 ) {
+            $('#invoice').hide();
+            $('#send_payment').hide();
+        }
+        else {
+            $('#invoice').show();
+            $('#send_payment').show();
+        }
+    }
+    elemVisibility();
+
+    function sumItems(amt) {
+        var total_amount = $('#total_amount').val();
+        total_amount = (total_amount === '') ? 0 : total_amount;
+        var sum = parseInt(total_amount) + parseInt(amt);
+        $('#total_amount').attr('value', sum);
+
+        elemVisibility();
+    }
+
+    function subtractItem(amt) {
+        var total_amount = $('#total_amount').val();
+        total_amount = (total_amount === '') ? 0 : total_amount;
+        var sum = parseInt(total_amount) - parseInt(amt);
+        $('#total_amount').attr('value', sum);
+
+        elemVisibility();    
+    }
+
+    function multiplyAndAdd(item_amt, sub_total) {
+        var total_amount = $('#total_amount').val();
+        var sum = parseInt(total_amount) + parseInt(sub_total);
+        sum = parseInt(sum) - parseInt(item_amt);
+        $('#total_amount').attr('value', sum);
+    }
+
+
+    //Add items
+    $('#add_item').click(function() {
+        var category = $('#category option:selected').val();
+        var item = $('#item option:selected').val();
+        
+        if( !category || !item ) { return; }
+
+        for(var index = 0; index < itemsForCat.length; index++) {
+            var itemObj = itemsForCat[index];
+            if (!itemObj.price) continue;
+
+            if (itemObj._id.toString() == item) {
+                var qty = 1;
+                var qty_input = '';
+                if (itemObj.isService || itemObj.isUnique) {
+                    qty_input = '<input type="number" id="qty" min="1" max="1" class="form-control" size="1" value="1" disabled>';
                 }
-            },
-            rules: {
-                school_name: {
-                minlength: 2,
-                required: true
-                },
-                address: {
-                minlength: 2,
-                required: true,
-                },
-                phone: {
-                required: true
-                },
-                email: {
-                email: true
-                },
-                website: {
-                    url: true
+                else {
+                    qty = itemObj.quantity;
+                    var max = itemObj.quantity;
+                    qty_input = '<input type="number" id="qty" min="1" max="' + max + '" class="form-control" size="1" value="1" >';
                 }
-            },
 
-            invalidHandler: function(event, validator) { //display error alert on form submit              
-                success1.hide();
-                error1.show();
-                App.scrollTo(error1, -200);
-            },
-
-            errorPlacement: function(error, element) {
-                if (element.is(':checkbox')) {
-                    error.insertAfter(element.closest(".md-checkbox-list, .md-checkbox-inline, .checkbox-list, .checkbox-inline"));
-                } else if (element.is(':radio')) {
-                    error.insertAfter(element.closest(".md-radio-list, .md-radio-inline, .radio-list,.radio-inline"));
-                } else {
-                    error.insertAfter(element); // for other inputs, just perform default behavior
+                var amount = itemObj.price;
+                var discount = itemObj.discount || 0;
+                var discountType = itemObj.discountType || 'absolute';
+                var total_amount;
+                var icon = '';
+                if (discountType == 'percentage') {
+                    icon = '<i class="fa fa-percent"></i>';
+                    total_amount = amount - ((discount / 100) * amount);
                 }
-            },
+                else {
+                    total_amount = amount - discount;
+                }
 
-            highlight: function(element) { // hightlight error inputs
-                $(element)
-                .closest('.form-group').addClass('has-error'); // set error class to the control group
-            },
+                var selected_item = '<tr class="single_item">' +
+                                        '<td id="item_category">' + $('#category option:selected').text() + '</td>' +
+                                        '<td id="item_name">' + $('#item option:selected').text() + '</td>' +
+                                        '<td>' + qty_input + ' </td>' +
+                                        '<td><input type="text" value="'+ amount +'" class="form-control" id="amount_per_item" maxlength="20" readonly> </td>' +
+                                        '<td><div class="input-icon right">'+ icon +'<input type="text" value="'+ discount +'" class="form-control" id="discount" readonly></div> <input type="hidden" value="'+ discountType +'" class="form-control" id="discount_type"> </td>' +
+                                        '<td><input type="text" value="'+ total_amount +'" class="form-control" id="item_sub_total" readonly maxlength="20"></td>' +
+                                        '<td> <button type="button" id="remove_item" class="btn btn-xs red"><i class="fa fa-minus"></i> Remove</button> </td>' +
+                                    '</tr>';
 
-            unhighlight: function(element) { // revert the change done by hightlight
-                $(element)
-                .closest('.form-group').removeClass('has-error'); // set error class to the control group
-            },
+                if( $( "#item_row" ).prepend(selected_item) ) {
+                    sumItems(total_amount);
+                }
 
-            success: function(label) {
-                label
-                .closest('.form-group').removeClass('has-error'); // set success class to the control group
-            },
+                break;
+            }
+        }
+    });
 
-            submitHandler: function(form) {
-                success1.show();
-                error1.hide();
+    //Remove added items
+    $(document).on('click', '#remove_item', function(){
+        var item_sub_total = $(this).closest('tr').find("input[id=item_sub_total]").val();
+        $(this).closest('tr').remove();
+        subtractItem(item_sub_total);
+    });
 
-                var formData = new FormData();
+    $(document).on('change', '#qty', function(){
+        var qty = $(this).closest('tr').find("input[id=qty]").val();
+        if(isNaN(qty)) { return; }
+        qty = (qty === '' || qty == 0) ? 1 : qty;
 
-                var files = $("#dp").get(0).files;
+        var amount_per_item = $(this).closest('tr').find("input[id=amount_per_item]").val();
+        var total_amount = amount_per_item * qty;
+        var discount_per_item = $(this).closest('tr').find("input[id=discount]").val();
+        var discount_type = $(this).closest('tr').find("input[id=discount_type]").val();
+        var total_discount = discount_per_item;
+        if (discount_type == 'absolute') {
+            total_discount = discount_per_item * qty;
+        } else {
+            //percentage
+            total_discount = (discount_per_item / 100) * total_amount;
+        }
+        var sub_total = total_amount - total_discount;
+        var item_sub_total = $(this).closest('tr').find("input[id=item_sub_total]").val();
+        $(this).closest('tr').find("input[id=item_sub_total]").attr('value', sub_total);
 
-                if (files.length > 0){
-                    // loop through all the selected files and add them to the formData object
-                    for (var i = 0; i < files.length; i++) {
-                        var file = files[i];
+        multiplyAndAdd(item_sub_total, sub_total);
+    });
 
-                        // add the files to formData object for the data payload
-                        formData.append('dp', file, file.name);
+    $(document).on('change', '#category', function(){
+        $('#item').children().remove();
+        var category = $('#category option:selected').val();
+
+        $.ajax({
+            url: '{{bolt_root}}/api/db/items/find?parentId=' + category,
+            type: 'POST',
+            data: JSON.stringify({ app: 'ctl-sms-inventory'}),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response) {
+                if(response.code === 0){
+                    var items = response.body;
+                    itemsForCat = items;
+
+                    for (var index = 0; index < items.length; index++) {
+                        var item = items[index]; //_id, displayName
+                        var fetched_item = '<option value="' + item._id + '">' + item.displayName + '</option>';
+                        $('#item').append(fetched_item);
                     }
-               }
-
-                var username = $("#username").val();
-                var password = $("#password").val();
-                var displayname = $("#fullname").val();
-                var email = $("#email").val();
-                var phone = $("#phone").val();
-
-                var gender = $("#gender").val();
-                var dob = $("#dob").val();
-                var address = $("#address").val();
-
-                formData.append('name', username);
-                formData.append('password', password);
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
-                    
-                //create staff as a bolt user
-                $.ajax({
-                    url: '{{bolt_root}}/api/users',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false, //'multipart/form-data',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-Bolt-App-Token', '{{app_token}}');
-                    },
-                    success: function(response) {
-                        if(response.code === 0){
-                            //second, create an staff role
-                            var rolenm = $("#role option:selected").val();
-                            var dataBody;
-                            if (rolenm === 'management') {
-                                dataBody = { name: "management", isAdmin: true, displayName: "Management", description: "A member of the school management" };
-                            }
-                            else if (rolenm === 'center_head') {
-                                dataBody = { name: "center_head", isAdmin: true, displayName: "Center Head", description: "The center head" };
-                            }
-                            else if (rolenm === 'front_desk') {
-                                dataBody = { name: "front_desk", isAdmin: false, displayName: "Front Desk", description: "A member of the front desk team" };
-                            }
-                            else if (rolenm === 'faculty') {
-                                dataBody = { name: "faculty", isAdmin: false, displayName: "Faculty", description: "A member of the faculty" };
-                            }
-                            else if (rolenm === 'auxilliary_staff') {
-                                dataBody = { name: "auxilliary_staff", isAdmin: false, displayName: "Auxilliary Staff", description: "A member of the auxilliary staff" };
-                            }
-                            $.ajax({
-                                url: "{{bolt_root}}/api/roles",
-                                type: 'POST',
-                                data: dataBody,
-                                headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                success: function(response2, status2, xhr2) {
-                                    if(response2.code === 0 || response2.code === 301){
-                                        //code 0 means no error occured, code 301 means the role already exists; either way, we are good
-                                        //third, associate user and role
-                                        $.ajax({
-                                            url: "{{bolt_root}}/api/user-roles",
-                                            type: "POST",
-                                            data: { user: response.body.name, role: rolenm },
-                                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                            success: function(response3, status3, xhr3) {
-                                                if(response3.code === 0){
-                                                    //fourth, insert the staff into the staff collection
-                                                    $.ajax({
-                                                        url: '{{bolt_root}}/api/db/staff/insert',
-                                                        type: 'POST',
-                                                        data: JSON.stringify({ object: { name: username, gender: gender, dob: dob, address: address }}),
-                                                        //processData: false,
-                                                        dataType: 'json',
-                                                        contentType: 'application/json',
-                                                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                                        success: function(response4, status4, xhr4){
-                                                            if(response4.code === 0){
-                                                                //Sweet alert
-                                                                swal({
-                                                                    title: "Staff Registered!",
-                                                                    text: displayname + " has been registered.",
-                                                                    type: "success",
-                                                                    showCancelButton: false,
-                                                                    closeOnConfirm: true
-                                                                }, function(isConfirm){
-                                                                    if (isConfirm) {
-                                                                        window.location.href="{{app_root}}/register-staff";
-                                                                    }
-                                                                });
-                                                            }
-                                                            else {
-                                                                sweetAlert(response4.errorUserTitle, response4.errorUserMessage, "error");
-                                                            }
-                                                        },
-                                                        error: function(xhr4, status4, err4){
-                                                            alert(xhr4.responseText);
-                                                        }
-                                                    });
-                                                }
-                                                else {
-                                                  sweetAlert(response3.errorUserTitle, response3.errorUserMessage, "error");
-                                                }
-                                            },
-                                            error: function(xhr3, status3, err3){
-                                                alert(xhr3.responseText);
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
-                                    }
-                                }, 
-                                error: function(xhr2, status2, err2){
-                                    alert(xhr2.responseText);
-                                }
-                            });
-                        }
-                        else {
-                            sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
-                        }
-                    },
-                    error: function(xhr, status, err){
-                        alert(xhr.responseText);
-                    }
-                });
+                }
+                else {
+                    sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                }
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
             }
         });
-    };
+    });
 
-    return {
-        //main function to initiate the module
-        init: function() {
-            handleValidation2();
+    $('#submit').click(function() {
+        var amountPaid = $("#amount_paid").val();
+        if (!amountPaid || amountPaid === '') {
+            sweetAlert("Missing Field!", "Please enter amount paid", "warning");
+            return;
         }
-    };
-}();
 
-jQuery(document).ready(function() {
-    FormValidationMd.init();
+        var invoice = {};
+        invoice.student = '{{student.name}}';
+        invoice.displayName = '{{student.displayName}} (' + new Date().toDateString() + ')';
+        invoice.date = new Date();
+        invoice.totalAmount = $("#total_amount").val();
+        invoice.remark = $("#remark").val();
+        invoice.payments = [{ amount: amountPaid, date: new Date() }];
+        invoice.items = [];
+
+        $('.single_item').each(function (index) {
+            var item = {};
+            item.categoryDisplayName = $(this).find("td[id=item_category]").text();
+            item.itemDisplayName = $(this).find("td[id=item_name]").text();
+            item.quantity = $(this).find("input[id=qty]").val();
+            item.amount = $(this).find("input[id=amount_per_item]").val();
+            item.discount = $(this).find("input[id=discount]").val();
+            item.discountType = $(this).find("input[id=discount_type]").val();
+            item.totalAmount = $(this).find("input[id=item_sub_total]").val();
+            invoice.items.push(item);
+        });
+
+        $.ajax({
+            url: '{{bolt_root}}/api/db/invoices/insert',
+            type: 'POST',
+            data: JSON.stringify({ object: invoice }),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response) {
+                if(response.code === 0){
+                    swal({
+                        title: "Invoice Created!",
+                        text: "Invoice for this transaction has been created.",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    }, function(isConfirm){
+                        if (isConfirm) {
+                            window.location.href="{{app_root}}/make-payment/{{student.name}}";
+                        }
+                    });
+                }
+                else {
+                    sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                }
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
+            }
+        });
+    });
 });
+
+
 </script>
 
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->

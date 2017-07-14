@@ -25,7 +25,8 @@
     "hooks": {
       "bolt/app-starting": "/app-starting",
       "bolt/app-installed": "/app-installed",
-      "bolt/dashboard-card-posted": "/hooks/bolt/dashboard-card-posted"
+      "bolt/dashboard-card-posted": "/hooks/bolt/dashboard-card-posted",
+      "bolt/notification-posted": "/hooks/bolt/notification-posted"
     },
     "index": "/",
     "startup": true,

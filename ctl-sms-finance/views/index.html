@@ -28,25 +28,23 @@
                 </div>
             </div>
             <div class="portlet-body form">
-                <form role="form" method="" autocomplete="off">
-                    <div class="form-body">
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <div class="input-group">
-                                        <div class="input-group-control">
-                                            <input class="form-control" name="search_name" id="search_name" type="text">
-                                            <label for="search_name">Student's name or ID</label>
-                                        </div>
-                                        <span class="input-group-btn btn-right">
-                                            <button class="btn green" type="button">Search</button>
-                                        </span>
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-md-line-input form-md-floating-label">
+                                <div class="input-group">
+                                    <div class="input-group-control">
+                                        <input class="form-control" name="search_name" id="search_name" type="text">
+                                        <label for="search_name">Student's name or ID</label>
                                     </div>
+                                    <span class="input-group-btn btn-right">
+                                        <button id="search" class="btn green" type="button">Search</button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
         <!-- END SAMPLE FORM PORTLET-->
@@ -54,69 +52,21 @@
 
     <div class="col-md-12 ">
         <!-- BEGIN SAMPLE FORM PORTLET-->
-        <div class="portlet light bordered">
+        <div class="portlet light bordered" id="result_section">
             <div class="portlet-title">
                 <div class="caption font-green">
                     <i class="icon-doc font-green"></i>
                     <span class="caption-subject bold uppercase"> Search Result</span>
                 </div>
+                <div class="actions">
+                    <span id="result_count"> </a>
+                </div>
             </div>
             <div class="portlet-body form">
                 <div class="table-container">
                     <table class="table table-hover table-light">
-                        <tbody>
-                            <tr>
-                                <td> 
-                                    <img src="{{app_root}}/assets/pages/img/avatar.png" style="height: 50px; width: 50px; border-radius: 50% !important">
-                                </td>
-                                <td> Mark Peterson James </td>
-                                <td> NIIT/56357/17 </td>
-                                <td>
-                                    <a href="payment-summary/james" class="btn yellow-crusta btn-xs uppercase"> 
-                                        <span class="hidden-xs">Proceed</span>
-                                        <span><i class="fa fa-long-arrow-right"></i></span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td> 
-                                    <img src="{{app_root}}/assets/pages/img/avatar.png" style="height: 50px; width: 50px; border-radius: 50% !important">
-                                </td>
-                                <td> John Doe </td>
-                                <td> NIIT/56357/17 </td>
-                                <td>
-                                    <a href="payment-summary/john" class="btn yellow-crusta btn-xs uppercase"> 
-                                        <span class="hidden-xs">Proceed</span>
-                                        <span><i class="fa fa-long-arrow-right"></i></span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td> 
-                                    <img src="{{app_root}}/assets/pages/img/avatar.png" style="height: 50px; width: 50px; border-radius: 50% !important">
-                                </td>
-                                <td> Samuel Henry Moses </td>
-                                <td> NIIT/56357/17 </td>
-                                <td>
-                                    <a href="payment-summary/samuel" class="btn yellow-crusta btn-xs uppercase"> 
-                                        <span class="hidden-xs">Proceed</span>
-                                        <span><i class="fa fa-long-arrow-right"></i></span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td> 
-                                    <img src="{{app_root}}/assets/pages/img/avatar.png" style="height: 50px; width: 50px; border-radius: 50% !important">
-                                </td>
-                                <td> Paul Hillary Cliton </td>
-                                <td> NIIT/56357/17 </td>
-                                <td>
-                                    <a href="payment-summary/paul" class="btn yellow-crusta btn-xs uppercase"> 
-                                        <span class="hidden-xs">Proceed</span>
-                                        <span><i class="fa fa-long-arrow-right"></i></span>
-                                    </a>
-                                </td>
-                            </tr>
+                        <tbody id="result_frame">
+                            
                         </tbody>
                     </table>
                 </div>
@@ -129,10 +79,6 @@
 {{> copyright }}
  
  {{> sub_footer }}
-
-<!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="/public/ctl-sms-home/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
-<!-- END PAGE LEVEL PLUGINS -->
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script type="text/javascript">
@@ -147,240 +93,72 @@ window.onload = function() {
 <!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 
 <script type="text/javascript">
-var FormValidationMd = function() {
-    var handleValidation2 = function() {
-        var form1 = $('#school_profile');
-        var error1 = $('.alert-danger', form1);
-        var success1 = $('.alert-success', form1);
 
-        form1.validate({
-            errorElement: 'span', //default input error message container
-            errorClass: 'help-block help-block-error', // default input error message class
-            focusInvalid: false, // do not focus the last invalid input
-            ignore: "", // validate all fields including form hidden input
-            messages: {
-                school_name: {
-                required: 'School name is required',
-                minlength: 'Enter at least 2 characters'
-                },
-                address: {
-                required: 'School address is required',
-                minlength: 'Enter at least 2 characters'
-                },
-                phone: {
-                required: 'School phone number is required'
-                },
-                email: {
-                email: 'Enter a valid email address'
-                },
-                website: {
-                url: 'Enter a valid URL'
-                }
-            },
-            rules: {
-                school_name: {
-                minlength: 2,
-                required: true
-                },
-                address: {
-                minlength: 2,
-                required: true,
-                },
-                phone: {
-                required: true
-                },
-                email: {
-                email: true
-                },
-                website: {
-                    url: true
-                }
-            },
+$(document).ready(function() {
+    $('#result_section').hide();
+    
+    $('#search').click(function() {
+        var name = $("#search_name").val();
+        if(name === "") { return; }
+        $('#result_frame').children().remove();
+        
+        $.ajax({
+            url: '{{bolt_root}}/api/db/students/find',
+            type: 'POST',
+            data: JSON.stringify({ query: {}, app: 'ctl-sms-students' }),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response) {
+                if (response.code == 0) {
+                    var users = response.body;
 
-            invalidHandler: function(event, validator) { //display error alert on form submit              
-                success1.hide();
-                error1.show();
-                App.scrollTo(error1, -200);
-            },
+                    users = users.filter(function(user) {
+                        return user.displayName.toLowerCase().indexOf(name.toLowerCase()) > -1 || 
+                        user.name.toLowerCase().indexOf(name.toLowerCase()) > -1;
+                    });
 
-            errorPlacement: function(error, element) {
-                if (element.is(':checkbox')) {
-                    error.insertAfter(element.closest(".md-checkbox-list, .md-checkbox-inline, .checkbox-list, .checkbox-inline"));
-                } else if (element.is(':radio')) {
-                    error.insertAfter(element.closest(".md-radio-list, .md-radio-inline, .radio-list,.radio-inline"));
-                } else {
-                    error.insertAfter(element); // for other inputs, just perform default behavior
-                }
-            },
+                    if(users.length > 0) {
+                        for (index = 0; index < users.length; index++) {
+                            var user = users[index];
+                            if (!user.displayPic) user.displayPic = "public/bolt/users/user.png";
+                            var result_row = '<tr id="result_row">' +
+                                                    '<td> ' +
+                                                        '<img src="{{bolt_root}}/' + user.displayPic + '" style="height: 50px; width: 50px; border-radius: 50% !important">' +
+                                                    '</td>' +
+                                                    '<td>' + user.displayName + '</td>' +
+                                                    '<td>' + user.name + '</td>' +
+                                                    '<td>' +
+                                                        '<a href="payment-summary/' + user.name + '" class="btn yellow-crusta btn-xs uppercase">' + 
+                                                            '<span class="hidden-xs">Proceed</span>' +
+                                                            ' <span><i class="fa fa-long-arrow-right"></i></span>' +
+                                                        '</a>' +
+                                                    '</td>' +
+                                                '</tr>';
 
-            highlight: function(element) { // hightlight error inputs
-                $(element)
-                .closest('.form-group').addClass('has-error'); // set error class to the control group
-            },
-
-            unhighlight: function(element) { // revert the change done by hightlight
-                $(element)
-                .closest('.form-group').removeClass('has-error'); // set error class to the control group
-            },
-
-            success: function(label) {
-                label
-                .closest('.form-group').removeClass('has-error'); // set success class to the control group
-            },
-
-            submitHandler: function(form) {
-                success1.show();
-                error1.hide();
-
-                var formData = new FormData();
-
-                var files = $("#dp").get(0).files;
-
-                if (files.length > 0){
-                    // loop through all the selected files and add them to the formData object
-                    for (var i = 0; i < files.length; i++) {
-                        var file = files[i];
-
-                        // add the files to formData object for the data payload
-                        formData.append('dp', file, file.name);
-                    }
-               }
-
-                var username = $("#username").val();
-                var password = $("#password").val();
-                var displayname = $("#fullname").val();
-                var email = $("#email").val();
-                var phone = $("#phone").val();
-
-                var gender = $("#gender").val();
-                var dob = $("#dob").val();
-                var address = $("#address").val();
-
-                formData.append('name', username);
-                formData.append('password', password);
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
-                    
-                //create staff as a bolt user
-                $.ajax({
-                    url: '{{bolt_root}}/api/users',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false, //'multipart/form-data',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-Bolt-App-Token', '{{app_token}}');
-                    },
-                    success: function(response) {
-                        if(response.code === 0){
-                            //second, create an staff role
-                            var rolenm = $("#role option:selected").val();
-                            var dataBody;
-                            if (rolenm === 'management') {
-                                dataBody = { name: "management", isAdmin: true, displayName: "Management", description: "A member of the school management" };
-                            }
-                            else if (rolenm === 'center_head') {
-                                dataBody = { name: "center_head", isAdmin: true, displayName: "Center Head", description: "The center head" };
-                            }
-                            else if (rolenm === 'front_desk') {
-                                dataBody = { name: "front_desk", isAdmin: false, displayName: "Front Desk", description: "A member of the front desk team" };
-                            }
-                            else if (rolenm === 'faculty') {
-                                dataBody = { name: "faculty", isAdmin: false, displayName: "Faculty", description: "A member of the faculty" };
-                            }
-                            else if (rolenm === 'auxilliary_staff') {
-                                dataBody = { name: "auxilliary_staff", isAdmin: false, displayName: "Auxilliary Staff", description: "A member of the auxilliary staff" };
-                            }
-                            $.ajax({
-                                url: "{{bolt_root}}/api/roles",
-                                type: 'POST',
-                                data: dataBody,
-                                headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                success: function(response2, status2, xhr2) {
-                                    if(response2.code === 0 || response2.code === 301){
-                                        //code 0 means no error occured, code 301 means the role already exists; either way, we are good
-                                        //third, associate user and role
-                                        $.ajax({
-                                            url: "{{bolt_root}}/api/user-roles",
-                                            type: "POST",
-                                            data: { user: response.body.name, role: rolenm },
-                                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                            success: function(response3, status3, xhr3) {
-                                                if(response3.code === 0){
-                                                    //fourth, insert the staff into the staff collection
-                                                    $.ajax({
-                                                        url: '{{bolt_root}}/api/db/staff/insert',
-                                                        type: 'POST',
-                                                        data: JSON.stringify({ object: { name: username, gender: gender, dob: dob, address: address }}),
-                                                        //processData: false,
-                                                        dataType: 'json',
-                                                        contentType: 'application/json',
-                                                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                                        success: function(response4, status4, xhr4){
-                                                            if(response4.code === 0){
-                                                                //Sweet alert
-                                                                swal({
-                                                                    title: "Staff Registered!",
-                                                                    text: displayname + " has been registered.",
-                                                                    type: "success",
-                                                                    showCancelButton: false,
-                                                                    closeOnConfirm: true
-                                                                }, function(isConfirm){
-                                                                    if (isConfirm) {
-                                                                        window.location.href="{{app_root}}/register-staff";
-                                                                    }
-                                                                });
-                                                            }
-                                                            else {
-                                                                sweetAlert(response4.errorUserTitle, response4.errorUserMessage, "error");
-                                                            }
-                                                        },
-                                                        error: function(xhr4, status4, err4){
-                                                            alert(xhr4.responseText);
-                                                        }
-                                                    });
-                                                }
-                                                else {
-                                                  sweetAlert(response3.errorUserTitle, response3.errorUserMessage, "error");
-                                                }
-                                            },
-                                            error: function(xhr3, status3, err3){
-                                                alert(xhr3.responseText);
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
-                                    }
-                                }, 
-                                error: function(xhr2, status2, err2){
-                                    alert(xhr2.responseText);
-                                }
-                            });
+                            $('#result_section').show();
+                            $('#result_frame').append(result_row);
                         }
-                        else {
-                            sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
-                        }
-                    },
-                    error: function(xhr, status, err){
-                        alert(xhr.responseText);
+
+                        var r = (users.length > 1) ? ' results' : ' result';
+                        $('#result_count').text(users.length + r + ' found').show();
                     }
-                });
+                    else {
+                        var result_row2 = '<tr id="result_row">' +
+                                                '<td colspan="4"> No result found! </td>' +
+                                            '</tr>';  
+                        
+                        $('#result_section').show();
+                        $('#result_count').hide();
+                        $('#result_frame').append(result_row2); 
+                    }
+                }
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
             }
         });
-    };
-
-    return {
-        //main function to initiate the module
-        init: function() {
-            handleValidation2();
-        }
-    };
-}();
-
-jQuery(document).ready(function() {
-    FormValidationMd.init();
+    });
 });
 </script>
 

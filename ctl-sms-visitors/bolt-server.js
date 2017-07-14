@@ -74,7 +74,7 @@ app.post('/hooks/bolt/visits-modified', function(req, res){
 			request.post({
 				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
 				headers: {'X-Bolt-App-Token': apptoken},
-				json: {background: '#3598DC', caption: visits.length, message: 'today\'s visitors'}}, 
+				json: {background: '#3598DC', caption: visits.length, message: 'today\'s visitors', route: '/signout-visitor'}}, 
 				function(error, response, body) {
 					
 				});
@@ -135,62 +135,6 @@ app.get('/view-visits', function(req, res){
 		});
 	});
 });
-
-/*app.get('/edit-guardian/:name', function(req, res){
-	var name = req.params.name;
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/guardians/findone', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{name: name}}}, 
-		function(error, response, body) {
-		var guardian = body.body;
-
-		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/students/find', 
-			headers: {'X-Bolt-App-Token': apptoken},
-			json: {object:{}, app: 'ctl-sms-students'}}, 
-			function(error2, response2, body2) {
-				var students = body2.body;
-
-				if (guardian) {
-					request.post({
-						url: process.env.BOLT_ADDRESS + '/api/db/student-guardian/find', 
-						headers: {'X-Bolt-App-Token': apptoken},
-						json: {object:{guardian: guardian.name}, app: "ctl-sms-students"} 
-					}, 
-					function (error3, response3, body3) {
-						var relationships = body3.body;
-
-						if (relationships) {
-							guardian.wards = relationships.map(function(r) {
-								return r.ward;
-							});
-						}
-
-						res.render('edit-guardian', {
-							view_guardians_menu: 'selected',
-							view_guardians_active: 'active',
-							app_root: req.app_root,
-							app_token: apptoken,
-							bolt_root: process.env.BOLT_ADDRESS,
-							wards: students,
-							guardian: guardian
-						});
-					});
-				} else {
-					res.render('edit-guardian', {
-						view_guardians_menu: 'selected',
-						view_guardians_active: 'active',
-						app_root: req.app_root,
-						app_token: apptoken,
-						bolt_root: process.env.BOLT_ADDRESS,
-						wards: students,
-						guardian: guardian
-					});
-				}
-			});
-	});
-});*/
 
 app.get('*', function(req, res){
 	res.render('404', {

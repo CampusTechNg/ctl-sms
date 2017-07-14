@@ -62,10 +62,46 @@ app.post('/hooks/bolt/app-collection-inserted-or-removed', function(req, res){
 			request.post({
 				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
 				headers: {'X-Bolt-App-Token': apptoken},
-				json: {background: '#8E44AD', caption: students.length, message: 'registered students'}}, 
+				json: {background: '#8E44AD', caption: students.length, message: 'registered students', route: '/view-students'}}, 
 				function(error, response, body) {
 					
 				});
+
+			if (event.name == 'app-collection-inserted') {
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/notifications', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {
+						message: 'A new student has been created',
+						route: '/view-students',
+						to: ['kelvin'],
+						buttons: [
+						{
+							type: 'link',
+							text: 'Click',
+							data: '/apps/ctl-sms-students'
+						},
+						{
+							type: 'phone',
+							text: 'Call',
+							data: '+2347012345678'
+						},
+						{
+							type: 'postback',
+							text: 'Post',
+							data: 'A'
+						}
+						],
+						toast: {
+							message: 'A new student has been created',
+							duration: 8000
+						}
+					}
+				}, 
+					function(error, response, body) {
+						
+					});
+			}
 		});
 	}
 });
