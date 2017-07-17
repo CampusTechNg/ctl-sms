@@ -276,8 +276,8 @@ var FormValidationMd = function() {
 
                 var displayName = $("#name").val();
                 var description = $("#description").val();
-                var price = $("#price").val();
-                var discount = $("#discount").val();
+                var price = parseFloat($("#price").val());
+                var discount = parseFloat($("#discount").val());
                 var discountType;
                 if($('#discount_type option').is(":selected")) {
                     discountType = $('#discount_type').val();
@@ -305,8 +305,8 @@ var FormValidationMd = function() {
                         //criticalQuantity = 0;
                     }
                     else {
-                        quantity = $("#qty").val();
-                        criticalQuantity = $("#critical_qty").val();
+                        quantity = parseInt($("#qty").val());
+                        criticalQuantity = parseInt($("#critical_qty").val());
                     }
                 }
                 

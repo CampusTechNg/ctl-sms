@@ -118,7 +118,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                <div class="col-md-12 col-sm-12">
+                                    <div class="col-md-12 col-sm-12">
                                         <div class="form-group form-md-line-input form-md-floating-label">
                                             <input type="text" class="form-control" id="remark" maxlength="300">
                                             <label for="remark">Remark</label>
@@ -173,81 +173,30 @@
                                 <table class="table table-bordered table-hover table-light" id="sample_2">
                                     <thead>
                                         <tr>
-                                            <th> Course/Program </th>
-                                            <th> Course Fee </th>
-                                            <th> Discount </th>
-                                            <th> Paid </th>
+                                            <th> Invoice </th>
                                             <th> Date </th>
+                                            <th> Total Amount </th>
+                                            <th> Amount Paid </th>
                                             <th> Outstanding</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {{#each invoices}}
                                         <tr>
-                                            <td> MMS - Network Engineering </td>
-                                            <td> N70,000 </td>
-                                            <td> N10,000 </td>
-                                            <td> N30,000 </td>
-                                            <td> 17 September, 2016 </td>
-                                            <td> N30,000 </td>
+                                            <td> {{displayName}} </td>
+                                            <td> {{toDate date}} </td>
+                                            <td> {{totalAmount}} </td>
+                                            <td> {{paidAmount}} </td>
+                                            <td> {{outstandingAmount}} </td>
                                             <td> 
-                                                <a href="edit-staff.html" class="btn green btn-xs uppercase">
-                                                    <i class="fa fa-print"></i> <span class="hidden-xs"> Print </span>
+                                                <a href="{{../app_root}}/invoice/{{_id}}" class="btn yellow-crusta btn-xs uppercase"> 
+                                                    <span class="hidden-xs">Proceed</span>
+                                                    <span><i class="fa fa-long-arrow-right"></i></span>
                                                 </a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td> Web Development/Web Design </td>
-                                            <td> N180,000 </td>
-                                            <td> N2,000 </td>
-                                            <td> N160,000 </td>
-                                            <td> 4 March, 2017 </td>
-                                            <td> Nil </td>
-                                            <td> 
-                                                <a href="" class="btn green btn-xs uppercase">
-                                                    <i class="fa fa-print"></i> <span class="hidden-xs"> Print </span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td> CCNA </td>
-                                            <td> N250,000 </td>
-                                            <td> Nil </td>
-                                            <td> N150,000 </td>
-                                            <td> 12 July, 2016 </td>
-                                            <td> N50,000 </td>
-                                            <td> 
-                                                <a href="" class="btn green btn-xs uppercase">
-                                                    <i class="fa fa-print"></i> <span class="hidden-xs"> Print </span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td> Network Engineering/Software Engineering </td>
-                                            <td> N170,000 </td>
-                                            <td> N2,000 </td>
-                                            <td> N150,000 </td>
-                                            <td> 30 January, 2017 </td>
-                                            <td> Nil </td>
-                                            <td> 
-                                                <a href="" class="btn green btn-xs uppercase">
-                                                    <i class="fa fa-print"></i> <span class="hidden-xs"> Print </span>
-                                                </a>
-                                            </td>
-                                        </tr> 
-                                        <tr>
-                                            <td> Oracle </td>
-                                            <td> N100,000 </td>
-                                            <td> 10% </td>
-                                            <td> N80,000 </td>
-                                            <td> 20 April, 2017 </td>
-                                            <td> N10,000 </td>
-                                            <td> 
-                                                <a href="" class="btn green btn-xs uppercase">
-                                                    <i class="fa fa-print"></i> <span class="hidden-xs"> Print </span>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        {{/each}}
                                     </tbody>
                                 </table>
                             </div>
@@ -299,7 +248,7 @@ $(document).ready(function() {
     function sumItems(amt) {
         var total_amount = $('#total_amount').val();
         total_amount = (total_amount === '') ? 0 : total_amount;
-        var sum = parseInt(total_amount) + parseInt(amt);
+        var sum = parseFloat(total_amount) + parseFloat(amt);
         $('#total_amount').attr('value', sum);
 
         elemVisibility();
@@ -308,7 +257,7 @@ $(document).ready(function() {
     function subtractItem(amt) {
         var total_amount = $('#total_amount').val();
         total_amount = (total_amount === '') ? 0 : total_amount;
-        var sum = parseInt(total_amount) - parseInt(amt);
+        var sum = parseFloat(total_amount) - parseFloat(amt);
         $('#total_amount').attr('value', sum);
 
         elemVisibility();    
@@ -316,8 +265,8 @@ $(document).ready(function() {
 
     function multiplyAndAdd(item_amt, sub_total) {
         var total_amount = $('#total_amount').val();
-        var sum = parseInt(total_amount) + parseInt(sub_total);
-        sum = parseInt(sum) - parseInt(item_amt);
+        var sum = parseFloat(total_amount) + parseFloat(sub_total);
+        sum = parseFloat(sum) - parseFloat(item_amt);
         $('#total_amount').attr('value', sum);
     }
 
@@ -440,9 +389,15 @@ $(document).ready(function() {
     });
 
     $('#submit').click(function() {
-        var amountPaid = $("#amount_paid").val();
+        var totalAmount = parseFloat($("#total_amount").val());
+        var amountPaid = parseFloat($("#amount_paid").val());
+
         if (!amountPaid || amountPaid === '') {
             sweetAlert("Missing Field!", "Please enter amount paid", "warning");
+            return;
+        }
+        if (amountPaid > totalAmount) {
+            sweetAlert("Excess Payment!", "Please do not pay more than the expected total amount", "warning");
             return;
         }
 
@@ -450,7 +405,7 @@ $(document).ready(function() {
         invoice.student = '{{student.name}}';
         invoice.displayName = '{{student.displayName}} (' + new Date().toDateString() + ')';
         invoice.date = new Date();
-        invoice.totalAmount = $("#total_amount").val();
+        invoice.totalAmount = totalAmount;
         invoice.remark = $("#remark").val();
         invoice.payments = [{ amount: amountPaid, date: new Date() }];
         invoice.items = [];
@@ -459,11 +414,11 @@ $(document).ready(function() {
             var item = {};
             item.categoryDisplayName = $(this).find("td[id=item_category]").text();
             item.itemDisplayName = $(this).find("td[id=item_name]").text();
-            item.quantity = $(this).find("input[id=qty]").val();
-            item.amount = $(this).find("input[id=amount_per_item]").val();
-            item.discount = $(this).find("input[id=discount]").val();
+            item.quantity = parseInt($(this).find("input[id=qty]").val());
+            item.amount = parseFloat($(this).find("input[id=amount_per_item]").val());
+            item.discount = parseFloat($(this).find("input[id=discount]").val());
             item.discountType = $(this).find("input[id=discount_type]").val();
-            item.totalAmount = $(this).find("input[id=item_sub_total]").val();
+            item.totalAmount = parseFloat($(this).find("input[id=item_sub_total]").val());
             invoice.items.push(item);
         });
 

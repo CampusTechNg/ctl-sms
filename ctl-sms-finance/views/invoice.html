@@ -1,0 +1,247 @@
+{{> header}}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<div class="container-fluid">
+    <div class="col-md-8 col-sm-8">
+        <h3 class="page-title"> Invoice</h3>
+    </div>
+    <div class="col-md-4 col-sm-4 text-right hidden-xs">
+        <a href="{{app_root}}/payment-summary/{{invoice.student}}" class="btn btn-default m-icon">
+            <i class="m-icon-swapleft"></i> Payment Summmary
+        </a>
+    </div>
+</div>
+<!-- END PAGE TITLE-->
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="container-fluid">
+    {{#if invoice.paymentOustanding}}
+    <div class="col-md-12">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-green">
+                    <i class="icon-wallet font-green"></i>
+                    <span class="caption-subject bold uppercase"> Complete Payment</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-5">
+                            <div class="form-group form-md-line-input form-md-floating-label">
+                                <input type="text" class="form-control" id="outstanding_amount" value="{{invoice.outstandingAmount}}" readonly>
+                                <label for="outstanding_amount">Outstanding amount</label>
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-sm-5">
+                            <div class="form-group form-md-line-input form-md-floating-label">
+                                <input type="text" class="form-control" id="amount" maxlength="20">
+                                <label for="amount">Amount</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+                            <div class="form-actions noborder">
+                                <button type="button" id="complete_payment" class="btn btn-sm green"> Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+    {{/if}}
+
+    <div class="col-md-12">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-green">
+                    <i class="icon-calculator font-green"></i>
+                    <span class="caption-subject bold uppercase"> Invoice</span>
+                </div>
+                <div class="actions">
+                    <div class="btn-group">
+                        <a href="javascript:;" class="btn yellow-crusta">
+                            <i class="fa fa-print"></i> <span class="hidden-xs"> Print</span>
+                        </a>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="{{app_root}}/make-payment/{{invoice.student}}" class="btn green-haze">
+                            <i class="fa fa-plus"></i> <span class="hidden-xs"> New Payment</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group form-md-line-input form-md-floating">
+                            <input type="text" value="{{invoice.displayName}}" class="form-control" id="fullname" readonly="readonly">
+                            <label for="fullname">Full name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group form-md-line-input form-md-floating">
+                            <input type="text" value="{{toDate invoice.date}}" class="form-control" id="date" readonly="readonly">
+                            <label for="date">Date</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group form-md-line-input form-md-floating">
+                            <input type="text" value="{{invoice.totalAmount}}" class="form-control" id="fullname" readonly="readonly">
+                            <label for="fullname">Total</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group form-md-line-input form-md-floating">
+                            <input type="text" value="{{invoice.remark}}" class="form-control" id="date" readonly="readonly">
+                            <label for="date">Remark</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <h4>Items</h4>  
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="table table-hover table-light" id="sample_3">
+                        <thead>
+                            <tr>
+                                <th> Item </th>
+                                <th> Quantity </th>
+                                <th> Amount </th>
+                                <th> Discount </th>
+                                <th> Sub Total </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each invoice.items}}
+                            <tr>
+                                <td> {{itemDisplayName}} </td>
+                                <td> {{quantity}} </td>
+                                <td> {{amount}} </td>
+                                <td> {{discount}} </td>
+                                <td> {{totalAmount}} </td>
+                            </tr> 
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div> 
+ 
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <h4>Payments Made</h4>  
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="table table-hover table-light" id="sample_3">
+                        <thead>
+                            <tr>
+                                <th> Amount </th>
+                                <th> Date </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each invoice.payments}}
+                            <tr>
+                                <td> {{amount}} </td>
+                                <td> {{toDate date}} </td>
+                            </tr> 
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+        </div>
+    </div>
+</div>
+<!-- END PAGE CONTENT-->
+{{> copyright }}
+ 
+ {{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/public/ctl-sms-home/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script type="text/javascript">
+/*window.onload = function() {
+    document.getElementById("school_name").focus();
+};*/
+</script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#complete_payment').click(function() {
+        var outstanding_amount = parseFloat($('#outstanding_amount').val());
+        var amount = parseFloat($('#amount').val());
+
+        if (amount > outstanding_amount) {
+            sweetAlert("Excess Payment!", "Please do not pay more than the expected outstanding amount", "warning");
+            return;
+        }
+
+        var invoice = {{{json invoice}}};
+        invoice.payments = invoice.payments || [];
+        invoice.payments.push({ amount: amount, date: new Date() });
+
+        $.ajax({
+            url: '{{bolt_root}}/api/db/invoices/update?_id={{invoice._id}}',
+            type: 'POST',
+            data: JSON.stringify({ values: {payments: invoice.payments} }),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response) {
+                if(response.code === 0){
+                    swal({
+                        title: "Payment Made!",
+                        text: "Payment for this invoice has been recorded.",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    }, function(isConfirm){
+                        if (isConfirm) {
+                            window.location.href="{{app_root}}/invoice/{{invoice._id}}";
+                        }
+                    });
+                }
+                else {
+                    sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                }
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+ 
+ {{> footer }}
