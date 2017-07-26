@@ -19,6 +19,45 @@
 
 <!-- BEGIN PAGE CONTENT-->
 <div class="container-fluid">
+    {{#if profile}}
+    <div class="col-md-12 ">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-green">
+                    <i class="icon-layers font-green"></i>
+                    <span class="caption-subject bold uppercase"> School Profile</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form role="form" id="register_staff" autocomplete="off">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="text-center">
+                                    <img src="{{bolt_root}}/{{profile.logo}}" class="img-circle" width="50%" height="50%">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 text-center">
+                                <h3>{{profile.displayName}}</h3>
+                                <h5>{{profile.address}}</h5>
+                                <h5>{{profile.phone}}</h5>
+                                <h5>{{profile.email}}</h5>
+                                <h5>{{profile.website}}</h5>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions noborder text-center">
+                        <a href="{{app_root}}/edit-school-profile" class="btn green">Edit Profile</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+    {{else}}
     <div class="col-md-12 ">
         <!-- BEGIN SAMPLE FORM PORTLET-->
         <div class="portlet light bordered">
@@ -117,45 +156,7 @@
         </div>
         <!-- END SAMPLE FORM PORTLET-->
     </div>
-
-    <div class="col-md-12 ">
-        <!-- BEGIN SAMPLE FORM PORTLET-->
-        <div class="portlet light bordered">
-            <div class="portlet-title">
-                <div class="caption font-green">
-                    <i class="icon-layers font-green"></i>
-                    <span class="caption-subject bold uppercase"> School Profile</span>
-                </div>
-            </div>
-            <div class="portlet-body form">
-                <form role="form" id="register_staff" autocomplete="off">
-                    <div class="form-body">
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                                <div class="text-center">
-                                    <img src="{{app_root}}/assets/pages/img/photo-avatar.png" class="img-circle" width="50%" height="50%">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-sm-6 text-center">
-                                <h3>Lorem International School, Abuja</h3>
-                                <h5>8 Thestreetname Street, Somewhere, Abuja, Nigeria</h5>
-                                <h5>+2347028918765</h5>
-                                <h5>info@schoolwebsite.com</h5>
-                                <h5>http://www.schoolwebsite.com</h5>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions noborder text-center">
-                        <a href="{{app_root}}/edit-school-profile" class="btn green">Edit Profile</a>
-                        <a href="#" onclick="confirm('Do want to delete profile?')" class="btn red">Delete Profile</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- END SAMPLE FORM PORTLET-->
-    </div>
+    {{/if}}
 </div>
 <!-- END PAGE CONTENT-->
 {{> copyright }}
@@ -279,25 +280,17 @@ var FormValidationMd = function() {
                     }
                }
 
-                var username = $("#username").val();
-                var password = $("#password").val();
-                var displayname = $("#fullname").val();
-                var email = $("#email").val();
-                var phone = $("#phone").val();
-
-                var gender = $("#gender").val();
-                var dob = $("#dob").val();
-                var address = $("#address").val();
-
-                formData.append('name', username);
-                formData.append('password', password);
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
+               var profile = {};
+               profile.app = "{{appname}}";
+                profile.displayName = $("#school_name").val();
+                profile.address = $("#address").val();
+                profile.phone = $("#phone").val();
+                profile.email = $("#email").val();
+                profile.website = $("#website").val();
                     
-                //create staff as a bolt user
+                //upload file
                 $.ajax({
-                    url: '{{bolt_root}}/api/users',
+                    url: '{{bolt_root}}/public/upload',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -308,78 +301,24 @@ var FormValidationMd = function() {
                     success: function(response) {
                         if(response.code === 0){
                             //second, create an staff role
-                            var rolenm = $("#role option:selected").val();
-                            var dataBody;
-                            if (rolenm === 'management') {
-                                dataBody = { name: "management", isAdmin: true, displayName: "Management", description: "A member of the school management" };
-                            }
-                            else if (rolenm === 'center_head') {
-                                dataBody = { name: "center_head", isAdmin: true, displayName: "Center Head", description: "The center head" };
-                            }
-                            else if (rolenm === 'front_desk') {
-                                dataBody = { name: "front_desk", isAdmin: false, displayName: "Front Desk", description: "A member of the front desk team" };
-                            }
-                            else if (rolenm === 'faculty') {
-                                dataBody = { name: "faculty", isAdmin: false, displayName: "Faculty", description: "A member of the faculty" };
-                            }
-                            else if (rolenm === 'auxilliary_staff') {
-                                dataBody = { name: "auxilliary_staff", isAdmin: false, displayName: "Auxilliary Staff", description: "A member of the auxilliary staff" };
-                            }
+                            profile.logo = response.body[0];
+
                             $.ajax({
-                                url: "{{bolt_root}}/api/roles",
+                                url: "{{bolt_root}}/api/db/school-profile/insert",
                                 type: 'POST',
-                                data: dataBody,
+                                data: {object: profile},
                                 headers: {'X-Bolt-App-Token': '{{app_token}}'},
                                 success: function(response2, status2, xhr2) {
-                                    if(response2.code === 0 || response2.code === 301){
-                                        //code 0 means no error occured, code 301 means the role already exists; either way, we are good
-                                        //third, associate user and role
-                                        $.ajax({
-                                            url: "{{bolt_root}}/api/user-roles",
-                                            type: "POST",
-                                            data: { user: response.body.name, role: rolenm },
-                                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                            success: function(response3, status3, xhr3) {
-                                                if(response3.code === 0){
-                                                    //fourth, insert the staff into the staff collection
-                                                    $.ajax({
-                                                        url: '{{bolt_root}}/api/db/staff/insert',
-                                                        type: 'POST',
-                                                        data: JSON.stringify({ object: { name: username, gender: gender, dob: dob, address: address }}),
-                                                        //processData: false,
-                                                        dataType: 'json',
-                                                        contentType: 'application/json',
-                                                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                                        success: function(response4, status4, xhr4){
-                                                            if(response4.code === 0){
-                                                                //Sweet alert
-                                                                swal({
-                                                                    title: "Staff Registered!",
-                                                                    text: displayname + " has been registered.",
-                                                                    type: "success",
-                                                                    showCancelButton: false,
-                                                                    closeOnConfirm: true
-                                                                }, function(isConfirm){
-                                                                    if (isConfirm) {
-                                                                        window.location.href="{{app_root}}/register-staff";
-                                                                    }
-                                                                });
-                                                            }
-                                                            else {
-                                                                sweetAlert(response4.errorUserTitle, response4.errorUserMessage, "error");
-                                                            }
-                                                        },
-                                                        error: function(xhr4, status4, err4){
-                                                            alert(xhr4.responseText);
-                                                        }
-                                                    });
-                                                }
-                                                else {
-                                                  sweetAlert(response3.errorUserTitle, response3.errorUserMessage, "error");
-                                                }
-                                            },
-                                            error: function(xhr3, status3, err3){
-                                                alert(xhr3.responseText);
+                                    if(response2.code === 0){
+                                        swal({
+                                            title: "School Profile Created!",
+                                            text: "Profile for " + profile.displayName + " has been created.",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            closeOnConfirm: true
+                                        }, function(isConfirm){
+                                            if (isConfirm) {
+                                                window.location.href="{{app_root}}/school-profile";
                                             }
                                         });
                                     }

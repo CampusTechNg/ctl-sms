@@ -47,6 +47,41 @@ app.post('/app-starting', function(req, res){
 	apptoken = event.body.appToken;
 });
 
+app.post('/hooks/bolt/app-collection-inserted', function(req, res){
+	var event = req.body;
+	
+	if (event.body.collection == 'sessions' || event.body.collection == 'terms') {
+		var collection = event.body.collection;
+
+		var id = event.body.result.insertedIds[0];
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/'+ collection + '/findone?_id=' + id, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+				var object = body.body;
+				if (object.isCurrent) {
+					request.post({
+						url: process.env.BOLT_ADDRESS + '/api/db/'+ collection + '/find',
+						headers: {'X-Bolt-App-Token': apptoken},
+						json: { query: {isCurrent:true}}},
+						function(error2, response2, body2) {
+							var objects = body2.body;
+							objects.forEach(function (s) {
+								if (s._id != object._id) {
+									request.post({
+										url: process.env.BOLT_ADDRESS + '/api/db/'+ collection + '/update?_id=' + s._id, 
+										headers: {'X-Bolt-App-Token': apptoken},
+										json: { values: {isCurrent:false}}},
+										function(error3, response3, body3) {});
+								}
+							});
+						});
+				}
+			});
+	}
+});
+
 //Route
 app.get('/', function(req, res){
 	res.render('index', {
@@ -57,127 +92,169 @@ app.get('/', function(req, res){
 });
 
 app.get('/school-profile', function(req, res){
-	res.render('school-profile', {
-		school_profile_menu: 'selected',
-		school_profile_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
-});
-
-app.get('/session-term', function(req, res){
-	res.render('session-term', {
-		session_term_menu: 'selected',
-		session_term_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
-});
-
-/*app.get('/view-staff', function(req, res){
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
+		url: process.env.BOLT_ADDRESS + '/api/db/school-profile/findone?app=' + appname, 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}}}, 
+		json: {}}, 
 		function(error, response, body) {
-		var staff = body.body;
+			var profile = body.body;
 
-		if(staff) {
-			var getUserInfo = function(index) {
-				if (index >= staff.length) {
-					res.render('view-staff', {
-						view_staff_menu: 'selected',
-						view_staff_active: 'active',
-						app_root: req.app_root,
-						app_token: apptoken,
-						bolt_root: process.env.BOLT_ADDRESS,
-						staff: staff
-					});
-				}
-				else {
-					request({
-						url: process.env.BOLT_ADDRESS + '/api/users/' + staff[index].name, 
-						headers: {'X-Bolt-App-Token': apptoken}
-					},
-					function(errorUsers, responseUsers, bodyUsers) {
-						bodyUsers = JSON.parse(bodyUsers);
-						var user = bodyUsers.body;
-						staff[index].userInfo = user;
-						getUserInfo(++index);
-					});
-				}	
-			};
-
-			getUserInfo(0);
-		}
-		else {
-			res.render('view-staff', {
-				view_staff_menu: 'selected',
-				view_staff_active: 'active',
+			res.render('school-profile', {
+				school_profile_menu: 'selected',
+				school_profile_active: 'active',
+				appname: appname,
 				app_root: req.app_root,
 				app_token: apptoken,
 				bolt_root: process.env.BOLT_ADDRESS,
-				staff: []
+				profile: profile
 			});
-		}
-	});
-});*/
+		});
+});
 
-app.get('/edit-school-profile', function(req, res){
-	res.render('edit-school-profile', {
-		school_profile_menu: 'selected',
-		school_profile_active: 'active',
+app.get('/new-session', function(req, res){
+	res.render('new-session', {
+		new_session_menu: 'selected',
+		new_session_active: 'active',
 		app_root: req.app_root,
 		app_token: apptoken,
 		bolt_root: process.env.BOLT_ADDRESS
 	});
 });
 
-/*app.get('/edit-profile/:name', function(req, res){
-	var name = req.params.name;
+app.get('/view-sessions', function(req, res){
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/school-profile/findone', 
+		url: process.env.BOLT_ADDRESS + '/api/db/sessions/find', 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{name: name}}}, 
+		json: {object:{}}}, 
 		function(error, response, body) {
-		var staff = body.body;
+		var sessions = body.body;
 
-		if(staff) {
-			request({
-				url: process.env.BOLT_ADDRESS + '/api/users/' + name, 
-				headers: {'X-Bolt-App-Token': apptoken}
-			},
-			function(errorUser, responseUser, bodyUser) {
-				bodyUser = JSON.parse(bodyUser);
-				var user = bodyUser.body;
-				staff.userInfo = user;
+		res.render('view-sessions', {
+			view_sessions_menu: 'selected',
+			view_sessions_active: 'active',
+			app_root: req.app_root,
+			app_token: apptoken,
+			bolt_root: process.env.BOLT_ADDRESS,
+			sessions: sessions
+		});
+	});
+});
 
-				var scope = {
-					school_profile_menu: 'selected',
-					school_profile_active: 'active',
-					app_root: req.app_root,
-					app_token: apptoken,
-					bolt_root: process.env.BOLT_ADDRESS,
-					staff: staff,
-					isMale: staff.gender == 'male' || staff.gender == 'Male'
-				};
+app.get('/edit-session/:id', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/sessions/findone?_id=' + req.params.id, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+		var session = body.body;
 
-				res.render('edit-profile', scope);
-			});
+		res.render('edit-session', {
+			view_sessions_menu: 'selected',
+			view_sessions_active: 'active',
+			app_root: req.app_root,
+			app_token: apptoken,
+			bolt_root: process.env.BOLT_ADDRESS,
+			session: session
+		});
+	});
+});
+
+app.get('/new-term', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/sessions/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {object:{}}}, 
+		function(error, response, body) {
+		var sessions = body.body;
+
+		var currentSession;
+		var thereIsCurrent = sessions.map(function(s) { if(s.isCurrent){currentSession = s;} return s.isCurrent || false; })
+			.reduce(function(or, value) {return or || value;});
+
+		res.render('new-term', {
+			new_term_menu: 'selected',
+			new_term_active: 'active',
+			app_root: req.app_root,
+			app_token: apptoken,
+			bolt_root: process.env.BOLT_ADDRESS,
+			sessions: sessions,
+			currentSession: currentSession,
+			thereIsCurrent: thereIsCurrent
+		});
+	});
+});
+
+app.get('/view-terms', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/sessions/findone', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {query: {isCurrent:true}}}, 
+		function(error, response, body) {
+		var currentSession = body.body;
+
+		var id = "";
+		if (currentSession) {
+			id = currentSession._id;
 		}
-		else {
-			res.render('edit-profile', {
-				school_profile_menu: 'selected',
-				school_profile_active: 'active',
+
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/terms/find?sessionId=' + id, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+			var terms = body.body;
+
+			res.render('view-terms', {
+				view_terms_menu: 'selected',
+				view_terms_active: 'active',
 				app_root: req.app_root,
 				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS
+				bolt_root: process.env.BOLT_ADDRESS,
+				currentSession: currentSession,
+				terms: terms
 			});
-		}
+		});
 	});
-});*/
+});
+
+app.get('/edit-term/:id', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/terms/findone?_id=' + req.params.id, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+		var term = body.body;
+
+		res.render('edit-term', {
+			view_terms_menu: 'selected',
+			view_terms_active: 'active',
+			app_root: req.app_root,
+			app_token: apptoken,
+			bolt_root: process.env.BOLT_ADDRESS,
+			term: term
+		});
+	});
+});
+
+app.get('/edit-school-profile', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/school-profile/findone?app=' + appname, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+			var profile = body.body;
+
+			res.render('edit-school-profile', {
+				school_profile_menu: 'selected',
+				school_profile_active: 'active',
+				appname: appname,
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				profile: profile
+			});
+		});
+});
 
 app.get('*', function(req, res){
 	res.render('404', {

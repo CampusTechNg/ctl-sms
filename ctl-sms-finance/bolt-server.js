@@ -168,7 +168,7 @@ app.get('/invoice/:id', function(req, res){
 			if (invoice.payments) {
 				var paid = invoice.payments.map(function(pay) { return pay.amount; })
 					.reduce(function(sum, value) {return sum + value;});
-//console.log(paid);console.log(invoice.totalAmount);console.log(invoice.totalAmount - paid);
+				//console.log(paid);console.log(invoice.totalAmount);console.log(invoice.totalAmount - paid);
 				invoice.paymentCompleted = (paid >= invoice.totalAmount);
 				invoice.paymentOustanding = !invoice.paymentCompleted;
 				invoice.outstandingAmount = 0;

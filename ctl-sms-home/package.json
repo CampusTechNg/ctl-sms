@@ -20,7 +20,7 @@
       "/home": "/"
     },
     "files": {
-      "icon": "assets/global/img/icon.png"
+      "icon": "assets/pages/img/icon.png"
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",

@@ -30,7 +30,11 @@
                 <div class="portlet light bordered">
                     <div class="portlet-body form">
                         <div class="profile-userpic">
+                            {{#if student.displayPic}}
                             <img class="img-responsive" src="{{bolt_root}}/{{student.displayPic}}">
+                            {{else}}
+                            <img class="img-responsive" src="{{bolt_root}}/public/bolt/users/user.png"">
+                            {{/if}}
                         </div>
                         <div class="profile-usertitle">
                             <div class="profile-usertitle-name"> {{student.displayName}} </div>
@@ -60,35 +64,41 @@
                     <div class="portlet-body form">
                         <div class="table-container">
                             <table class="table table-hover table-light" id="sample_3">
-                                <thead>
+                                {{#if invoices}}
+                                    <thead>
+                                        <tr>
+                                            <th> Invoice </th>
+                                            <th> Payment Status </th>
+                                            <th> Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each invoices}}
+                                        <tr>
+                                            <td> {{displayName}} </td>
+                                            <td> 
+                                                {{#if paymentCompleted}}
+                                                <span class="badge badge-empty badge-success"></span>
+                                                Completed
+                                                {{else}}
+                                                <span class="badge badge-empty badge-warning"></span>
+                                                Outstanding
+                                                {{/if}}
+                                            </td>
+                                            <td> 
+                                                <a href="{{../app_root}}/invoice/{{_id}}" class="btn yellow-crusta btn-xs uppercase"> 
+                                                    <span class="hidden-xs">Proceed</span>
+                                                    <span><i class="fa fa-long-arrow-right"></i></span>
+                                                </a>
+                                            </td>
+                                        </tr> 
+                                        {{/each}}
+                                    </tbody>
+                                {{else}}
                                     <tr>
-                                        <th> Invoice </th>
-                                        <th> Payment Status </th>
-                                        <th> Action </th>
+                                        <td colspan="3"> No payment made yet! </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {{#each invoices}}
-                                    <tr>
-                                        <td> {{displayName}} </td>
-                                        <td> 
-                                            {{#if paymentCompleted}}
-                                            <span class="badge badge-empty badge-success"></span>
-                                            Completed
-                                            {{else}}
-                                            <span class="badge badge-empty badge-warning"></span>
-                                            Outstanding
-                                            {{/if}}
-                                        </td>
-                                        <td> 
-                                            <a href="{{../app_root}}/invoice/{{_id}}" class="btn yellow-crusta btn-xs uppercase"> 
-                                                <span class="hidden-xs">Proceed</span>
-                                                <span><i class="fa fa-long-arrow-right"></i></span>
-                                            </a>
-                                        </td>
-                                    </tr> 
-                                    {{/each}}
-                                </tbody>
+                                {{/if}}
                             </table>
                         </div>  
                     </div>

@@ -200,6 +200,11 @@ $(document).ready(function() {
         var outstanding_amount = parseFloat($('#outstanding_amount').val());
         var amount = parseFloat($('#amount').val());
 
+        if (!amount || amount === '') {
+            sweetAlert("Missing Field!", "Please enter amount paid", "warning");
+            return;
+        }
+        
         if (amount > outstanding_amount) {
             sweetAlert("Excess Payment!", "Please do not pay more than the expected outstanding amount", "warning");
             return;

@@ -59,7 +59,7 @@
                     <span class="caption-subject bold uppercase"> Search Result</span>
                 </div>
                 <div class="actions">
-                    <span id="result_count"> </a>
+                    <span id="search_icon"></span> <span id="result_count"> </span>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -109,6 +109,12 @@ $(document).ready(function() {
             dataType: 'json',
             contentType: 'application/json',
             headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            beforeSend : function() {
+                $('#result_count').hide();
+                $( '#search_icon' ).fadeIn(function() {
+                    $( this ).html('<span>Searching </span> <img src="{{app_root}}/assets/pages/img/loading.gif">');
+                });  
+            },
             success: function(response) {
                 if (response.code == 0) {
                     var users = response.body;
@@ -138,21 +144,28 @@ $(document).ready(function() {
 
                             $('#result_section').show();
                             $('#result_frame').append(result_row);
-                        }
 
-                        var r = (users.length > 1) ? ' results' : ' result';
-                        $('#result_count').text(users.length + r + ' found').show();
+                            $( '#search_icon' ).fadeOut(function() {
+                                var r = (users.length > 1) ? ' results' : ' result';
+                                $('#result_count').text(users.length + r + ' found').show();   
+                            });
+                        }
+                        
                     }
                     else {
                         var result_row2 = '<tr id="result_row">' +
                                                 '<td colspan="4"> No result found! </td>' +
                                             '</tr>';  
-                        
+
                         $('#result_section').show();
-                        $('#result_count').hide();
-                        $('#result_frame').append(result_row2); 
+                        $( '#search_icon' ).fadeOut(function() {
+                            $('#result_count').hide();
+                            $('#result_frame').append(result_row2);
+                        });
+                         
                     }
                 }
+                // $( '#search_icon' ).fadeOut();
             },
             error: function(xhr, status, err){
                 alert(xhr.responseText);

@@ -39,7 +39,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="school_name" id="school_name" type="text" maxlength="400">
+                                    <input class="form-control" name="school_name" id="school_name" type="text" maxlength="400" value="{{profile.displayName}}">
                                     <label for="school_name">
                                         School Name <span class="required">*</span>
                                     </label>
@@ -50,7 +50,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="address" id="address" type="text" maxlength="400">
+                                    <input class="form-control" name="address" id="address" type="text" maxlength="400" value="{{profile.address}}">
                                     <label for="address">
                                         School Address <span class="required">*</span>
                                     </label>
@@ -58,7 +58,7 @@
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="phone" id="phone" type="text" maxlength="20">
+                                    <input class="form-control" name="phone" id="phone" type="text" maxlength="20" value="{{profile.phone}}">
                                     <label for="phone">
                                         Phone Number <span class="required">*</span>
                                     </label>
@@ -69,7 +69,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="email" id="email" type="text" maxlength="100">
+                                    <input class="form-control" name="email" id="email" type="text" maxlength="100" value="{{profile.email}}">
                                     <label for="email">
                                         School Email
                                     </label>
@@ -77,7 +77,7 @@
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="website" id="website" type="text" maxlength="150">
+                                    <input class="form-control" name="website" id="website" type="text" maxlength="150" value="{{profile.website}}">
                                     <label for="website">
                                         School Website
                                     </label>
@@ -101,7 +101,9 @@
 
                             <div class="col-md-6 col-sm-6">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
-                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;"></div>
+                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;">
+                                        <img src="{{bolt_root}}/{{profile.logo}}">
+                                    </div>
                                     <div>
                                         <span class="btn dark btn-outline btn-file">
                                             <span class="fileinput-new"> Select image </span>
@@ -114,7 +116,7 @@
                         </div>
                     </div>
                     <div class="form-actions noborder">
-                        <button type="submit" class="btn green">Edit</button>
+                        <button type="submit" class="btn green">Save</button>
                         <button type="reset" class="btn default">Cancel</button>
                     </div>
                 </form>
@@ -245,25 +247,17 @@ var FormValidationMd = function() {
                     }
                }
 
-                var username = $("#username").val();
-                var password = $("#password").val();
-                var displayname = $("#fullname").val();
-                var email = $("#email").val();
-                var phone = $("#phone").val();
-
-                var gender = $("#gender").val();
-                var dob = $("#dob").val();
-                var address = $("#address").val();
-
-                formData.append('name', username);
-                formData.append('password', password);
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
+               var profile = {};
+               profile.app = "{{appname}}";
+                profile.displayName = $("#school_name").val();
+                profile.address = $("#address").val();
+                profile.phone = $("#phone").val();
+                profile.email = $("#email").val();
+                profile.website = $("#website").val();
                     
-                //create staff as a bolt user
+                //upload file
                 $.ajax({
-                    url: '{{bolt_root}}/api/users',
+                    url: '{{bolt_root}}/public/upload',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -274,78 +268,24 @@ var FormValidationMd = function() {
                     success: function(response) {
                         if(response.code === 0){
                             //second, create an staff role
-                            var rolenm = $("#role option:selected").val();
-                            var dataBody;
-                            if (rolenm === 'management') {
-                                dataBody = { name: "management", isAdmin: true, displayName: "Management", description: "A member of the school management" };
-                            }
-                            else if (rolenm === 'center_head') {
-                                dataBody = { name: "center_head", isAdmin: true, displayName: "Center Head", description: "The center head" };
-                            }
-                            else if (rolenm === 'front_desk') {
-                                dataBody = { name: "front_desk", isAdmin: false, displayName: "Front Desk", description: "A member of the front desk team" };
-                            }
-                            else if (rolenm === 'faculty') {
-                                dataBody = { name: "faculty", isAdmin: false, displayName: "Faculty", description: "A member of the faculty" };
-                            }
-                            else if (rolenm === 'auxilliary_staff') {
-                                dataBody = { name: "auxilliary_staff", isAdmin: false, displayName: "Auxilliary Staff", description: "A member of the auxilliary staff" };
-                            }
+                            profile.logo = response.body[0];
+
                             $.ajax({
-                                url: "{{bolt_root}}/api/roles",
+                                url: "{{bolt_root}}/api/db/school-profile/update?app={{appname}}",
                                 type: 'POST',
-                                data: dataBody,
+                                data: {values: profile, upsert: true},
                                 headers: {'X-Bolt-App-Token': '{{app_token}}'},
                                 success: function(response2, status2, xhr2) {
-                                    if(response2.code === 0 || response2.code === 301){
-                                        //code 0 means no error occured, code 301 means the role already exists; either way, we are good
-                                        //third, associate user and role
-                                        $.ajax({
-                                            url: "{{bolt_root}}/api/user-roles",
-                                            type: "POST",
-                                            data: { user: response.body.name, role: rolenm },
-                                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                            success: function(response3, status3, xhr3) {
-                                                if(response3.code === 0){
-                                                    //fourth, insert the staff into the staff collection
-                                                    $.ajax({
-                                                        url: '{{bolt_root}}/api/db/staff/insert',
-                                                        type: 'POST',
-                                                        data: JSON.stringify({ object: { name: username, gender: gender, dob: dob, address: address }}),
-                                                        //processData: false,
-                                                        dataType: 'json',
-                                                        contentType: 'application/json',
-                                                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                                        success: function(response4, status4, xhr4){
-                                                            if(response4.code === 0){
-                                                                //Sweet alert
-                                                                swal({
-                                                                    title: "Staff Registered!",
-                                                                    text: displayname + " has been registered.",
-                                                                    type: "success",
-                                                                    showCancelButton: false,
-                                                                    closeOnConfirm: true
-                                                                }, function(isConfirm){
-                                                                    if (isConfirm) {
-                                                                        window.location.href="{{app_root}}/register-staff";
-                                                                    }
-                                                                });
-                                                            }
-                                                            else {
-                                                                sweetAlert(response4.errorUserTitle, response4.errorUserMessage, "error");
-                                                            }
-                                                        },
-                                                        error: function(xhr4, status4, err4){
-                                                            alert(xhr4.responseText);
-                                                        }
-                                                    });
-                                                }
-                                                else {
-                                                  sweetAlert(response3.errorUserTitle, response3.errorUserMessage, "error");
-                                                }
-                                            },
-                                            error: function(xhr3, status3, err3){
-                                                alert(xhr3.responseText);
+                                    if(response2.code === 0){
+                                        swal({
+                                            title: "School Profile Updated!",
+                                            text: "Profile for " + profile.displayName + " has been updated.",
+                                            type: "success",
+                                            showCancelButton: false,
+                                            closeOnConfirm: true
+                                        }, function(isConfirm){
+                                            if (isConfirm) {
+                                                window.location.href="{{app_root}}/school-profile";
                                             }
                                         });
                                     }

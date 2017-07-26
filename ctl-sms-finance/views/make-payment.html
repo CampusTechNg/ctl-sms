@@ -68,7 +68,7 @@
                                                 <option value="">- Select -</option>
                                             </select>
                                             <label for="item">
-                                                Item <span class="required">*</span>
+                                                Item <span class="required">*</span> <span id="search_icon"></span>
                                             </label>
                                         </div>
                                     </div>
@@ -107,18 +107,24 @@
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group form-md-line-input form-md-floating-label">
                                             <input type="text" class="form-control" id="total_amount" readonly>
-                                            <label for="total_amount">Total amount</label>
+                                            <label for="total_amount">Total amount <span class="required">*</span></label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group form-md-line-input form-md-floating-label">
                                             <input type="text" class="form-control" id="amount_paid" maxlength="20">
-                                            <label for="amount_paid">Amount paid</label>
+                                            <label for="amount_paid">Amount paid <span class="required">*</span></label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12 col-sm-12">
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                            <input type="text" class="form-control" id="invoice_title" maxlength="300">
+                                            <label for="invoice_title">Invoice title  <span class="required">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6">
                                         <div class="form-group form-md-line-input form-md-floating-label">
                                             <input type="text" class="form-control" id="remark" maxlength="300">
                                             <label for="remark">Remark</label>
@@ -171,33 +177,39 @@
                             </div>
                             <div class="table-container">
                                 <table class="table table-bordered table-hover table-light" id="sample_2">
-                                    <thead>
-                                        <tr>
-                                            <th> Invoice </th>
-                                            <th> Date </th>
-                                            <th> Total Amount </th>
-                                            <th> Amount Paid </th>
-                                            <th> Outstanding</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {{#each invoices}}
-                                        <tr>
-                                            <td> {{displayName}} </td>
-                                            <td> {{toDate date}} </td>
-                                            <td> {{totalAmount}} </td>
-                                            <td> {{paidAmount}} </td>
-                                            <td> {{outstandingAmount}} </td>
-                                            <td> 
-                                                <a href="{{../app_root}}/invoice/{{_id}}" class="btn yellow-crusta btn-xs uppercase"> 
-                                                    <span class="hidden-xs">Proceed</span>
-                                                    <span><i class="fa fa-long-arrow-right"></i></span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {{/each}}
-                                    </tbody>
+                                    {{#if invoices}}
+                                        <thead>
+                                            <tr>
+                                                <th> Invoice </th>
+                                                <th> Date </th>
+                                                <th> Total Amount </th>
+                                                <th> Amount Paid </th>
+                                                <th> Outstanding</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each invoices}}
+                                            <tr>
+                                                <td> {{displayName}} </td>
+                                                <td> {{toDate date}} </td>
+                                                <td> {{totalAmount}} </td>
+                                                <td> {{paidAmount}} </td>
+                                                <td> {{outstandingAmount}} </td>
+                                                <td> 
+                                                    <a href="{{../app_root}}/invoice/{{_id}}" class="btn yellow-crusta btn-xs uppercase"> 
+                                                        <span class="hidden-xs">Proceed</span>
+                                                        <span><i class="fa fa-long-arrow-right"></i></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {{/each}}
+                                        </tbody>
+                                    {{else}}
+                                    <tr>
+                                        <td colspan="6"> No payment made yet! </td>
+                                    </tr>
+                                {{/if}}
                                 </table>
                             </div>
                         </div>
@@ -367,6 +379,11 @@ $(document).ready(function() {
             dataType: 'json',
             contentType: 'application/json',
             headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            beforeSend : function() {
+                $( '#search_icon' ).fadeIn(function() {
+                    $( this ).html('<img src="{{app_root}}/assets/pages/img/loading.gif">');
+                });  
+            },
             success: function(response) {
                 if(response.code === 0){
                     var items = response.body;
@@ -377,9 +394,11 @@ $(document).ready(function() {
                         var fetched_item = '<option value="' + item._id + '">' + item.displayName + '</option>';
                         $('#item').append(fetched_item);
                     }
+                    $( '#search_icon' ).fadeOut();
                 }
                 else {
                     sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                    $( '#search_icon' ).fadeOut();
                 }
             },
             error: function(xhr, status, err){
@@ -391,6 +410,7 @@ $(document).ready(function() {
     $('#submit').click(function() {
         var totalAmount = parseFloat($("#total_amount").val());
         var amountPaid = parseFloat($("#amount_paid").val());
+        var invoice_title = $('#invoice_title').val();
 
         if (!amountPaid || amountPaid === '') {
             sweetAlert("Missing Field!", "Please enter amount paid", "warning");
@@ -400,10 +420,14 @@ $(document).ready(function() {
             sweetAlert("Excess Payment!", "Please do not pay more than the expected total amount", "warning");
             return;
         }
+        if (!invoice_title || invoice_title === '') {
+            sweetAlert("Missing Field!", "Please enter the invoice title", "warning");
+            return;
+        }
 
         var invoice = {};
         invoice.student = '{{student.name}}';
-        invoice.displayName = '{{student.displayName}} (' + new Date().toDateString() + ')';
+        invoice.displayName = invoice_title;
         invoice.date = new Date();
         invoice.totalAmount = totalAmount;
         invoice.remark = $("#remark").val();
