@@ -2,9 +2,6 @@
 
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
-    <link href="/public/ctl-sms-home/assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-    <link href="/public/ctl-sms-home/assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
     <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS -->
 
@@ -33,12 +30,12 @@
                 </div>
             </div>
             <div class="portlet-body form">
-                <form role="form" id="session_term" autocomplete="off">
+                <form role="form" id="new_term" autocomplete="off">
                     <div class="form-body">
                         <div class="row">
                             <div class="col-md-12 col-sm-12"> 
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" value="{{term.displayName}}" id="school_term" type="text" maxlength="100">
+                                    <input class="form-control" name="school_term" id="school_term" type="text" maxlength="100">
                                     <label for="school_term">
                                         School Term <span class="required">*</span>
                                     </label>
@@ -48,7 +45,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input value="{{term.begin}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" id="term_start_date">
+                                    <input class="form-control date-picker" name="term_start_date" type="text" data-date-format="dd-mm-yyyy" id="term_start_date">
                                     <label for="term_start_date">
                                         Term starts <span class="required">*</span>
                                     </label>
@@ -56,7 +53,7 @@
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input value="{{term.end}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" id="term_end_date">
+                                    <input class="form-control date-picker" name="term_end_date" type="text" data-date-format="dd-mm-yyyy" id="term_end_date">
                                     <label for="term_end_date">
                                         Term ends <span class="required">*</span>
                                     </label>
@@ -66,11 +63,7 @@
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
                                 <div class="md-checkbox">
-                                    {{#if term.isCurrent}}
-                                    <input type="checkbox" checked value="1" id="is_current" class="md-check">
-                                    {{else}}
                                     <input type="checkbox" value="1" id="is_current" class="md-check">
-                                    {{/if}}
                                     <label for="is_current">
                                         <span></span>
                                         <span class="check"></span>
@@ -116,14 +109,15 @@
 <!-- BEGIN PAGE LEVEL PLUGINS -->
 <script src="/public/ctl-sms-home/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 <script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-<script src="/public/ctl-sms-home/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script type="text/javascript">
+window.onload = function() {
+    document.getElementById("school_term").focus();
+};
 </script>
 <script src="/public/ctl-sms-home/assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
-<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
-<script src="/public/ctl-sms-home/assets/pages/scripts/components-select2.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
@@ -133,7 +127,7 @@
 <script type="text/javascript">
 var FormValidationMd = function() {
     var handleValidation2 = function() {
-        var form1 = $('#session_term');
+        var form1 = $('#new_term');
         var error1 = $('.alert-danger', form1);
         var success1 = $('.alert-success', form1);
 
@@ -143,10 +137,6 @@ var FormValidationMd = function() {
             focusInvalid: false, // do not focus the last invalid input
             ignore: "", // validate all fields including form hidden input
             messages: {
-                school_session: {
-                required: 'School session is required',
-                minlength: 'Enter at least 2 characters'
-                },
                 school_term: {
                 required: 'School term is required'
                 },
@@ -155,19 +145,9 @@ var FormValidationMd = function() {
                 },
                 term_end_date: {
                 required: 'Term end date is required'
-                },
-                session_start_date: {
-                required: 'Session start date is required'
-                },
-                session_end_date: {
-                required: 'Session end date is required'
                 }
             },
             rules: {
-                school_session: {
-                minlength: 2,
-                required: true
-                },
                 school_term: {
                 required: true
                 },
@@ -175,12 +155,6 @@ var FormValidationMd = function() {
                 required: true
                 },
                 term_end_date: {
-                required: true
-                },
-                session_start_date: {
-                required: true
-                },
-                session_end_date: {
                 required: true
                 }
             },

@@ -42,7 +42,7 @@
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group form-md-line-input form-md-floating">
-                                            <input type="text" value="{{student.displayName}}" class="form-control" id="fullname" readonly="readonly">
+                                            <input type="text" value="{{student.displayName}}" class="form-control" name="fullname" id="fullname" readonly="readonly">
                                             <label for="fullname">Full name</label>
                                         </div>
                                     </div>
@@ -51,7 +51,7 @@
                                 <div class="row">
                                     <div class="col-md-5 col-sm-5">
                                         <div class="form-group form-md-line-input form-md-floating">
-                                            <select class="form-control" id="category">
+                                            <select class="form-control" name="category" id="category">
                                                 <option value="">- Select -</option>
                                                 {{#each categories}}
                                                 <option value="{{_id}}">{{displayName}}</option>
@@ -64,7 +64,7 @@
                                     </div>
                                     <div class="col-md-5 col-sm-5">
                                         <div class="form-group form-md-line-input form-md-floating">
-                                            <select class="form-control" id="item">
+                                            <select class="form-control" name="item" id="item">
                                                 <option value="">- Select -</option>
                                             </select>
                                             <label for="item">
@@ -106,13 +106,13 @@
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group form-md-line-input form-md-floating-label">
-                                            <input type="text" class="form-control" id="total_amount" readonly>
+                                            <input type="text" class="form-control" name="total_amount" id="total_amount" readonly>
                                             <label for="total_amount">Total amount <span class="required">*</span></label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group form-md-line-input form-md-floating-label">
-                                            <input type="text" class="form-control" id="amount_paid" maxlength="20">
+                                            <input type="text" class="form-control" name="amount_paid" id="amount_paid" maxlength="20">
                                             <label for="amount_paid">Amount paid <span class="required">*</span></label>
                                         </div>
                                     </div>
@@ -120,13 +120,13 @@
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group form-md-line-input form-md-floating-label">
-                                            <input type="text" class="form-control" id="invoice_title" maxlength="300">
+                                            <input type="text" class="form-control" name="invoice_title" id="invoice_title" maxlength="300">
                                             <label for="invoice_title">Invoice title  <span class="required">*</span></label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group form-md-line-input form-md-floating-label">
-                                            <input type="text" class="form-control" id="remark" maxlength="300">
+                                            <input type="text" class="form-control" name="remark" id="remark" maxlength="300">
                                             <label for="remark">Remark</label>
                                         </div>
                                     </div>

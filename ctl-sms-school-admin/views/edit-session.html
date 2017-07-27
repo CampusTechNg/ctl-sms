@@ -37,12 +37,12 @@
                 </div>
             </div>
             <div class="portlet-body form">
-                <form role="form" id="session_term" autocomplete="off">
+                <form role="form" id="edit_session" autocomplete="off">
                     <div class="form-body">
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" value="{{session.displayName}}" id="school_session" type="text" maxlength="100">
+                                    <input class="form-control" value="{{session.displayName}}" name="school_session" id="school_session" type="text" maxlength="100">
                                     <label for="school_session">
                                         School Session <span class="required">*</span>
                                     </label>
@@ -52,7 +52,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input value="{{session.begin}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" id="session_start_date">
+                                    <input value="{{session.begin}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" name="session_start_date" id="session_start_date">
                                     <label for="session_start_date">
                                         Session starts <span class="required">*</span>
                                     </label>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input value="{{session.end}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" id="session_end_date">
+                                    <input value="{{session.end}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" name="session_end_date" id="session_end_date">
                                     <label for="session_end_date">
                                         Session ends <span class="required">*</span>
                                     </label>
@@ -123,7 +123,7 @@ window.onload = function() {
 <script type="text/javascript">
 var FormValidationMd = function() {
     var handleValidation2 = function() {
-        var form1 = $('#session_term');
+        var form1 = $('#edit_session');
         var error1 = $('.alert-danger', form1);
         var success1 = $('.alert-success', form1);
 

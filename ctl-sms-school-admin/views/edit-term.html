@@ -15,7 +15,7 @@
 <!-- BEGIN PAGE TITLE-->
 <div class="container-fluid">
     <div class="col-md-12">
-        <h3 class="page-title"> Edit School Session</h3>
+        <h3 class="page-title"> Edit School Term</h3>
     </div>
 </div>
 <!-- END PAGE TITLE-->
@@ -37,12 +37,12 @@
                 </div>
             </div>
             <div class="portlet-body form">
-                <form role="form" id="session_term" autocomplete="off">
+                <form role="form" id="edit_term" autocomplete="off">
                     <div class="form-body">
                         <div class="row">
                             <div class="col-md-12 col-sm-12"> 
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" id="school_term" type="text" maxlength="100" value="{{term.displayName}}">
+                                    <input class="form-control" name="school_term" id="school_term" type="text" maxlength="100" value="{{term.displayName}}">
                                     <label for="school_term">
                                         School Term <span class="required">*</span>
                                     </label>
@@ -52,7 +52,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input value="{{term.begin}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" id="term_start_date">
+                                    <input value="{{term.begin}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" name="term_start_date" id="term_start_date">
                                     <label for="term_start_date">
                                         Term starts <span class="required">*</span>
                                     </label>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input value="{{term.end}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" id="term_end_date">
+                                    <input value="{{term.end}}" class="form-control date-picker" type="text" data-date-format="dd-mm-yyyy" name="term_end_date" id="term_end_date">
                                     <label for="term_end_date">
                                         Term ends <span class="required">*</span>
                                     </label>
@@ -123,7 +123,7 @@ window.onload = function() {
 <script type="text/javascript">
 var FormValidationMd = function() {
     var handleValidation2 = function() {
-        var form1 = $('#session_term');
+        var form1 = $('#edit_term');
         var error1 = $('.alert-danger', form1);
         var success1 = $('.alert-success', form1);
 

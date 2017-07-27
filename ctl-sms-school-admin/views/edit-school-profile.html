@@ -247,15 +247,14 @@ var FormValidationMd = function() {
                     }
                }
 
-               var profile = {};
-               profile.app = "{{appname}}";
+                var profile = {};
+                profile.app = "{{appname}}";
                 profile.displayName = $("#school_name").val();
                 profile.address = $("#address").val();
                 profile.phone = $("#phone").val();
                 profile.email = $("#email").val();
                 profile.website = $("#website").val();
                     
-                //upload file
                 $.ajax({
                     url: '{{bolt_root}}/public/upload',
                     type: 'POST',
