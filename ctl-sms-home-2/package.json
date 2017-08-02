@@ -1,0 +1,37 @@
+{
+  "name": "ctl-sms-home-2",
+  "version": "1.0.0",
+  "description": "Campus Technologies Limited Student Management System",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "^3.0.0"
+  },
+  "author": "Campus Technologies",
+  "license": "ISC",
+  "bolt": {
+    "displayName": "School Management System",
+    "main": "bolt-server.js",
+    "extensions": {
+      "/home": "/"
+    },
+    "files": {
+      "icon": "assets/pages/img/icon.png",
+      "icon-md": "assets/pages/img/icon-md.png"
+    },
+    "hooks": {
+      "bolt/app-starting": "/app-starting",
+      "bolt/app-installed": "/app-installed",
+      "bolt/dashboard-card-posted": "/hooks/bolt/dashboard-card-posted",
+      "bolt/notification-posted": "/hooks/bolt/notification-posted"
+    },
+    "index": "/",
+    "system": true,
+    "public": ["assets"],
+    "tags": ["home", "main", "ctl", "ctl-sms", "ctl-sms-home-2"]
+  }
+}

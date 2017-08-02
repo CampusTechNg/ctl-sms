@@ -11,6 +11,7 @@ app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt envi
 
 //View Engine
 app.set('views', path.join(__dirname, 'views'));
+
 app.engine('html', exphbs({
 	//defaultLayout: 'main.html' //Default templating page
 	partialsDir: __dirname + '/views/partials/',
@@ -73,6 +74,58 @@ app.get('/add-category', function(req, res){
 				categories: categories
 			});
 		});
+});
+
+app.get('/view-categories', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/categories/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {object:{}}}, 
+		function(error, response, body) {
+		var categories = body.body;
+
+		res.render('view-categories', {
+			view_categories_menu: 'selected',
+			view_categories_active: 'active',
+			app_root: req.app_root,
+			app_token: apptoken,
+			bolt_root: process.env.BOLT_ADDRESS,
+			categories: categories
+		});
+	});
+});
+
+app.get('/edit-category/:id', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/categories/findone?_id=' + req.params.id, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+		var category = body.body;
+
+		request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/categories/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {object:{}}}, 
+		function(error, response, body) {
+			var categories = body.body;
+			if (category.parentId) {
+				///////////////////////
+			}
+
+			res.render('edit-category', {
+				view_categories_menu: 'selected',
+				view_categories_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				category: category,
+				categories: categories
+			});
+		});
+
+			
+	});
 });
 
 app.get('/add-item', function(req, res){

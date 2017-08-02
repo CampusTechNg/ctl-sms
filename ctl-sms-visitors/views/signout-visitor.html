@@ -1,11 +1,11 @@
 {{> header}}
 
     <!-- BEGIN PAGE LEVEL PLUGINS -->
-    <link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
-    <link href="/public/ctl-sms-home/assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-    <link href="/public/ctl-sms-home/assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+    <link href="/public/ctl-sms-home/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+    <link href="/public/ctl-sms-home/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/public/ctl-sms-home/assets/pages/css/datatable_custom.css" rel="stylesheet" type="text/css" />
     <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    </style>
     <!-- END PAGE LEVEL PLUGINS -->
 
 {{> sub_header}}
@@ -109,7 +109,7 @@
                                 <td> {{toTime dateIn}} </td>
                                 <td> 
                                     <a class="btn dark btn-xs btn-outline sbold uppercase" onclick="signout('{{visitorId}}')">
-                                        <i class="fa fa-logout"></i> <span class="hidden-xs"> Signout </span>
+                                        <i class="fa fa-sign-out"></i> <span class="hidden-xs"> Signout </span>
                                     </a>
                                 </td>
                             </tr>
@@ -128,18 +128,12 @@
 {{> sub_footer }}
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="/public/ctl-sms-home/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
-<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-<script src="/public/ctl-sms-home/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
-<!-- END PAGE LEVEL PLUGINS -->
-
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="/public/ctl-sms-home/assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
-<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
-<script src="/public/ctl-sms-home/assets/pages/scripts/components-select2.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
-<!-- END PAGE LEVEL SCRIPTS -->
+<!-- END PAGE LEVEL PLUGINS -->
 
 <!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 <script type="text/javascript">
@@ -182,4 +176,8 @@
     }
 </script>
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/public/ctl-sms-home/assets/pages/scripts/table-datatables-managed.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
  {{> footer }}

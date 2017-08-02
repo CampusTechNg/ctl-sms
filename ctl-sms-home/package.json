@@ -20,7 +20,8 @@
       "/home": "/"
     },
     "files": {
-      "icon": "assets/pages/img/icon.png"
+      "icon": "assets/pages/img/icon.png",
+      "icon-md": "assets/pages/img/icon-md.png"
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",
@@ -29,7 +30,6 @@
       "bolt/notification-posted": "/hooks/bolt/notification-posted"
     },
     "index": "/",
-    "startup": true,
     "system": true,
     "public": ["assets"],
     "tags": ["home", "main", "ctl", "ctl-sms", "ctl-sms-home"]

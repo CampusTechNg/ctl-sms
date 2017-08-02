@@ -1,0 +1,43 @@
+{
+  "name": "ctl-sms-forum",
+  "version": "1.0.0",
+  "description": "Campus Technologies Limited Student Management System - Forum Module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "^3.0.0"
+  },
+  "bolt": {
+    "displayName": "Forum",
+    "main": "bolt-server.js",
+    "index": "/",
+    "system": true,
+    "extensions": {
+      "/forum": "/"
+    },
+    "files": {
+      "icon": "assets/pages/img/icon.png",
+      "icon-md": "assets/pages/img/icon-md.png"
+    },
+    "order": 3,
+    "public": ["assets"],
+    "tags": ["forum", "ctl", "ctl-sms", "ctl-sms-forum", "ctl-sms-plugins"],
+    "collections": {
+      "forum": "*"
+    },
+    "hooks": {
+      "bolt/app-starting": "/app-starting",
+      "bolt/user-deleted": "/user-deleted",
+      "bolt/user-updated": "/user-updated"
+    },
+    "dependencies": {
+      "ctl-sms-home": "*"
+    }
+  },
+  "author": "Campus Technologies Limited",
+  "license": "ISC"
+}

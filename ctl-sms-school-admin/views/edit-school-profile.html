@@ -266,7 +266,6 @@ var FormValidationMd = function() {
                     },
                     success: function(response) {
                         if(response.code === 0){
-                            //second, create an staff role
                             profile.logo = response.body[0];
 
                             $.ajax({

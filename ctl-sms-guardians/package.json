@@ -21,7 +21,8 @@
       "/guardian": "/"
     },
     "files": {
-      "icon": "assets/pages/img/icon.png"
+      "icon": "assets/pages/img/icon.png",
+      "icon-md": "assets/pages/img/icon-md.png"
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",

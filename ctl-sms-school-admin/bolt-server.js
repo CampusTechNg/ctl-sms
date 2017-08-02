@@ -6,7 +6,7 @@ var exphbs = require('express-handlebars');
 
 var app = express();
 
-var appname, apptoken;
+var appname, apptoken, appDisplayName;
 app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt environment
 
 //View Engine
@@ -87,6 +87,7 @@ app.get('/', function(req, res){
 	res.render('index', {
 		school_admin_menu: 'selected',
 		school_admin_active: 'active',
+		bolt_root: process.env.BOLT_ADDRESS,
 		app_root: req.app_root
 	});
 });
@@ -168,8 +169,13 @@ app.get('/new-term', function(req, res){
 		var sessions = body.body;
 
 		var currentSession;
-		var thereIsCurrent = sessions.map(function(s) { if(s.isCurrent){currentSession = s;} return s.isCurrent || false; })
+		var thereIsCurrent = false;
+		if(sessions && sessions.length > 0){
+			thereIsCurrent = sessions.map(function(s) { if(s.isCurrent){currentSession = s;} return s.isCurrent || false; })
 			.reduce(function(or, value) {return or || value;});
+
+		}
+		
 
 		res.render('new-term', {
 			new_term_menu: 'selected',

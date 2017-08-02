@@ -1,40 +1,70 @@
 <!-- BEGIN TOP NAVIGATION MENU -->
-<div class="page-header navbar navbar-fixed-top" style="border-top: 3px solid transparent;">
+<div class="page-header navbar navbar-fixed-top" id="submenu">
     <div class="page-header-inner ">
-        <div class="page-logo" style="width:0;">
+        <div class="page-logo" style="width:auto;">
             
         </div>
-        <div class="hor-menu hidden-xs">
+        <div class="hor-menu collapse navbar-collapse" id="burger">
             <ul class="nav navbar-nav">
                 <li class="classic-menu-dropdown {{school_admin_active}}">
-                    <a href="{{app_root}}/" target="main_frame"> Home
+                    <a href="{{app_root}}/"> Home
                         <span class="{{school_admin_menu}}"> </span>
                     </a>
                 </li>
                 <li class="classic-menu-dropdown {{school_profile_active}}">
-                    <a href="{{app_root}}/school-profile" target="main_frame"> School Profile
+                    <a href="{{app_root}}/school-profile"> School Profile
                         <span class="{{school_profile_menu}}"> </span>
                     </a>
                 </li>
                 <li class="classic-menu-dropdown {{new_session_active}}">
-                    <a href="{{app_root}}/new-session" target="main_frame"> New session</a>
+                    <a href="{{app_root}}/new-session"> New session</a>
                     <span class="{{new_session_menu}}"> </span>
                 </li>
                 <li class="classic-menu-dropdown {{view_sessions_active}}">
-                    <a href="{{app_root}}/view-sessions" target="main_frame"> View sessions</a>
+                    <a href="{{app_root}}/view-sessions"> View sessions</a>
                     <span class="{{view_sessions_menu}}"> </span>
                 </li>
                 <li class="classic-menu-dropdown {{new_term_active}}">
-                    <a href="{{app_root}}/new-term" target="main_frame"> New term</a>
+                    <a href="{{app_root}}/new-term"> New term</a>
                     <span class="{{new_term_menu}}"> </span>
                 </li>
                 <li class="classic-menu-dropdown {{view_terms_active}}">
-                    <a href="{{app_root}}/view-terms" target="main_frame"> View terms</a>
+                    <a href="{{app_root}}/view-terms"> View terms</a>
                     <span class="{{view_terms_menu}}"> </span>
                 </li>  
             </ul>
+            {{!-- <div class="btn-group pull-right">
+                <span type="button" class="btn btn-circle btn-icon-only btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true" style="width:25px;height:25px;padding:3px 0 2px;margin-top:9px;"> 
+                    <i class="fa fa-ellipsis-v"></i>
+                </span>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="#">
+                            <i class="icon-bell"></i> Action</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="icon-shield"></i> Another action</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="icon-user"></i> Something else here</a>
+                    </li>
+                    <li class="divider"> </li>
+                    <li>
+                        <a href="#">
+                            <i class="icon-bag"></i> Separated link</a>
+                    </li>
+                </ul>
+            </div> --}}
         </div>
-        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+
+        <!--Help section-->
+        {{!-- <span class="btn btn-circle btn-icon-only btn-info pull-right" style="width:25px;height:25px;padding:3px 0 2px;margin-top:9px;margin-right:20px;" title="Help"> 
+            <i class="fa fa-question"></i>
+        </span> --}}      
+
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target="#burger">
             <span></span>
         </a>
     </div>
@@ -43,7 +73,7 @@
 
 <!-- BEGIN PAGE HEADER-->
 <!-- BEGIN PAGE BAR -->
-<div class="page-bar" style="margin-top: 50px;border-radius: 0;">
+<div class="page-bar">
     
 </div>
 <!-- END PAGE BAR -->

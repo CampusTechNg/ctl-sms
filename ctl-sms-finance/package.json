@@ -20,7 +20,8 @@
       "/finance": "/"
     },
     "files": {
-      "icon": "assets/pages/img/icon.png"
+      "icon": "assets/pages/img/icon.png",
+      "icon-md": "assets/pages/img/icon-md.png"
     },
     "order": 2,
     "public": ["assets"],

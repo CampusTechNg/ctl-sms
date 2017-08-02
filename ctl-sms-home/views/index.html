@@ -14,6 +14,7 @@
         <meta content="" name="author" />
         <link href="{{app_root}}/assets/global/plugins/pace/css/pace-theme-minimal.css" rel="stylesheet" type="text/css" />
         <script src="{{app_root}}/assets//global/plugins/pace/js/pace.min.js"></script>
+
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
         <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
         <link href="{{app_root}}/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -29,6 +30,7 @@
         <link href="{{app_root}}/assets/layouts/layout/css/notification.css" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="{{app_root}}/assets/pages/img/icon.png" /> 
+        <script src="{{app_root}}/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
     </head>
     <!-- END HEAD -->
 
@@ -798,8 +800,9 @@
             <script src="{{app_root}}/assets/global/plugins/excanvas.min.js"></script> 
         <![endif]-->
         <!-- BEGIN CORE PLUGINS -->
-        <script src="{{app_root}}/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script src="{{app_root}}/assets/layouts/global/scripts/frame.js" type="text/javascript"></script>
         <script src="{{app_root}}/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        
         <script src="{{app_root}}/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="{{app_root}}/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
         <script src="{{app_root}}/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
@@ -837,31 +840,6 @@
             }
 
             $(document).ready(function(){
-                function resizeFrame() {
-                    var main_frame = $('.main_frame');
-                    var window_height = $(window).height();
-                    var window_width = $(window).width();
-                    var page_header = $('.page-header').height();
-                    var min_height;
-
-                    if( window_width < 481 ) {
-                        min_height = window_height - 100;
-                        main_frame.attr('style', 'min-height:' + min_height + 'px');
-                        main_frame.attr({width:'100%'});
-                    }
-                    else {
-                        min_height = window_height - page_header;
-                        main_frame.attr('style', 'min-height:' + min_height + 'px');
-                        main_frame.attr({width:'100%'});
-                    }
-                }
-
-                resizeFrame();
-
-                $( window ).resize(function() {
-                    resizeFrame();
-                });
-
                 $.ajax({
                     url: '{{bolt_root}}/api/db/notifications/find',
                     type: 'POST',

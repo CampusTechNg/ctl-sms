@@ -1,0 +1,42 @@
+{
+  "name": "ctl-sms-classes",
+  "version": "1.0.0",
+  "description": "Campus Technologies Limited Student Management System - Class Module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "^3.0.0"
+  },
+  "bolt": {
+    "displayName": "Classes",
+    "main": "bolt-server.js",
+    "index": "/",
+    "system": true,
+    "extensions": {
+      "/classes": "/",
+      "class": "/"
+    },
+    "files": {
+      "icon": "assets/pages/img/icon.png",
+      "icon-md": "assets/pages/img/icon-md.png"
+    },
+    "order": 1,
+    "public": ["assets"],
+    "tags": ["classes", "class", "ctl", "ctl-sms", "ctl-sms-classes", "ctl-sms-class", "ctl-sms-plugins"],
+    "collections": {
+      "classes": "*"
+    },
+    "hooks": {
+      "bolt/app-starting": "/app-starting"
+    },
+    "dependencies": {
+      "ctl-sms-home": "*"
+    }
+  },
+  "author": "Campus Technologies Limited",
+  "license": "ISC"
+}

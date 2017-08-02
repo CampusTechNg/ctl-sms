@@ -138,45 +138,8 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="tab_2">
-                            <div class="actions pull-right">
-                                <div class="btn-group">
-                                    <a class="btn green-haze" href="javascript:;" data-toggle="dropdown">
-                                        <i class="fa fa-cog"></i>
-                                        <span class="hidden-xs"> Tools </span>
-                                        <i class="fa fa-angle-down"></i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right" id="sample_3_tools">
-                                        <li>
-                                            <a href="javascript:;" data-action="0" class="tool-action">
-                                                <i class="icon-printer"></i> Print</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" data-action="1" class="tool-action">
-                                                <i class="icon-check"></i> Copy</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" data-action="2" class="tool-action">
-                                                <i class="icon-doc"></i> PDF</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" data-action="3" class="tool-action">
-                                                <i class="icon-paper-clip"></i> Excel</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" data-action="4" class="tool-action">
-                                                <i class="icon-cloud-upload"></i> CSV</a>
-                                        </li>
-                                        <li class="divider"> </li>
-                                        <li>
-                                            <a href="javascript:;" data-action="5" class="tool-action">
-                                                <i class="icon-refresh"></i> Reload</a>
-                                        </li>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
                             <div class="table-container">
-                                <table class="table table-bordered table-hover table-light" id="sample_2">
+                                <table class="table table-bordered table-hover table-light">
                                     {{#if invoices}}
                                         <thead>
                                             <tr>
@@ -223,10 +186,6 @@
 {{> copyright }}
  
  {{> sub_footer }}
-
-<!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="/public/ctl-sms-home/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
-<!-- END PAGE LEVEL PLUGINS -->
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script type="text/javascript">
@@ -477,10 +436,6 @@ $(document).ready(function() {
         });
     });
 });
-
-
 </script>
-
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
- 
  {{> footer }}
