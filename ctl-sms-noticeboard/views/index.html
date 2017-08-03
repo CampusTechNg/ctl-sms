@@ -1,0 +1,206 @@
+{{> header}}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    <link href="{{app_root}}/assets/pages/css/noticeboard.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<div class="container-fluid">
+    <div class="col-md-8 col-sm-8 col-xs-6">
+        <h3 class="page-title"> Notices</h3>
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-6 text-right">
+        <button type="button" id="new_topic_btn" class="btn green-haze"> <i class="fa fa-plus"></i> New Notice </button>
+    </div>
+</div>
+<!-- END PAGE TITLE-->
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="container-fluid">
+    <div class="col-md-12" id="create_topic_section">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-green">
+                    <i class="icon-bubble font-green"></i>
+                    <span class="caption-subject bold uppercase"> Create New Notice</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-md-line-input form-md-floating-label">
+                                <input class="form-control" name="subject" id="subject" type="text" maxlength="20">
+                                <label for="subject">
+                                    Subject <span class="required">*</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-md-line-input form-md-floating-label">
+                                <textarea class="form-control" name="message" id="message" rows="6" style="resize: none;"></textarea>
+                                <label for="message">
+                                    Message <span class="required">*</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions noborder">
+                    <button type="submit" id="submit" class="btn green">Submit</button>
+                    <button type="button" id="cancel" class="btn yellow-crusta">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card-box">
+            <div class="pull-right">
+                <a href="javascript:;" class="card-drop" data-toggle="dropdown"
+                   aria-expanded="false">
+                    <i class="fa fa-remove"></i>
+                </a>
+            </div>
+
+            <h4 class="card-title">Card Title Here</h4>
+
+            <p>
+                1 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+                has been the industry's standard dummy text ever since the 1500s, when an unknown
+                printer took a galley of type and scrambled it to make a type specimen book.
+            </p>
+            <div class="card-bottom-divider"></div> 
+            <a href="#myModal1" role="button" data-id="{{@index}}" data-toggle="modal" class="btn yellow-crusta">
+                View more
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal1" class="modal fade bs-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Notice</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet-body">
+                                <h4 class="card-title">Card Title Here</h4>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn yellow" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+<!-- END PAGE CONTENT-->
+{{> copyright }}
+ 
+ {{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#create_topic_section').hide();
+    $('#new_topic_btn').click(function() {
+        $('#create_topic_section').slideToggle();
+    });
+    $('#cancel').click(function() {
+        $('#create_topic_section').slideToggle();
+    });
+
+    $('#submit').click(function() {
+        var subject = $('#subject').val();
+        var message = $('#message').val();
+
+        if (!subject) {
+            sweetAlert("Missing Field!", "Please enter a subject for the post", "warning");
+            return;
+        }
+        if (!message) {
+            sweetAlert("Missing Field!", "Please enter a message for the post", "warning");
+            return;
+        }
+
+        //store post
+        var post = {};
+        post.subject = subject;
+        post.message = message;
+        post.date = new Date();
+        post.user = {
+            name: '{{user.name}}',
+            displayName: '{{user.displayName}}',
+            displayPic: '{{user.displayPic}}'
+        };
+        post.comments = [];
+
+        $.ajax({
+            url: '{{bolt_root}}/api/db/noticeboard/insert',
+            type: 'POST',
+            data: JSON.stringify({ object: post }),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response) {
+                if(response.code === 0){
+                    swal({
+                        title: "Post Created!",
+                        text: "Post has been successfully created.",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    }, function(isConfirm){
+                        if (isConfirm) {
+                            $('#create_topic_section').slideToggle();
+                            window.location.href="{{app_root}}/";
+                        }
+                    });
+                }
+                else {
+                    sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                }
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+ 
+ {{> footer }}

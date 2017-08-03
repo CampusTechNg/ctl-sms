@@ -4,6 +4,8 @@ var path = require('path');
 var request = require('request');
 var exphbs = require('express-handlebars');
 
+var utils = require("bolt-internal-utils");
+
 var app = express();
 
 var appname, apptoken;
@@ -17,6 +19,11 @@ app.engine('html', exphbs({
 	helpers: {
 		json: function(obj) {
 			return JSON.stringify(obj);
+		},
+		excerpt: function(message) {
+			message = message.toString();
+			var max = 200;
+			return message.substr(0, max) + (message.length > max ? "..." : "");
 		},
 		toDate: function(datetime) {
 			var date = new Date(datetime);
@@ -57,23 +64,100 @@ app.post('/app-starting', function(req, res){
 
 //Route
 app.get('/', function(req, res){
-	res.render('index', {
-		forum_menu: 'selected',
-		forum_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/posts/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+			var posts = body.body || [];
+			posts = posts.reverse();
+			res.render('index', {
+				forum_menu: 'selected',
+				forum_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+
+				posts: posts,
+				user: req.user
+			});
+		});
 });
 
-app.get('/single-topic', function(req, res){
-	res.render('single-topic', {
-		forum_menu: 'selected',
-		forum_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
+app.get('/posts/:id', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/posts/findone?_id=' + req.params.id, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+			var post = body.body;
+
+			if (post) {
+				res.render('post', {
+					forum_menu: 'selected',
+					forum_active: 'active',
+					app_root: req.app_root,
+					app_token: apptoken,
+					bolt_root: process.env.BOLT_ADDRESS,
+
+					post: post,
+					user: req.user
+				});
+			} else {
+				res.render('404', {
+					app_root: req.app_root,
+					bolt_root: process.env.BOLT_ADDRESS
+				});
+			}
+		});
+});
+
+app.post('/posts/:id/comments', function(req, res){
+	//TODO: before proceeding confirm that the 'X-Bolt-App-Token' of req matches yours
+
+	res.set('Content-Type', 'application/json');
+
+	var comment = req.body;
+
+	comment.date = comment.date || new Date();
+	comment.user = comment.user || {
+		name: req.user.name,
+		displayName: req.user.displayName,
+		displayPic: req.user.displayPic,
+	};
+
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/posts/findone?_id=' + req.params.id, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+			var post = body.body;
+
+			if (post) {
+				post.comments = post.comments || [];
+				post.comments.push(comment);
+
+				//update post
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/db/posts/update?_id=' + req.params.id, 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: { values: {comments: post.comments} }
+				}, function(error2, response2, body2) {
+					if (body2.code === 0) {
+						//fire event for new comment
+						comment.postId = post._id;
+						utils.Events.fire('comment-posted', { body: comment, subscribers: ['ctl-sms-forum'] }, apptoken, function(eventError, eventResponse){});
+					}
+					else {
+						//TODO: a way to specify error (raise an event??)
+					}
+					res.send(JSON.stringify({}));
+				});
+			} else {
+				//TODO: a way to specify error (raise an event??)
+				res.send(JSON.stringify({}));
+			}
+		});
 });
 
 app.get('*', function(req, res){

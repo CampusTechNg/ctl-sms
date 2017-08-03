@@ -1,0 +1,174 @@
+{{> header}}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    <link href="{{app_root}}/assets/pages/css/forum.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<div class="container-fluid">
+    <div class="col-md-8 col-sm-8 col-xs-6">
+        <h3 class="page-title"> Forum Post </h3>
+    </div>
+    <div class="col-md-4 col-sm-4 text-right hidden-xs">
+        <a href="{{app_root}}/" class="btn btn-default m-icon">
+            <i class="m-icon-swapleft"></i> Go Back
+        </a>
+    </div>
+</div>
+<!-- END PAGE TITLE-->
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="container-fluid">
+    <div class="blog-page blog-content-2">
+        <div class="col-lg-12">
+            <div class="blog-single-content bordered blog-container">
+                <div class="blog-single-head">
+                    <h1 class="blog-single-head-title">{{post.subject}}</h1>
+                    <div class="blog-single-head-date">
+                        <img src="{{bolt_root}}/{{post.user.displayPic}}" class="img-circle">
+                        <span>{{post.user.displayName}}</span>
+
+                        <i class="icon-calendar font-blue"></i>
+                        <span>{{toDate post.date}}</span>
+
+                        <i class="icon-bubble font-blue"></i>
+                        <span id="comments-span">{{post.comments.length}}</span>
+                    </div>
+                </div>
+                <div class="blog-single-desc">
+                    {{post.message}}
+                </div>
+                <div class="blog-single-foot">
+                        
+                </div>
+                <div class="blog-comments">
+                    <h3 class="sbold blog-comments-title" id="comments-h3">Comments ({{post.comments.length}})</h3>
+                    <div class="c-comment-list" id="comments-list">
+                        {{#each post.comments}}
+                        <div class="media">
+                            <div class="media-left">
+                                <img src="{{../bolt_root}}/{{user.displayPic}}" class="media-object">  
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">
+                                    <span class="commenter_name">{{user.displayName}}</span> on
+                                    <span class="c-date">{{toDate date}}, {{toTime date}}</span>
+                                </h4> 
+                                {{message}} 
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <h3 class="sbold blog-comments-title">Leave A Comment</h3>
+                    <div>
+                        <div class="form-group">
+                            <textarea rows="5" name="message" id="message" placeholder="Write comment here ..." class="form-control c-square"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button id="submit" type="submit" class="btn blue uppercase btn-md sbold btn-block">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
+</div>
+<!-- END PAGE CONTENT-->
+{{> copyright }}
+ 
+ {{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<script src="{{bolt_root}}/socket.io/socket.io.js" type="text/javascript"></script>
+<script src="{{bolt_root}}/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
+
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var commentCount = parseInt('{{post.comments.length}}');
+
+    Bolt.Events.on("ctl-sms-forum/comment-posted", function(event) {
+        if (event.token != '{{app_token}}') return;
+
+        var comment = event.body;
+        if (comment.postId != "{{post._id}}") {
+            //TODO: raise a notification so the user can go and check the appropriate post
+            return;
+        }
+
+        comment.date = new Date(comment.date); //because the date comes in as a string
+
+        commentCount++;
+        $("#comments-span").text(commentCount);
+        $("#comments-h3").text("Comments (" + commentCount + ")");
+
+        var comment_block = '<div class="media">' + 
+                            '<div class="media-left">' +
+                                '<img src="{{bolt_root}}/' + comment.user.displayPic + '" class="media-object">' +
+                            '</div>' +
+                            '<div class="media-body">' +
+                                '<h4 class="media-heading">' +
+                                    '<span class="commenter_name">' + comment.user.displayName + '</span> on ' +
+                                    '<span class="c-date">' + comment.date.toDateString() + ', ' + comment.date.toTimeString() + '</span>' +
+                                '</h4>' + 
+                                comment.message +
+                            '</div>' +
+                        '</div>';
+        $('#comments-list').append(comment_block);
+    });
+
+    $('#submit').click(function() {
+        var message = $("#message").val();
+
+        if (!message) {
+            sweetAlert("Missing Field!", "Please enter a comment for the post", "warning");
+            return;
+        }
+
+        var comment = {};
+        comment.message = message;
+        comment.date = new Date();
+        comment.user = {
+            name: '{{user.name}}',
+            displayName: '{{user.displayName}}',
+            displayPic: '{{user.displayPic}}'
+        };
+
+        $.ajax({
+            url: '{{app_root}}/posts/{{post._id}}/comments',
+            type: 'POST',
+            data: JSON.stringify(comment),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response) {
+                $("#message").val("");
+                /*if(response.code === 0){
+                    $("#message").val("");
+                }
+                else {
+                    sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                }*/
+            },
+            error: function(xhr, status, err){
+                //alert(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+ 
+ {{> footer }}

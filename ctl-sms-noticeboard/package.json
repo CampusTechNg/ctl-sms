@@ -1,7 +1,7 @@
 {
-  "name": "ctl-sms-forum",
+  "name": "ctl-sms-noticeboard",
   "version": "1.0.0",
-  "description": "Campus Technologies Limited Student Management System - Forum Module",
+  "description": "Campus Technologies Limited Student Management System - Notice Board Module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,12 +12,12 @@
     "express-handlebars": "^3.0.0"
   },
   "bolt": {
-    "displayName": "Forum",
+    "displayName": "Notice Board",
     "main": "bolt-server.js",
     "index": "/",
     "system": true,
     "extensions": {
-      "/forum": "/"
+      "/noticeboard": "/"
     },
     "files": {
       "icon": "assets/pages/img/icon.png",
@@ -25,16 +25,14 @@
     },
     "order": 3,
     "public": ["assets"],
-    "tags": ["forum", "ctl", "ctl-sms", "ctl-sms-forum", "ctl-sms-plugins"],
+    "tags": ["noticeboard", "ctl", "ctl-sms", "ctl-sms-noticeboard", "ctl-sms-plugins"],
     "collections": {
-      "posts": "*"
+      "noticeboard": "*"
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",
       "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated",
-
-      "ctl-sms-forum/comment-posted": "/hooks/ctl-sms-forum/comment-posted"
+      "bolt/user-updated": "/user-updated"
     },
     "dependencies": {
       "ctl-sms-home": "*"

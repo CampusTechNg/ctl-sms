@@ -13,7 +13,7 @@
 <!-- BEGIN PAGE TITLE-->
 <div class="container-fluid">
     <div class="col-md-12">
-        <h3 class="page-title"> Avaliable Categories</h3>
+        <h3 class="page-title"> Avaliable Items</h3>
     </div>
 </div>
 <!-- END PAGE TITLE-->
@@ -26,12 +26,12 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-green"></i>
-                    <span class="caption-subject font-green sbold uppercase">List of Avaliable Categories</span>
+                    <span class="caption-subject font-green sbold uppercase">List of Avaliable Items</span>
                 </div>
-                <div class="actions">
+                <!-- <div class="actions">
                     <div class="btn-group">
                         <a href="{{app_root}}/add-category" class="btn green">
-                            <i class="fa fa-plus"></i> <span class="hidden-xs"> Add Category</span>
+                            <i class="fa fa-plus"></i> <span class="hidden-xs"> Add Item</span>
                         </a>
                     </div>
                     <div class="btn-group">
@@ -74,6 +74,20 @@
                             </li>
                         </ul>
                     </div>
+                </div> -->
+            </div>
+            <div class="actions text-right">
+                <div class="form-group">
+                    <label class="col-md-3 col-md-offset-6 col-sm-8 col-xs-12 control-label">Filter by category</label>
+                    <div class="col-md-3 col-sm-4 col-xs-12">
+                        <select name="category" class="form-control" id="category">
+                            <option value="">All items</option>
+                            {{#each categories}}
+                            <option value="{{_id}}">{{displayName}}</option>
+                            {{/each}}
+                        </select> 
+                        <!-- <button type="button" id="chkbtn">Check</button> -->
+                    </div>
                 </div>
             </div>
             <div class="portlet-body">
@@ -87,24 +101,32 @@
                                         <span></span>
                                     </label>
                                 </th>
-                                <th> Category name </th>
-                                <th> Description </th>
+                                <th> Item name </th>
+                                <th> Price </th>
+                                <th> Discount </th>
+                                <th> Discount Type</th>
+                                <th> Quantity</th>
+                                <th> Critical quantity</th>
                                 <th> Action </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each categories}}
+                            {{#each items}}
                             <tr>
                                 <td>
                                     <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="checkboxes" value="{{_id}}" />
+                                        <input type="checkbox" class="checkboxes" value="{{_id}}"  id="chk"/>
                                         <span></span>
                                     </label>
                                 </td>
-                                <td> {{displayName}} </td>
-                                <td> {{description}} </td>
+                                <td> {{displayName}} <span style="display: none;">{{parentId}}</span></td>
+                                <td> {{price}} </td>
+                                <td> {{discount}} </td>
+                                <td> {{discountType}} </td>
+                                <td> {{quantity}} </td>
+                                <td> {{criticalQuantity}} </td>
                                 <td> 
-                                    <a href="{{../ app_root}}/edit-category/{{_id}}" class="btn dark btn-xs btn-outline sbold uppercase">
+                                    <a href="{{../ app_root}}/edit-item/{{_id}}" class="btn dark btn-xs btn-outline sbold uppercase">
                                         <i class="fa fa-edit"></i> <span class="hidden-xs"> Edit </span>
                                     </a>
                                 </td>
@@ -114,6 +136,7 @@
                     </table>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 
@@ -123,9 +146,9 @@
 {{> sub_footer }}
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="/public/ctl-sms-home/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<!-- <script src="/public/ctl-sms-home/assets/global/scripts/datatable.js" type="text/javascript"></script>
 <script src="/public/ctl-sms-home/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
-<script src="/public/ctl-sms-home/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script> -->
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
@@ -133,7 +156,7 @@
 <script type="text/javascript">
     $('#delete_btn').click(function(event) {
         event.preventDefault(); 
-        var names = $('input[type=checkbox]:checked').map(function() {
+        var names = $('input[type=checkbox]:checked:enabled').map(function() {
             return $(this).val();
         }).get();
         
@@ -207,9 +230,38 @@
         deleteCategory(0);
     });
 </script>
+
+<script type="text/javascript">
+    $(document).ready(function($) {
+        $('#category').change(function() {
+            $('table').show();
+            var selection = $(this).val();
+            var dataset = $('#sample_3 tbody').find('tr');
+            dataset.show().find("input[type=checkbox]").prop({"disabled": false,"checked": false});
+            // filter the rows that should be hidden
+            dataset.filter(function(index, item) {
+                return $(item).find('td').text().indexOf(selection) === -1;
+            }).hide().find("input[type=checkbox]").prop({"disabled": true,"checked": false});
+
+        });
+
+        //Select all checkboxes that are NOT disabled
+        $('.group-checkable').on('click', function() {
+           $('.checkboxes:enabled').prop('checked', this.checked);
+        });
+
+        /*$('#chkbtn').click(function(event) {
+            event.preventDefault(); 
+            var names = $('input[type=checkbox]:checked:enabled').map(function() {
+                return $(this).val();
+            }).get();
+            console.log(names);
+        });*/
+    });
+</script>
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="/public/ctl-sms-home/assets/pages/scripts/table-datatables-managed.min.js" type="text/javascript"></script>
+<!-- <script src="/public/ctl-sms-home/assets/pages/scripts/table-datatables-managed.min.js" type="text/javascript"></script> -->
 <!-- END PAGE LEVEL SCRIPTS -->
 {{> footer }}

@@ -147,6 +147,36 @@ app.get('/add-item', function(req, res){
 		});
 });
 
+app.get('/view-items', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/items/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {object:{}}}, 
+		function(error, response, body) {
+		var items = body.body;
+
+		request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/categories/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {object:{}}}, 
+		function(error, response, body) {
+			var categories = body.body;
+
+			res.render('view-items', {
+				view_items_menu: 'selected',
+				view_items_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				items: items,
+				categories: categories
+			});
+		});
+
+			
+	});
+});
+
 app.get('*', function(req, res){
 	res.render('404', {
 		app_root: req.app_root,

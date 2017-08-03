@@ -32,99 +32,63 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    <form role="form" id="new_topic_form" autocomplete="off">
-                        <div class="form-body">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="form-group form-md-line-input form-md-floating-label">
-                                        <input class="form-control" name="subject" id="subject" type="text" maxlength="20">
-                                        <label for="subject">
-                                            Subject <span class="required">*</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="form-group form-md-line-input form-md-floating-label">
-                                        <textarea class="form-control" name="message" id="message" rows="2" style="resize: none;"></textarea>
-                                        <label for="message">
-                                            Message <span class="required">*</span>
-                                        </label>
-                                    </div>
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group form-md-line-input form-md-floating-label">
+                                    <input class="form-control" name="subject" id="subject" type="text" maxlength="20">
+                                    <label for="subject">
+                                        Subject <span class="required">*</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-actions noborder">
-                            <button type="submit" id="submit" class="btn green">Submit</button>
-                            <button type="button" id="cancel" class="btn yellow-crusta">Cancel</button>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group form-md-line-input form-md-floating-label">
+                                    <textarea class="form-control" name="message" id="message" rows="6" style="resize: none;"></textarea>
+                                    <label for="message">
+                                        Message <span class="required">*</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="form-actions noborder">
+                        <button type="submit" id="submit" class="btn green">Submit</button>
+                        <button type="button" id="cancel" class="btn yellow-crusta">Cancel</button>
+                    </div>
                 </div>
             </div>
             <!-- END SAMPLE FORM PORTLET-->
         </div>
         <div class="col-lg-12">
+            {{#each posts}}
             <div class="blog-post-lg bordered blog-container">
                 <div class="blog-post-content">
                     <h2 class="blog-title blog-post-title">
-                        <a href="{{app_root}}/single-topic">Metronic Blog Post</a>
+                        <a href="{{../app_root}}/posts/{{_id}}">{{subject}}</a>
                     </h2>
                     <p class="blog-post-desc"> 
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
-                        suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit 
+                        {{excerpt message}} 
                     </p>
                     <div class="blog-post-foot">
-                        <!-- <ul class="blog-post-tags">
-                            <li class="uppercase">
-                                <a href="javascript:;">By Kelvin Chikezie</a>
-                            </li>
-                        </ul> -->
                         <div class="blog-post-meta">
-                            <i class="icon-user font-blue"></i>
-                            <a href="javascript:;">Johnson Stevenson</a>
+                            <img width="25" height="25" src="{{../bolt_root}}/{{user.displayPic}}" class="img-circle">
+                            <span>{{user.displayName}}</span>
                         </div>
                         <div class="blog-post-meta">
                             <i class="icon-calendar font-blue"></i>
-                            <a href="javascript:;">Oct 24, 2015</a>
+                            <span>{{toDate date}}</span>
                         </div>
                         <div class="blog-post-meta">
                             <i class="icon-bubble font-blue"></i>
-                            <a href="{{app_root}}/single-topic">14 Comments</a>
+                            <span>{{comments.length}}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="blog-post-lg bordered blog-container">
-                <div class="blog-post-content">
-                    <h2 class="blog-title blog-post-title">
-                        <a href="{{app_root}}/single-topic">New Metronic Features</a>
-                    </h2>
-                    <p class="blog-post-desc"> 
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
-                        suscipit lobortis nisl ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit 
-                    </p>
-                    <div class="blog-post-foot">
-                        <!-- <ul class="blog-post-tags">
-                            <li class="uppercase">
-                                <a href="javascript:;">By Kelvin Chikezie</a>
-                            </li>
-                        </ul> -->
-                        <div class="blog-post-meta">
-                            <i class="icon-user font-blue"></i>
-                            <a href="javascript:;">Johnson Stevenson</a>
-                        </div>
-                        <div class="blog-post-meta">
-                            <i class="icon-calendar font-blue"></i>
-                            <a href="javascript:;">Oct 22, 2015</a>
-                        </div>
-                        <div class="blog-post-meta">
-                            <i class="icon-bubble font-blue"></i>
-                            <a href="{{app_root}}/single-topic">8 Comments</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{/each}}
         </div>
     </div>   
 </div>
@@ -149,6 +113,63 @@ $(document).ready(function() {
     });
     $('#cancel').click(function() {
         $('#create_topic_section').slideToggle();
+    });
+
+    $('#submit').click(function() {
+        var subject = $('#subject').val();
+        var message = $('#message').val();
+
+        if (!subject) {
+            sweetAlert("Missing Field!", "Please enter a subject for the post", "warning");
+            return;
+        }
+        if (!message) {
+            sweetAlert("Missing Field!", "Please enter a message for the post", "warning");
+            return;
+        }
+
+        //store post
+        var post = {};
+        post.subject = subject;
+        post.message = message;
+        post.date = new Date();
+        post.user = {
+            name: '{{user.name}}',
+            displayName: '{{user.displayName}}',
+            displayPic: '{{user.displayPic}}'
+        };
+        post.comments = [];
+
+        $.ajax({
+            url: '{{bolt_root}}/api/db/posts/insert',
+            type: 'POST',
+            data: JSON.stringify({ object: post }),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response) {
+                if(response.code === 0){
+                    swal({
+                        title: "Post Created!",
+                        text: "Post has been successfully created.",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    }, function(isConfirm){
+                        if (isConfirm) {
+                            $('#create_topic_section').slideToggle();
+                            window.location.href="{{app_root}}/";
+                        }
+                    });
+                }
+                else {
+                    sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                }
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
+            }
+        });
     });
 });
 </script>
