@@ -22,7 +22,7 @@ app.engine('html', exphbs({
 		},
 		excerpt: function(message) {
 			message = message.toString();
-			var max = 200;
+			var max = 500;
 			return message.substr(0, max) + (message.length > max ? "..." : "");
 		},
 		toDate: function(datetime) {
@@ -62,15 +62,98 @@ app.post('/app-starting', function(req, res){
 	apptoken = event.body.appToken;
 });
 
+app.post('/hooks/bolt/app-collection-inserted', function(req, res){
+	var event = req.body;
+	
+	if (event.body.collection == 'notices') {
+		var id = event.body.result.insertedIds[0];
+
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/notices/find', 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+			var notices = body.body;
+
+			var notice;
+			for (var index = 0; index < notices.length; index++) {
+				var n = notices[index];
+				if (n._id.toString() == id.toString()) {
+					notice = n;
+					break;
+				}
+			}
+			
+			if(notice)
+				utils.Events.fire('notice-posted', { body: notice }, apptoken, function(eventError, eventResponse){});
+
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {background: '#2F42EC', caption: notices.length, message: 'public notices', route: '/'}}, 
+				function(error, response, body) {});
+
+			//TODO: raise notification
+			/*if (event.name == 'app-collection-inserted') {
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/notifications', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {
+						message: 'A new student has been created',
+						route: '/view-students',
+						to: ['kelvin'],
+						buttons: [
+						{
+							type: 'link',
+							text: 'Click',
+							data: '/apps/ctl-sms-students'
+						},
+						{
+							type: 'phone',
+							text: 'Call',
+							data: '+2347012345678'
+						},
+						{
+							type: 'postback',
+							text: 'Post',
+							data: 'A'
+						}
+						],
+						toast: {
+							message: 'A new student has been created',
+							duration: 8000
+						}
+					}
+				}, 
+					function(error, response, body) {
+						
+					});
+			}*/
+		});
+	}
+});
+
 //Route
 app.get('/', function(req, res){
-	res.render('index', {
-		noticeboard_menu: 'selected',
-		noticeboard_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/notices/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+			var notices = body.body || [];
+			//notices = notices.reverse();
+			res.render('index', {
+				noticeboard_menu: 'selected',
+				noticeboard_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+
+				editable: true, //TODO: determine if this is true or false based on logged-in user
+				notices: notices,
+				user: req.user
+			});
+		});
 });
 
 app.get('*', function(req, res){

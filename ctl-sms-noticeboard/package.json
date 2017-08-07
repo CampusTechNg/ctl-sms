@@ -27,12 +27,30 @@
     "public": ["assets"],
     "tags": ["noticeboard", "ctl", "ctl-sms", "ctl-sms-noticeboard", "ctl-sms-plugins"],
     "collections": {
-      "noticeboard": "*"
+      "notices": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              { "subject": { "$type": "string" } },
+              { "message": { "$type": "string" } },
+              { "date": { "$type": "date" } }
+            ]
+          },
+          "capped": true,
+          "size": 50000,
+          "max": 100
+        }
+      }
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",
       "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated"
+      "bolt/user-updated": "/user-updated",
+      "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted",
+      "bolt/app-collection-removed": "/hooks/bolt/app-collection-removed",
+
+      "ctl-sms-noticeboard/notice-posted": "/hooks/ctl-sms-noticeboard/notice-posted"
     },
     "dependencies": {
       "ctl-sms-home": "*"

@@ -62,6 +62,78 @@ app.post('/app-starting', function(req, res){
 	apptoken = event.body.appToken;
 });
 
+app.post('/hooks/bolt/app-collection-inserted', function(req, res){
+	var event = req.body;
+	
+	if (event.body.collection == 'posts') {
+		var id = event.body.result.insertedIds[0];
+
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/posts/find', 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+			var posts = body.body;
+
+			//var post = posts.find(function(p) { p._id.toString() == id.toString(); }); //for some reason this doesnt work
+			var post;
+			for (var index = 0; index < posts.length; index++) {
+				var p = posts[index];
+				if (p._id.toString() == id.toString()) {
+					post = p;
+					break;
+				}
+			}
+			
+			if(post)
+				utils.Events.fire('topic-posted', { body: post }, apptoken, function(eventError, eventResponse){});
+
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {background: '#FF7C26', caption: posts.length, message: 'forum topics', route: '/'}}, 
+				function(error, response, body) {});
+
+			//TODO: raise notification
+			/*if (event.name == 'app-collection-inserted') {
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/notifications', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {
+						message: 'A new student has been created',
+						route: '/view-students',
+						to: ['kelvin'],
+						buttons: [
+						{
+							type: 'link',
+							text: 'Click',
+							data: '/apps/ctl-sms-students'
+						},
+						{
+							type: 'phone',
+							text: 'Call',
+							data: '+2347012345678'
+						},
+						{
+							type: 'postback',
+							text: 'Post',
+							data: 'A'
+						}
+						],
+						toast: {
+							message: 'A new student has been created',
+							duration: 8000
+						}
+					}
+				}, 
+					function(error, response, body) {
+						
+					});
+			}*/
+		});
+	}
+});
+
 //Route
 app.get('/', function(req, res){
 	request.post({

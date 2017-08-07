@@ -33,7 +33,9 @@
       "bolt/app-starting": "/app-starting",
       "bolt/user-deleted": "/user-deleted",
       "bolt/user-updated": "/user-updated",
+      "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted",
 
+      "ctl-sms-forum/topic-posted": "/hooks/ctl-sms-forum/topic-posted",
       "ctl-sms-forum/comment-posted": "/hooks/ctl-sms-forum/comment-posted"
     },
     "dependencies": {

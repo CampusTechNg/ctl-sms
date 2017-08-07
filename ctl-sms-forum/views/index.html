@@ -36,7 +36,7 @@
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="subject" id="subject" type="text" maxlength="20">
+                                    <input class="form-control" name="subject" id="subject" type="text" maxlength="500">
                                     <label for="subject">
                                         Subject <span class="required">*</span>
                                     </label>
@@ -62,7 +62,7 @@
             </div>
             <!-- END SAMPLE FORM PORTLET-->
         </div>
-        <div class="col-lg-12">
+        <div class="col-lg-12" id="posts-list">
             {{#each posts}}
             <div class="blog-post-lg bordered blog-container">
                 <div class="blog-post-content">
@@ -102,17 +102,60 @@
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
+<script src="{{bolt_root}}/socket.io/socket.io.js" type="text/javascript"></script>
+<script src="{{bolt_root}}/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
+
 <!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 
 <script type="text/javascript">
 
 $(document).ready(function() {
+    var excerpt = function(message) {
+        message = message.toString();
+        var max = 200;
+        return message.substr(0, max) + (message.length > max ? "..." : "");
+    }
+
     $('#create_topic_section').hide();
     $('#new_topic_btn').click(function() {
         $('#create_topic_section').slideToggle();
     });
     $('#cancel').click(function() {
         $('#create_topic_section').slideToggle();
+    });
+
+    Bolt.Events.on("ctl-sms-forum/topic-posted", function(event) {
+        if (event.token != '{{app_token}}') return;
+
+        var post = event.body;
+
+        post.date = new Date(post.date); //because the date comes in as a string
+
+        var post_block = '<div class="blog-post-lg bordered blog-container">' +
+                '<div class="blog-post-content">' +
+                    '<h2 class="blog-title blog-post-title">' +
+                        '<a href="{{app_root}}/posts/' + post._id + '">' + post.subject + '</a>' +
+                    '</h2>' +
+                    '<p class="blog-post-desc"> ' +
+                        excerpt(post.message) + 
+                    '</p>' +
+                    '<div class="blog-post-foot">' +
+                        '<div class="blog-post-meta">' +
+                            '<img width="25" height="25" src="{{bolt_root}}/' + post.user.displayPic + '" class="img-circle">' +
+                            '<span>' + post.user.displayName + '</span>' +
+                        '</div>' +
+                        '<div class="blog-post-meta">' +
+                            '<i class="icon-calendar font-blue"></i>' +
+                            '<span>' + post.date.toDateString() + '</span>' +
+                        '</div>' +
+                        '<div class="blog-post-meta">' +
+                            '<i class="icon-bubble font-blue"></i>' +
+                            '<span>' + post.comments.length + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+        $('#posts-list').prepend(post_block);
     });
 
     $('#submit').click(function() {
@@ -149,7 +192,10 @@ $(document).ready(function() {
             headers: {'X-Bolt-App-Token': '{{app_token}}'},
             success: function(response) {
                 if(response.code === 0){
-                    swal({
+                    $('#subject').val("");
+                    $('#message').val("");
+                    $('#create_topic_section').slideToggle();
+                    /*swal({
                         title: "Post Created!",
                         text: "Post has been successfully created.",
                         type: "success",
@@ -160,7 +206,7 @@ $(document).ready(function() {
                             $('#create_topic_section').slideToggle();
                             window.location.href="{{app_root}}/";
                         }
-                    });
+                    });*/
                 }
                 else {
                     sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");

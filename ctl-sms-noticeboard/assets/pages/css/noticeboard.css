@@ -8,19 +8,7 @@
   margin-bottom: 20px;
   background-color: #ffffff;
 }
-.card-box .card-drop {
-  color: #98a6ad;
-  font-size: 17px;
-  line-height: 1px;
-  padding: 0px 5px;
-  display: inline-block;
-  opacity: 0.5;
-}
-.card-box .card-drop:hover {
-    opacity: 1;
-    color: #d91e18;
 
-}
 .card-title {
     font-size: 16px;
     font-weight: 600;

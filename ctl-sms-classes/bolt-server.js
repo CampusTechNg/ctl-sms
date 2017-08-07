@@ -104,6 +104,53 @@ app.get('/edit-class/:id', function(req, res){
 	});
 });
 
+app.get('/class-settings', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/classes/find', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {object:{}}}, 
+		function(error, response, body) {
+		var classes = body.body;
+
+		res.render('class-settings', {
+			class_settings_menu: 'selected',
+			class_settings_active: 'active',
+			app_root: req.app_root,
+			app_token: apptoken,
+			bolt_root: process.env.BOLT_ADDRESS,
+			classes: classes
+		});
+	});
+});
+
+app.get('/assign-class-subject/:id', function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.id, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+		var schClass = body.body;
+
+			request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/subjects/find', 
+			headers: {'X-Bolt-App-Token': apptoken, },
+			json: {object:{}, app: 'ctl-sms-subjects'}}, 
+			function(error, response, body) {
+			var subjects = body.body;
+
+			res.render('assign-class-subject', {
+				class_settings_menu: 'selected',
+				class_settings_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				schClass: schClass,
+				subjects: subjects
+			});
+		});		
+	});
+});
+
 app.get('*', function(req, res){
 	res.render('404', {
 		app_root: req.app_root,
