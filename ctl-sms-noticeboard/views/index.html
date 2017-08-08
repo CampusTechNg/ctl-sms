@@ -66,11 +66,11 @@
 </div>
 <div class="container-fluid" id="notices-list">
     {{#each notices}}
-    <div class="col-lg-3 col-md-4 col-sm-6">
+    <div class="col-lg-3 col-md-4 col-sm-6" id="notice_{{_id}}">
         <div class="card-box">
             {{#if ../editable}}
             <div class="pull-right">
-                <button type="button" class="close" onclick="removeNotice({{@index}})"></button>
+                <button type="button" class="close" onclick="removeNotice('{{_id}}')"></button>
                 <!-- <a href="javascript:;" onclick="removeNotice({{@index}})" class="card-drop" data-toggle="dropdown"
                    aria-expanded="false">
                     <i class="fa fa-remove"></i>
@@ -135,13 +135,35 @@
 <!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 
 <script type="text/javascript">
-var removeNotice = function(index) {
-    alert(index);
+var notices;
+var noticesCount;
+
+var removeNotice = function(id) {
+    $.ajax({
+        url: '{{bolt_root}}/api/db/notices/remove?_id=' + id,
+        type: 'POST',
+        data: JSON.stringify({}),
+        dataType: 'json',
+        contentType: 'application/json',
+        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+        success: function(response) {
+            if(response.code === 0){
+                //$('#notice_' + id).hide();
+            }
+            else {
+                sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+            }
+        },
+        error: function(xhr, status, err){
+            alert(xhr.responseText);
+        }
+    });
 };
 
 $(document).ready(function() {
-    var notices = {{{json notices}}};
-    var noticesCount = notices.length;
+    notices = {{{json notices}}};
+    noticesCount = notices.length;
+    var editable = '{{editable}}' == 'true';
 
     $(document).on("click", ".view-more", function () {
          var index = $(this).data('id');
@@ -174,11 +196,11 @@ $(document).ready(function() {
         noticesCount++;
         notices.push(notice);
 
-        var notice_block = '<div class="col-lg-3 col-md-4 col-sm-6">' +
+        var notice_block = '<div class="col-lg-3 col-md-4 col-sm-6" id="notice_' + notice._id + '">' +
                 '<div class="card-box">' +
-                    '<div class="pull-right">' +
-                        '<button type="button" class="close" onclick="removeNotice(' + (noticesCount - 1) + ')"></button>' +
-                    '</div>' +
+                    (editable ? '<div class="pull-right">' +
+                                             '<button type="button" class="close" onclick="removeNotice(\'' + notice._id + '\')"></button>' +
+                                         '</div>' : '') +
 
                     '<h4 class="card-title">' + notice.subject + '</h4>' +
 
@@ -192,6 +214,13 @@ $(document).ready(function() {
                 '</div>' +
             '</div>';
         $('#notices-list').append(notice_block);
+    });
+    Bolt.Events.on("ctl-sms-noticeboard/notice-deleted", function(event) {
+        if (event.token != '{{app_token}}') return;
+
+        var notice = event.body;//this event.body contains ONLY '_id'
+
+        $('#notice_' + notice._id).hide();
     });
 
     $('#submit').click(function() {

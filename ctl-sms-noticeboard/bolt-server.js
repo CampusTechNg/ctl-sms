@@ -37,6 +37,16 @@ app.engine('html', exphbs({
 }));
 app.set('view engine', 'html');
 
+function checkForWriteNoticePermission(req, res, next) {
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/checks/has-permission', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: { app: appname, permission: 'write-notice', user: req.user.name }}, 
+		function(error, response, body) {
+			req.hasWriteNoticePermission = body.body.result;
+			next();
+		});
+}
 
 //Body Parser Middleware
 app.use(bodyParser.json());
@@ -133,8 +143,69 @@ app.post('/hooks/bolt/app-collection-inserted', function(req, res){
 	}
 });
 
+app.post('/hooks/bolt/app-collection-removed', function(req, res){
+	var event = req.body;
+	
+	if (event.body.collection == 'notices') {
+		var id = event.body.meta.query._id;
+
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/notices/find', 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+			var notices = body.body;
+			
+			utils.Events.fire('notice-deleted', { body: { _id: id } }, apptoken, function(eventError, eventResponse){});
+
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {background: '#2F42EC', caption: notices.length, message: 'public notices', route: '/'}}, 
+				function(error, response, body) {});
+
+			//TODO: raise notification
+			/*if (event.name == 'app-collection-inserted') {
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/notifications', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {
+						message: 'A new student has been created',
+						route: '/view-students',
+						to: ['kelvin'],
+						buttons: [
+						{
+							type: 'link',
+							text: 'Click',
+							data: '/apps/ctl-sms-students'
+						},
+						{
+							type: 'phone',
+							text: 'Call',
+							data: '+2347012345678'
+						},
+						{
+							type: 'postback',
+							text: 'Post',
+							data: 'A'
+						}
+						],
+						toast: {
+							message: 'A new student has been created',
+							duration: 8000
+						}
+					}
+				}, 
+					function(error, response, body) {
+						
+					});
+			}*/
+		});
+	}
+});
+
 //Route
-app.get('/', function(req, res){
+app.get('/', checkForWriteNoticePermission, function(req, res){
 	request.post({
 		url: process.env.BOLT_ADDRESS + '/api/db/notices/find', 
 		headers: {'X-Bolt-App-Token': apptoken},
@@ -149,7 +220,7 @@ app.get('/', function(req, res){
 				app_token: apptoken,
 				bolt_root: process.env.BOLT_ADDRESS,
 
-				editable: true, //TODO: determine if this is true or false based on logged-in user
+				editable: req.hasWriteNoticePermission,
 				notices: notices,
 				user: req.user
 			});

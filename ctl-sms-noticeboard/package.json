@@ -36,11 +36,14 @@
               { "message": { "$type": "string" } },
               { "date": { "$type": "date" } }
             ]
-          },
-          "capped": true,
-          "size": 50000,
-          "max": 100
+          }
         }
+      }
+    },
+    "permissions": {
+      "write-notice": {
+        "displayName": "Create Notice",
+        "description": "Permission to create, edit or delete notice"
       }
     },
     "hooks": {
@@ -50,7 +53,8 @@
       "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted",
       "bolt/app-collection-removed": "/hooks/bolt/app-collection-removed",
 
-      "ctl-sms-noticeboard/notice-posted": "/hooks/ctl-sms-noticeboard/notice-posted"
+      "ctl-sms-noticeboard/notice-posted": "/hooks/ctl-sms-noticeboard/notice-posted",
+      "ctl-sms-noticeboard/notice-deleted": "/hooks/ctl-sms-noticeboard/notice-deleted"
     },
     "dependencies": {
       "ctl-sms-home": "*"
