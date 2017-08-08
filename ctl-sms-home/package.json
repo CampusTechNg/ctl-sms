@@ -27,6 +27,11 @@
       "bolt/app-starting": "/app-starting",
       "bolt/app-installed": "/app-installed",
       "bolt/dashboard-card-posted": "/hooks/bolt/dashboard-card-posted",
+      "bolt/dashboard-tile-posted": "/hooks/bolt/dashboard-tile-posted",
+      "bolt/dashboard-view-posted": "/hooks/bolt/dashboard-view-posted",
+      "bolt/dashboard-card-deleted": "/hooks/bolt/dashboard-card-deleted",
+      "bolt/dashboard-tile-deleted": "/hooks/bolt/dashboard-tile-deleted",
+      "bolt/dashboard-view-deleted": "/hooks/bolt/dashboard-view-deleted",
       "bolt/notification-posted": "/hooks/bolt/notification-posted"
     },
     "index": "/",

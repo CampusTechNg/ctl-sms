@@ -98,7 +98,7 @@ app.post('/hooks/bolt/app-collection-inserted', function(req, res){
 				utils.Events.fire('notice-posted', { body: notice }, apptoken, function(eventError, eventResponse){});
 
 			request.post({
-				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
+				url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
 				headers: {'X-Bolt-App-Token': apptoken},
 				json: {background: '#2F42EC', caption: notices.length, message: 'public notices', route: '/'}}, 
 				function(error, response, body) {});
@@ -158,12 +158,21 @@ app.post('/hooks/bolt/app-collection-removed', function(req, res){
 			
 			utils.Events.fire('notice-deleted', { body: { _id: id } }, apptoken, function(eventError, eventResponse){});
 
-			request.post({
-				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
-				headers: {'X-Bolt-App-Token': apptoken},
-				json: {background: '#2F42EC', caption: notices.length, message: 'public notices', route: '/'}}, 
-				function(error, response, body) {});
-
+			if (notices.length > 0) {
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {background: '#2F42EC', caption: notices.length, message: 'public notices', route: '/'}}, 
+					function(error, response, body) {});
+			}
+			else {
+				request.delete({
+					url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {}}, 
+					function(error, response, body) {});
+			}
+				
 			//TODO: raise notification
 			/*if (event.name == 'app-collection-inserted') {
 				request.post({

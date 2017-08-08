@@ -98,7 +98,17 @@
                                 </li>
                                 <li>
                                     <ul class="dropdown-menu-list scroller" id="private_notification" style="height: 275px;" data-handle-color="#637283">
-                                        
+                                        <li>
+                                            <a href="#">
+                                                <span class="photo">
+                                                    <img src="../assets/layouts/layout3/img/avatar2.jpg" class="img-circle" alt=""> </span>
+                                                <span class="subject">
+                                                    <span class="from"> Lisa Wong </span>
+                                                    <span class="time">Just Now </span>
+                                                </span>
+                                                <span class="message"> Vivamus sed auctor nibh congue nibh. auctor nibh auctor nibh... </span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -918,6 +928,12 @@
         </script>
 
         <script type="text/javascript">
+            /*Bolt.Events.on("bolt/server-connected", function(event){
+                alert("yayyy server connected")
+            });
+            Bolt.Events.on("bolt/server-disconnected", function(event){
+                alert("server disconnected")
+            });*/
             Bolt.Events.on("bolt/notification-posted", function(event){
                 if (event.token != '{{app_token}}') return;
 

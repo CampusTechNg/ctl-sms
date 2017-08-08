@@ -54,11 +54,74 @@
 <!-- END PAGE HEADER-->
 
 <!-- BEGIN DASHBOARD STATS 1-->
-<div class="container-fluid" id="home-cards">
+<div class="container-fluid" id="home-tiles">
     
 </div>
 <div class="clearfix"></div>
 <!-- END DASHBOARD STATS 1-->
+
+<div class="container-fluid">
+    <div class="mt-element-card mt-element-overlay">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="mt-card-item">
+                <div class="mt-card-avatar mt-overlay-1">
+                    <img src="{{app_root}}/assets/pages/img/team1.jpg" />
+                    <div class="mt-overlay"></div>
+                </div>
+                <div class="mt-card-content">
+                    <h3 class="mt-card-name">Mark Anthony</h3>
+                    <p class="mt-card-desc font-grey-mint">Managing Director</p>
+                    <div class="mt-card-social">
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="icon-social-facebook"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="icon-social-twitter"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="icon-social-dribbble"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <!-- BEGIN Portlet PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <span class="caption-subject bold uppercase"> Portlet</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="scroller" style="height:180px">
+                    <p> Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula,
+                        eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus
+                        sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. consectetur purus sit amet fermentum. Duis
+                        mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. </p>
+                    <p> nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras
+                        mattis consectetur purus sit amet fermentum. consectetur purus sit amet fermentum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus
+                        sit amet fermentum. </p>
+                </div>
+                <hr>
+                <div class="form-actions noborder">
+                    <button type="submit" class="btn green">Submit</button>
+                </div>
+            </div>
+        </div>
+        <!-- END Portlet PORTLET-->
+    </div>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="col-md-6 col-sm-6">
@@ -363,48 +426,11 @@
 <script src="{{bolt_root}}/socket.io/socket.io.js" type="text/javascript"></script>
 <script src="{{bolt_root}}/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
 <script type="text/javascript">
-    Bolt.Events.on("bolt/dashboard-card-posted", function(event){
-        if (event.token != '{{app_token}}') return;
-        var card = event.body;
+    var plugins = {{{json plugins}}};
 
-        if (card.app.indexOf('ctl-sms-') !== 0) return;
-
-        var elems = $('#card_' + card.app);
-
-        if (typeof elems.length == 'undefined' || elems.length == 0) {
-            var count = $("#home-cards").children().length;
-            if (count == 8) {
-                $('#home-cards div:last').remove();
-            }
-
-            var append = '';
-            if (card.route) {
-                var route = (card.route.indexOf('/') == 0) ? card.route : '/' + card.route;
-                append = '?route=' + encodeURIComponent(route);
-            }
-            if (card.query) {
-                append += (card.route) ? '&' : '?';
-                append += 'query=' + encodeURIComponent(card.query);
-            }
-
-            var card_frame =    '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' +
-                                '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ card.background +' !important" href="{{bolt_root}}/apps/' + card.app + append + '">' +
-                                '<div class="visual"><img src="{{bolt_root}}/files/' + card.app + '/icon-md" style="opacity:0.6"></div>' +
-                                '<div class="details">' +
-                                '<div class="number">' +
-                                '<span id="card_' + card.app + '" data-counter="counterup" data-value="' + card.caption + '">' + card.caption + '</span></div>' +
-                                '<div class="desc"> ' + card.message + ' </div></div>' +
-                                '</a>' +
-                                '</div>';
-            $( "#home-cards" ).prepend(card_frame);
-        } else {
-            $('#card_' + card.app).attr('data-value', card.caption);
-            $('#card_' + card.app).text(card.caption);
-        }    
-    });
     $(document).ready(function(){
         $.ajax({
-            url: '{{bolt_root}}/api/db/cards/find',
+            url: '{{bolt_root}}/api/db/tiles/find',
             type: 'POST',
             data: JSON.stringify({app: 'bolt-module-dashboard', query: {}}),
             dataType: 'json',
@@ -412,37 +438,86 @@
             headers: {'X-Bolt-App-Token': '{{app_token}}'},
             success: function(response, status, xhr){
                 if (response.code === 0) {
-                    var cards = response.body;
-                    cards = cards.reverse().filter(function(card){
-                        return card.app.indexOf('ctl-sms-') === 0;
+                    var tiles = response.body;
+                    tiles = tiles.reverse().filter(function(tile){
+                        return plugins.map(function(app) {return app.name;}).indexOf(tile.app) > -1;
                     });
-                    for (index = 0; index < cards.length && index < 8; index++) {
-                        var card = cards[index];
+                    for (index = 0; index < tiles.length && index < 8; index++) {
+                        var tile = tiles[index];
                         var append = '';
-                        if (card.route) {
-                            var route = (card.route.indexOf('/') == 0) ? card.route : '/' + card.route;
+                        if (tile.route) {
+                            var route = (tile.route.indexOf('/') == 0) ? tile.route : '/' + tile.route;
                             append = '?route=' + encodeURIComponent(route);
                         }
-                        if (card.query) {
-                            append += (card.route) ? '&' : '?';
-                            append += 'query=' + encodeURIComponent(card.query);
+                        if (tile.query) {
+                            append += (tile.route) ? '&' : '?';
+                            append += 'query=' + encodeURIComponent(tile.query);
                         }
-                        var card_frame =    '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' +
-                                            '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ card.background +' !important" href="{{bolt_root}}/apps/' + card.app + append + '">' +
-                                            '<div class="visual"><img src="{{bolt_root}}/files/' + card.app + '/icon-md" style="opacity:0.6"></div>' +
+                        var tile_frame =    '<div id="tile_' + tile.app + '" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' +
+                                            '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ tile.background +' !important" href="{{bolt_root}}/apps/' + tile.app + append + '">' +
+                                            '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                             '<div class="details">' +
                                             '<div class="number">' +
-                                            '<span id="card_' + card.app + '" data-counter="counterup" data-value="' + card.caption + '">' + card.caption + '</span></div>' +
-                                            '<div class="desc"> ' + card.message + ' </div></div>' +
+                                            '<span id="tile_caption_' + tile.app + '" data-counter="counterup" data-value="' + tile.caption + '">' + tile.caption + '</span></div>' +
+                                            '<div class="desc"> ' + tile.message + ' </div></div>' +
                                             '</a>' +
                                             '</div>';
-                        $( "#home-cards" ).append(card_frame);
+                        $( "#home-tiles" ).append(tile_frame);
                     }
                 }
             },
             error: function(xhr, status, err) {}
         });
         
+    });
+
+    Bolt.Events.on("bolt/dashboard-tile-posted", function(event){
+        if (event.token != '{{app_token}}') return;
+        var tile = event.body;
+
+        if (plugins.map(function(app) {return app.name;}).indexOf(tile.app) == -1) return;
+
+        var elems = $('#tile_' + tile.app);
+
+        if (typeof elems.length == 'undefined' || elems.length == 0) {
+            var count = $("#home-tiles").children().length;
+            if (count == 8) {
+                $('#home-tiles div:last').remove();
+            }
+
+            var append = '';
+            if (tile.route) {
+                var route = (tile.route.indexOf('/') == 0) ? tile.route : '/' + tile.route;
+                append = '?route=' + encodeURIComponent(route);
+            }
+            if (tile.query) {
+                append += (tile.route) ? '&' : '?';
+                append += 'query=' + encodeURIComponent(tile.query);
+            }
+
+            var tile_frame =    '<div id="tile_' + tile.app + '" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' +
+                                '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ tile.background +' !important" href="{{bolt_root}}/apps/' + tile.app + append + '">' +
+                                '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
+                                '<div class="details">' +
+                                '<div class="number">' +
+                                '<span id="tile_caption_' + tile.app + '" data-counter="counterup" data-value="' + tile.caption + '">' + tile.caption + '</span></div>' +
+                                '<div class="desc"> ' + tile.message + ' </div></div>' +
+                                '</a>' +
+                                '</div>';
+            $( "#home-tiles" ).prepend(tile_frame);
+        } else {
+            $('#tile_caption_' + tile.app).attr('data-value', tile.caption);
+            $('#tile_caption_' + tile.app).text(tile.caption);
+        }    
+    });
+
+    Bolt.Events.on("bolt/dashboard-tile-deleted", function(event){
+        if (event.token != '{{app_token}}') return;
+        var tile = event.body;
+
+        if (tile.app.indexOf('ctl-sms-') !== 0) return;
+
+        $('#tile_' + tile.app).remove();
     });
 </script>
 <!-- END PAGE LEVEL SCRIPTS -->

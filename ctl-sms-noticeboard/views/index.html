@@ -148,7 +148,7 @@ var removeNotice = function(id) {
         headers: {'X-Bolt-App-Token': '{{app_token}}'},
         success: function(response) {
             if(response.code === 0){
-                //$('#notice_' + id).hide();
+                //$('#notice_' + id).remove();
             }
             else {
                 sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
@@ -163,7 +163,6 @@ var removeNotice = function(id) {
 $(document).ready(function() {
     notices = {{{json notices}}};
     noticesCount = notices.length;
-    var editable = '{{editable}}' == 'true';
 
     $(document).on("click", ".view-more", function () {
          var index = $(this).data('id');
@@ -198,9 +197,9 @@ $(document).ready(function() {
 
         var notice_block = '<div class="col-lg-3 col-md-4 col-sm-6" id="notice_' + notice._id + '">' +
                 '<div class="card-box">' +
-                    (editable ? '<div class="pull-right">' +
-                                             '<button type="button" class="close" onclick="removeNotice(\'' + notice._id + '\')"></button>' +
-                                         '</div>' : '') +
+                    '<div class="pull-right">' +
+                        '<button type="button" class="close" onclick="removeNotice(\'' + notice._id + '\')"></button>' +
+                    '</div>' +
 
                     '<h4 class="card-title">' + notice.subject + '</h4>' +
 
@@ -220,7 +219,7 @@ $(document).ready(function() {
 
         var notice = event.body;//this event.body contains ONLY '_id'
 
-        $('#notice_' + notice._id).hide();
+        $('#notice_' + notice._id).remove();
     });
 
     $('#submit').click(function() {

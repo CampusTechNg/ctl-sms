@@ -17,7 +17,12 @@ app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt envi
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', exphbs({
 	//defaultLayout: 'main.html' //Default templating page
-	partialsDir: __dirname + '/views/partials/'
+	partialsDir: __dirname + '/views/partials/',
+	helpers: {
+		json: function(obj) {
+			return JSON.stringify(obj);
+		}
+	}
 }));
 app.set('view engine', 'html');
 
@@ -46,8 +51,7 @@ app.post('/app-starting', function(req, res){
 	appToken = event.body.appToken;
 });
 
-//Route
-app.get('/', function(req, res){
+function getVisibleApps(req, res, next) {
 	request(process.env.BOLT_ADDRESS + '/api/checks/visible-apps/' + req.user.name + '?tags=ctl-sms-plugins', function(error, response, body){
 		body = JSON.parse(body);
 		var plugins = body.body;
@@ -56,22 +60,29 @@ app.get('/', function(req, res){
           var orderB = b.order || 0;
           return parseInt(orderA, 10) - parseInt(orderB, 10);
         });
-        var scope = {
-          app_root: req.app_root,
-          app_token: appToken,
-		  bolt_root: process.env.BOLT_ADDRESS,
-          plugins: plugins,
-          user: req.user
-        };
-        res.render("index", scope);
+        req.plugins = plugins;
+        next();
 	});
+}
+
+//Route
+app.get('/', getVisibleApps, function(req, res){
+	var scope = {
+      app_root: req.app_root,
+      app_token: appToken,
+	  bolt_root: process.env.BOLT_ADDRESS,
+      plugins: req.plugins,
+      user: req.user
+    };
+    res.render("index", scope);
 });
 
-app.get('/frame', function(req, res){
+app.get('/frame', getVisibleApps, function(req, res){
 	res.render('frame', {
 		app_root: req.app_root,
 		app_token: appToken,
-		bolt_root: process.env.BOLT_ADDRESS
+		bolt_root: process.env.BOLT_ADDRESS,
+		plugins: req.plugins,
 	});
 });
 
