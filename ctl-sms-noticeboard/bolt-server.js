@@ -108,17 +108,17 @@ app.post('/hooks/bolt/app-collection-inserted', function(req, res){
 					}
 				}, function(error, response, body) {});
 
-				/*request.post({
-					url: process.env.BOLT_ADDRESS + '/api/dashboard/view', 
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
 					headers: {'X-Bolt-App-Token': apptoken},
-					json: {caption: notice.subject, route: '/testing'}}, 
-					function(error, response, body) {});*/
+					json: {subject: notice.subject, message: notice.message}}, 
+					function(error, response, body) {});
 			}
 
 			request.post({
 				url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
 				headers: {'X-Bolt-App-Token': apptoken},
-				json: {background: '#2F42EC', caption: notices.length, message: 'public notices', route: '/'}}, 
+				json: {background: '#2F42EC', subject: notices.length, message: 'public notices', route: '/'}}, 
 				function(error, response, body) {});
 		});
 	}
@@ -143,12 +143,25 @@ app.post('/hooks/bolt/app-collection-removed', function(req, res){
 				request.post({
 					url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
 					headers: {'X-Bolt-App-Token': apptoken},
-					json: {background: '#2F42EC', caption: notices.length, message: 'public notices', route: '/'}}, 
+					json: {background: '#2F42EC', subject: notices.length, message: 'public notices', route: '/'}}, 
+					function(error, response, body) {});
+
+				var notice = notices[notices.length - 1];
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {subject: notice.subject, message: notice.message}}, 
 					function(error, response, body) {});
 			}
 			else {
 				request.delete({
 					url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {}}, 
+					function(error, response, body) {});
+
+				request.delete({
+					url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
 					headers: {'X-Bolt-App-Token': apptoken},
 					json: {}}, 
 					function(error, response, body) {});

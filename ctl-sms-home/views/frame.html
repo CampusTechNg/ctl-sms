@@ -62,40 +62,7 @@
 <!-- END DASHBOARD STATS 1-->
 
 <div class="container-fluid">
-    <ul class="card_group">
-        <li class="card">
-            <div class="card_flex_display">
-                <span class="card_details card_flex_display card_flex">
-                    <span class="card_title">
-                        Individual Consultancy
-                    </span>
-                    <span class="card_body">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua.
-                    </span>
-                    <span class="card_footer">
-                        <a href="" class="btn green">View more</a>
-                    </span>
-                </span>
-            </div>
-        </li>
-        <li class="card">
-            <div class="card_flex_display">
-                <span class="card_img">
-                    <img src="{{app_root}}/assets/pages/img/0.jpg" alt="">
-                </span>
-                <span class="card_details card_flex_display card_flex">
-                    <span class="card_title_img">
-                        Individual Consultancy – Pre-feasibility Studies on Business Opportunities
-                    </span>
-                    <span class="card_footer">
-                        <a href="" class="btn green">View more</a>
-                    </span>
-                </span>
-            </div>
-        </li>
+    <ul id="home-cards" class="card_group">
     </ul>
 </div>
 
@@ -214,11 +181,80 @@
                                             '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                             '<div class="details">' +
                                             '<div class="number">' +
-                                            '<span id="tile_caption_' + tile.app + '" data-counter="counterup" data-value="' + tile.caption + '">' + tile.caption + '</span></div>' +
+                                            '<span id="tile_subject_' + tile.app + '" data-counter="counterup" data-value="' + tile.subject + '">' + tile.subject + '</span></div>' +
                                             '<div class="desc"> ' + tile.message + ' </div></div>' +
                                             '</a>' +
                                             '</div>';
                         $( "#home-tiles" ).append(tile_frame);
+                    }
+                }
+            },
+            error: function(xhr, status, err) {}
+        });
+
+        $.ajax({
+            url: '{{bolt_root}}/api/db/cards/find',
+            type: 'POST',
+            data: JSON.stringify({app: 'bolt-module-dashboard', query: {}}),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response, status, xhr){
+                if (response.code === 0) {
+                    var cards = response.body;
+                    cards = cards.reverse().filter(function(card){
+                        return modules.map(function(app) {return app.name;}).indexOf(card.app) > -1;
+                    });
+                    for (index = 0; index < cards.length && index < 8; index++) {
+                        var card = cards[index];
+                        var append = '';
+                        if (card.route) {
+                            var route = (card.route.indexOf('/') == 0) ? card.route : '/' + card.route;
+                            append = '?route=' + encodeURIComponent(route);
+                        }
+                        if (card.query) {
+                            append += (card.route) ? '&' : '?';
+                            append += 'query=' + encodeURIComponent(card.query);
+                        }
+
+                        var card_frame = "";
+
+                        if (card.type == 'image') {
+                            card_frame = '<li id="card_' + card.app + '" class="card">' +
+                                '<div class="card_flex_display">' +
+                                    '<span class="card_img">' +
+                                        '<img id="card_img_' + card.app + '" src="{{bolt_root}}/' + card.background + '" alt="">' +
+                                    '</span>' +
+                                    '<span class="card_details card_flex_display card_flex">' +
+                                        '<span id="card_subject_' + card.app + '" class="card_title_img">' +
+                                            card.subject +
+                                        '</span>' +
+                                        '<span class="card_footer">' +
+                                            '<a href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
+                                        '</span>' +
+                                    '</span>' +
+                                '</div>' +
+                            '</li>';
+                        }
+                        else {
+                            card_frame = '<li id="card_' + card.app + '" class="card">' +
+                                '<div class="card_flex_display">' +
+                                    '<span class="card_details card_flex_display card_flex">' +
+                                        '<span id="card_subject_' + card.app + '" class="card_title">' +
+                                            card.subject +
+                                        '</span>' +
+                                        '<span id="card_message_' + card.app + '" class="card_body">' +
+                                            card.message +
+                                        '</span>' +
+                                        '<span class="card_footer">' +
+                                            '<a href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
+                                        '</span>' +
+                                    '</span>' +
+                                '</div>' +
+                            '</li>';
+                        }
+
+                        $( "#home-cards" ).append(card_frame);
                     }
                 }
             },
@@ -256,14 +292,14 @@
                                 '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                 '<div class="details">' +
                                 '<div class="number">' +
-                                '<span id="tile_caption_' + tile.app + '" data-counter="counterup" data-value="' + tile.caption + '">' + tile.caption + '</span></div>' +
+                                '<span id="tile_subject_' + tile.app + '" data-counter="counterup" data-value="' + tile.subject + '">' + tile.subject + '</span></div>' +
                                 '<div class="desc"> ' + tile.message + ' </div></div>' +
                                 '</a>' +
                                 '</div>';
             $( "#home-tiles" ).prepend(tile_frame);
         } else {
-            $('#tile_caption_' + tile.app).attr('data-value', tile.caption);
-            $('#tile_caption_' + tile.app).text(tile.caption);
+            $('#tile_subject_' + tile.app).attr('data-value', tile.subject);
+            $('#tile_subject_' + tile.app).text(tile.subject);
         }    
     });
 
@@ -272,6 +308,82 @@
         var tile = event.body;
 
         $('#tile_' + tile.app).remove();
+    });
+
+    Bolt.Events.on("bolt/dashboard-card-posted", function(event){
+        if (event.token != '{{app_token}}') return;
+        var card = event.body;
+
+        if (modules.map(function(app) {return app.name;}).indexOf(card.app) == -1) return;
+
+        var elems = $('#card_' + card.app);
+
+        if (typeof elems.length == 'undefined' || elems.length == 0) {
+            var count = $("#home-tiles").children().length;
+            if (count == 8) {
+                $('#home-tiles div:last').remove();
+            }
+
+            var append = '';
+            if (card.route) {
+                var route = (card.route.indexOf('/') == 0) ? card.route : '/' + card.route;
+                append = '?route=' + encodeURIComponent(route);
+            }
+            if (card.query) {
+                append += (card.route) ? '&' : '?';
+                append += 'query=' + encodeURIComponent(card.query);
+            }
+
+            var card_frame = "";
+
+            if (card.type == 'image') {
+                card_frame = '<li id="card_' + card.app + '" class="card">' +
+                    '<div class="card_flex_display">' +
+                        '<span class="card_img">' +
+                            '<img id="card_img_' + card.app + '" src="{{bolt_root}}/' + card.background + '" alt="">' +
+                        '</span>' +
+                        '<span class="card_details card_flex_display card_flex">' +
+                            '<span id="card_subject_' + card.app + '" class="card_title_img">' +
+                                card.subject +
+                            '</span>' +
+                            '<span class="card_footer">' +
+                                '<a href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
+                            '</span>' +
+                        '</span>' +
+                    '</div>' +
+                '</li>';
+            }
+            else {
+                card_frame = '<li id="card_' + card.app + '" class="card">' +
+                    '<div class="card_flex_display">' +
+                        '<span class="card_details card_flex_display card_flex">' +
+                            '<span id="card_subject_' + card.app + '" class="card_title">' +
+                                card.subject +
+                            '</span>' +
+                            '<span id="card_message_' + card.app + '" class="card_body">' +
+                                card.message +
+                            '</span>' +
+                            '<span class="card_footer">' +
+                                '<a href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
+                            '</span>' +
+                        '</span>' +
+                    '</div>' +
+                '</li>';
+            }
+
+            $( "#home-cards" ).prepend(card_frame);
+        } else {
+            $('#card_img_' + card.app).attr('src', card.background);
+            $('#card_subject_' + card.app).text(card.subject);
+            $('#card_message_' + card.app).text(card.message);
+        }    
+    });
+
+    Bolt.Events.on("bolt/dashboard-card-deleted", function(event){
+        if (event.token != '{{app_token}}') return;
+        var card = event.body;
+
+        $('#card_' + card.app).remove();
     });
 
     var viewsPosted = 0;
@@ -298,7 +410,7 @@
                 '<div class="portlet-title">' +
                     '<div class="caption">' +
                         '<i class="icon-bar-chart font-dark hide"></i>' +
-                        '<span id="view_caption_' + view.app + '" class="caption-subject font-dark bold uppercase">' + view.caption + '</span>' +
+                        '<span id="view_subject_' + view.app + '" class="caption-subject font-dark bold uppercase">' + view.subject + '</span>' +
                     '</div>' +
                     '<div class="actions">' +
                         '<a class="btn red btn-outline btn-circle btn-sm active" href="{{bolt_root}}/apps/' + view.app + '" target="main_frame">Visit App</a>' +
@@ -314,7 +426,7 @@
             var viewDiv = (viewsPosted % 5);
             $( "#view_" + viewDiv ).html(view_frame);
         } else {
-            $('#view_caption_' + view.app).text(view.caption);
+            $('#view_subject_' + view.app).text(view.subject);
             $('#view_data_' + view.app).attr('data', '{{bolt_root}}/apps/' + view.app + append);
         }    
     });

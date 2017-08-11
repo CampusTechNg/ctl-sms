@@ -899,7 +899,7 @@
                                                 buttons += '<a href="tel:[' + btn.data + ']" class="btn btn-xs green-jungle"><i class="fa fa-phone"></i> ' + btn.text + '</a>';
                                             }
                                             else if (btn.type == 'postback') {
-                                                buttons += '<a href="javascript:;" onclick="postback(\'' + notification.app + '\', \'{{user.name}}\', \'' + (notification._id || 'no-id-here') + '\',\'' + btn.data + '\')" class="btn btn-xs red">' + btn.text + '</a>';
+                                                buttons += '<a href="javascript:;" onclick="postback(\'' + notification.app + '\', \'{{user.name}}\', \'' + notification._id + '\',\'' + btn.data + '\')" class="btn btn-xs red">' + btn.text + '</a>';
                                             }
                                         }
                                         buttons += '</div>';
@@ -1007,7 +1007,7 @@
                                 buttons += '<a href="tel:[' + btn.data + ']" class="btn btn-xs green-jungle"><i class="fa fa-phone"></i> ' + btn.text + '</a>';
                             }
                             else if (btn.type == 'postback') {
-                                buttons += '<a href="javascript:;" onclick="postback(\'' + notification.app + '\', \'{{user.name}}\', \'' + (notification._id || 'no-id-here') + '\',\'' + btn.data + '\')" class="btn btn-xs red">' + btn.text + '</a>';
+                                buttons += '<a href="javascript:;" onclick="postback(\'' + notification.app + '\', \'{{user.name}}\', \'' + notification._id + '\',\'' + btn.data + '\')" class="btn btn-xs red">' + btn.text + '</a>';
                             }
                         }
                         buttons += '</div>';
@@ -1020,7 +1020,7 @@
                                             */
 
                     if (notification.from) {
-                        var notf_frame =   '<li>' +
+                        var notf_frame =   '<li">' +
                                 '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
                                     '<span class="photo">' +
                                         '<img src="{{bolt_root}}/' + notification.from.displayPic + '" class="img-circle" alt="">' +
@@ -1035,7 +1035,7 @@
                             '</li>';
 
                         var count = $("#private_notification").children().length;
-                        if (count == 8) {
+                        if (count == 5) {
                             $('#private_notification li:last').remove();
                         }
                         $('#private_notification').prepend(notf_frame);
@@ -1053,7 +1053,7 @@
                             '</li>';
 
                         var count = $("#public_notification").children().length;
-                        if (count == 8) {
+                        if (count == 5) {
                             $('#public_notification li:last').remove();
                         }
                         $('#public_notification').prepend(notf_frame);
@@ -1063,11 +1063,9 @@
 
             Bolt.Events.on("bolt/notification-deleted", function(event){
                 if (event.token != '{{app_token}}') return;
-                var tile = event.body;
+                var notification = event.body;
 
-                if (tile.app.indexOf('ctl-sms-') !== 0) return;
-
-                $('#tile_' + tile.app).remove();
+                //$('#notif_' + notification._id).remove();
             });
         </script>
         <!-- END PAGE LEVEL SCRIPTS -->
