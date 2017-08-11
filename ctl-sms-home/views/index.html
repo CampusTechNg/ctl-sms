@@ -70,14 +70,11 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="external">
-                                    <h3>
-                                        <!-- <span class="bold">12 pending</span> notifications</h3> -->
+                                    <!-- <h3> <span class="bold">12 pending</span> notifications</h3> -->
                                     <a href="page_user_profile_1.html">view all</a>
                                 </li>
                                 <li>
                                     <ul class="dropdown-menu-list scroller" id="public_notification" style="height: 250px;" data-handle-color="#637283">
-                                        
-                                        
                                     </ul>
                                 </li>
                             </ul>
@@ -92,23 +89,11 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="external">
-                                    <h3>You have
-                                        <span class="bold">7 New</span> Messages</h3>
+                                    <!-- <h3>You have <span class="bold">7 New</span> Messages</h3> -->
                                     <a href="app_inbox.html">view all</a>
                                 </li>
                                 <li>
                                     <ul class="dropdown-menu-list scroller" id="private_notification" style="height: 275px;" data-handle-color="#637283">
-                                        <li>
-                                            <a href="#">
-                                                <span class="photo">
-                                                    <img src="../assets/layouts/layout3/img/avatar2.jpg" class="img-circle" alt=""> </span>
-                                                <span class="subject">
-                                                    <span class="from"> Lisa Wong </span>
-                                                    <span class="time">Just Now </span>
-                                                </span>
-                                                <span class="message"> Vivamus sed auctor nibh congue nibh. auctor nibh auctor nibh... </span>
-                                            </a>
-                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -198,7 +183,7 @@
                             <!-- END SIDEBAR TOGGLER BUTTON -->
                         </li>
                         <li class="heading"><h3 class="uppercase">&nbsp;</h3></li>
-                        {{#each plugins}}
+                        {{#each modules}}
                         <li class="nav-item" > <!-- style="box-shadow: inset 3px 0 #32C5D2;" -->
                         <!-- <li class="nav-item active open"> -->
                             <a href="/apps/{{name}}" target="main_frame" class="nav-link">
@@ -838,6 +823,9 @@
         <script src="{{bolt_root}}/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
 
         <script type="text/javascript">
+            var modules = {{{json modules}}};
+            var userRoles = {{{json user.roles}}};
+
             function postback(app, user, notifId, data) {
                 alert(app + ' ' + user + ' ' + (notifId || 'no-id') + ' ' + data);
 
@@ -865,7 +853,25 @@
                         if (response.code === 0) {
                             var notifications = response.body;
                             notifications = notifications.reverse().filter(function(notif){
-                                return notif.app.indexOf('ctl-sms-') === 0;
+                                return modules.map(function(app) {return app.name;}).indexOf(notif.app) > -1;
+                            });
+
+                            notifications = notifications.filter(function(notif){
+                                var result = true;
+
+                                if (notif.to) {
+                                    if (notif.to.users && notif.to.users.length > 0) {
+                                        result = (notif.to.users.indexOf('{{user.name}}') > -1);
+                                    }
+                                    else if (notif.to.roles && notif.to.roles.length > 0) {
+                                        var intersects = notif.to.roles.filter(function(r) {
+                                            return userRoles.indexOf(r.toLowerCase()) > -1;
+                                        });
+                                        result = (intersects.length > 0);
+                                    }
+                                }
+
+                                return result;
                             });
 
                             for (index = 0; index < notifications.length && index < 8; index++) {
@@ -899,23 +905,35 @@
                                         buttons += '</div>';
                                     }
 
-                                    var notf_frame =   '<li>' +
-                                                            '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
-                                                                '<span class="time">just now</span>' +
-                                                                '<span class="details">' +
-                                                                    '<span style="margin-right:10px">' +
-                                                                        '<img src="{{bolt_root}}/files/' + notification.app + '/icon">' +
-                                                                    '</span>' + notification.message.data + '</span>' +
-                                                            '</a>' +
-                                                            buttons +
-                                                        '</li>';
-                                    if (notification.to) {
-                                        //messages
-                                        if (notification.to.indexOf('{{user.name}}') > -1) {
-                                            $('#private_notification').append(notf_frame);
-                                        }
+                                    if (notification.from) {
+                                        var notf_frame =   '<li>' +
+                                            '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
+                                                '<span class="photo">' +
+                                                    '<img src="{{bolt_root}}/' + notification.from.displayPic + '" class="img-circle" alt="">' +
+                                                '</span>' +
+                                                '<span class="subject">' +
+                                                    '<span class="from">' + notification.from.displayName + '</span>' +
+                                                    '<span class="time">' + new Date(notification.time).toDateString() + '</span>' +
+                                                '</span>' +
+                                                '</span class="message">' + notification.message.data + '</span>' +
+                                            '</a>' +
+                                            buttons +
+                                        '</li>';
+
+                                        $('#private_notification').append(notf_frame);
                                     }
                                     else {
+                                        var notf_frame =   '<li>' +
+                                            '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
+                                                '<span class="time">' + new Date(notification.time).toDateString() + '</span>' +
+                                                '<span class="details">' +
+                                                    '<span style="margin-right:10px">' +
+                                                        '<img src="{{bolt_root}}/files/' + notification.app + '/icon">' +
+                                                    '</span>' + notification.message.data + '</span>' +
+                                            '</a>' +
+                                            buttons +
+                                        '</li>';
+                                        
                                         $('#public_notification').append(notf_frame);
                                     }
                                 }
@@ -925,9 +943,7 @@
                     error: function(xhr, status, err) {}
                 });
             });
-        </script>
-
-        <script type="text/javascript">
+        
             /*Bolt.Events.on("bolt/server-connected", function(event){
                 alert("yayyy server connected")
             });
@@ -938,6 +954,20 @@
                 if (event.token != '{{app_token}}') return;
 
                 var notification = event.body;
+
+                if (modules.map(function(app) {return app.name;}).indexOf(notification.app) == -1) return;
+
+                if (notification.to) {
+                    if (notification.to.users && notification.to.users.length > 0) {
+                        if (notification.to.users.indexOf('{{user.name}}') == -1) return;
+                    }
+                    else if (notification.to.roles && notification.to.roles.length > 0) {
+                        var intersects = notification.to.roles.filter(function(r) {
+                            return userRoles.indexOf(r.toLowerCase()) > -1;
+                        });
+                        if (intersects.length == 0) return;
+                    }
+                }
 
                 //show toast
                 if (notification.toast && notification.toast.message) {
@@ -983,36 +1013,45 @@
                         buttons += '</div>';
                     }
 
-                    var notf_frame =   '<li>' +
-                                            '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
-                                                '<span class="time">just now</span>' +
-                                                '<span class="details">' +
-                                                    '<span style="margin-right:10px">' +
-                                                        '<img src="{{bolt_root}}/files/' + notification.app + '/icon">' +
-                                                    '</span>' + notification.message.data + '</span>' +
-                                            '</a>' +
-                                            buttons +
-                                        '</li>';
+                        
 
-                                        /*<li>
-                                            <a href="#">
-                                                <span class="photo">
-                                                    <img src="../assets/layouts/layout3/img/avatar2.jpg" class="img-circle" alt=""> </span>
-                                                <span class="subject">
-                                                    <span class="from"> Lisa Wong </span>
-                                                    <span class="time">Just Now </span>
-                                                </span>
-                                                <span class="message"> Vivamus sed auctor nibh congue nibh. auctor nibh auctor nibh... </span>
-                                            </a>
-                                        </li>*/
+                                        /*
+                                                <span> Vivamus sed auctor nibh congue nibh. auctor nibh auctor nibh... </span>
+                                            */
 
-                    if (notification.to) {
-                        //messages
-                        if (notification.to.indexOf('{{user.name}}') > -1) {
-                            $('#private_notification').append(notf_frame);
+                    if (notification.from) {
+                        var notf_frame =   '<li>' +
+                                '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
+                                    '<span class="photo">' +
+                                        '<img src="{{bolt_root}}/' + notification.from.displayPic + '" class="img-circle" alt="">' +
+                                    '</span>' +
+                                    '<span class="subject">' +
+                                        '<span class="from">' + notification.from.displayName + '</span>' +
+                                        '<span class="time">' + new Date(notification.time).toDateString() + '</span>' +
+                                    '</span>' +
+                                    '</span class="message">' + notification.message.data + '</span>' +
+                                '</a>' +
+                                buttons +
+                            '</li>';
+
+                        var count = $("#private_notification").children().length;
+                        if (count == 8) {
+                            $('#private_notification li:last').remove();
                         }
+                        $('#private_notification').prepend(notf_frame);
                     }
                     else {
+                        var notf_frame =   '<li>' +
+                                '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
+                                    '<span class="time">' + new Date(notification.time).toDateString() + '</span>' +
+                                    '<span class="details">' +
+                                        '<span style="margin-right:10px">' +
+                                            '<img src="{{bolt_root}}/files/' + notification.app + '/icon">' +
+                                        '</span>' + notification.message.data + '</span>' +
+                                '</a>' +
+                                buttons +
+                            '</li>';
+
                         var count = $("#public_notification").children().length;
                         if (count == 8) {
                             $('#public_notification li:last').remove();
@@ -1020,6 +1059,15 @@
                         $('#public_notification').prepend(notf_frame);
                     }
                 }
+            });
+
+            Bolt.Events.on("bolt/notification-deleted", function(event){
+                if (event.token != '{{app_token}}') return;
+                var tile = event.body;
+
+                if (tile.app.indexOf('ctl-sms-') !== 0) return;
+
+                $('#tile_' + tile.app).remove();
             });
         </script>
         <!-- END PAGE LEVEL SCRIPTS -->

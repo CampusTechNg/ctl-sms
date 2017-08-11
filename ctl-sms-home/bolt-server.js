@@ -54,13 +54,13 @@ app.post('/app-starting', function(req, res){
 function getVisibleApps(req, res, next) {
 	request(process.env.BOLT_ADDRESS + '/api/checks/visible-apps/' + req.user.name + '?tags=ctl-sms-plugins', function(error, response, body){
 		body = JSON.parse(body);
-		var plugins = body.body;
-        plugins.sort(function(a, b){
+		var modules = body.body;
+        modules.sort(function(a, b){
           var orderA = a.order || 0;
           var orderB = b.order || 0;
           return parseInt(orderA, 10) - parseInt(orderB, 10);
         });
-        req.plugins = plugins;
+        req.modules = modules;
         next();
 	});
 }
@@ -71,7 +71,7 @@ app.get('/', getVisibleApps, function(req, res){
       app_root: req.app_root,
       app_token: appToken,
 	  bolt_root: process.env.BOLT_ADDRESS,
-      plugins: req.plugins,
+      modules: req.modules,
       user: req.user
     };
     res.render("index", scope);
@@ -82,7 +82,7 @@ app.get('/frame', getVisibleApps, function(req, res){
 		app_root: req.app_root,
 		app_token: appToken,
 		bolt_root: process.env.BOLT_ADDRESS,
-		plugins: req.plugins,
+		modules: req.modules,
 	});
 });
 

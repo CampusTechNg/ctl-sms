@@ -94,51 +94,32 @@ app.post('/hooks/bolt/app-collection-inserted', function(req, res){
 				}
 			}
 			
-			if(notice)
+			if(notice){
 				utils.Events.fire('notice-posted', { body: notice }, apptoken, function(eventError, eventResponse){});
+
+				request.post({
+					url: process.env.BOLT_ADDRESS + '/api/notifications', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {
+						toast: {
+							message: notice.message,
+							duration: 8000
+						}
+					}
+				}, function(error, response, body) {});
+
+				/*request.post({
+					url: process.env.BOLT_ADDRESS + '/api/dashboard/view', 
+					headers: {'X-Bolt-App-Token': apptoken},
+					json: {caption: notice.subject, route: '/testing'}}, 
+					function(error, response, body) {});*/
+			}
 
 			request.post({
 				url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
 				headers: {'X-Bolt-App-Token': apptoken},
 				json: {background: '#2F42EC', caption: notices.length, message: 'public notices', route: '/'}}, 
 				function(error, response, body) {});
-
-			//TODO: raise notification
-			/*if (event.name == 'app-collection-inserted') {
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/notifications', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {
-						message: 'A new student has been created',
-						route: '/view-students',
-						to: ['kelvin'],
-						buttons: [
-						{
-							type: 'link',
-							text: 'Click',
-							data: '/apps/ctl-sms-students'
-						},
-						{
-							type: 'phone',
-							text: 'Call',
-							data: '+2347012345678'
-						},
-						{
-							type: 'postback',
-							text: 'Post',
-							data: 'A'
-						}
-						],
-						toast: {
-							message: 'A new student has been created',
-							duration: 8000
-						}
-					}
-				}, 
-					function(error, response, body) {
-						
-					});
-			}*/
 		});
 	}
 });
@@ -172,43 +153,6 @@ app.post('/hooks/bolt/app-collection-removed', function(req, res){
 					json: {}}, 
 					function(error, response, body) {});
 			}
-				
-			//TODO: raise notification
-			/*if (event.name == 'app-collection-inserted') {
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/notifications', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {
-						message: 'A new student has been created',
-						route: '/view-students',
-						to: ['kelvin'],
-						buttons: [
-						{
-							type: 'link',
-							text: 'Click',
-							data: '/apps/ctl-sms-students'
-						},
-						{
-							type: 'phone',
-							text: 'Call',
-							data: '+2347012345678'
-						},
-						{
-							type: 'postback',
-							text: 'Post',
-							data: 'A'
-						}
-						],
-						toast: {
-							message: 'A new student has been created',
-							duration: 8000
-						}
-					}
-				}, 
-					function(error, response, body) {
-						
-					});
-			}*/
 		});
 	}
 });
