@@ -17,7 +17,12 @@ app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt envi
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', exphbs({
 	//defaultLayout: 'main.html' //Default templating page
-	partialsDir: __dirname + '/views/partials/'
+	partialsDir: __dirname + '/views/partials/',
+	helpers: {
+		json: function(obj) {
+			return JSON.stringify(obj);
+		}
+	}
 }));
 app.set('view engine', 'html');
 

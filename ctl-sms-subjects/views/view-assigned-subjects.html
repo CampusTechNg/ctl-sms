@@ -1,13 +1,10 @@
 {{> header}}
-
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link href="/public/metronic-for-bolt/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
     <link href="/public/metronic-for-bolt/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="/public/metronic-for-bolt/assets/pages/css/datatable_custom.css" rel="stylesheet" type="text/css" />
     <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
-    </style>
     <!-- END PAGE LEVEL PLUGINS -->
-
 {{> sub_header}}
 
 {{> nav }}
@@ -15,32 +12,32 @@
 <!-- BEGIN PAGE TITLE-->
 <div class="container-fluid">
     <div class="col-md-12">
-        <h3 class="page-title"> Edit Guardian Record</h3>
+        <h3 class="page-title"> Assign Subjects</h3>
     </div>
 </div>
 <!-- END PAGE TITLE-->
 
+
 <!-- BEGIN PAGE CONTENT-->
 <div class="container-fluid">
-    <div class="col-md-12 ">
-        <!-- Begin: life time stats -->
+    <div class="col-md-12">
         <div class="portlet light portlet-fit portlet-datatable bordered">
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-list font-green"></i>
-                    <span class="caption-subject font-green sbold uppercase">List of Registered Guardians</span>
+                    <span class="caption-subject font-green sbold uppercase">List of Avaliable Teachers</span>
                 </div>
                 <div class="actions">
                     <div class="btn-group">
-                        <a href="{{app_root}}/register-guardian" class="btn green">
-                            <i class="fa fa-plus"></i> <span class="hidden-xs"> Add Guardian</span>
+                        <a href="{{app_root}}/create-subject" class="btn green">
+                            <i class="fa fa-plus"></i> <span class="hidden-xs"> Add Suubject</span>
                         </a>
                     </div>
-                    <div class="btn-group">
+                    <!-- <div class="btn-group">
                         <a href="" class="btn red" id="delete_btn">
                             <i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span>
                         </a>
-                    </div>
+                    </div> -->
                     <div class="btn-group">
                         <a class="btn blue" href="javascript:;" data-toggle="dropdown">
                             <i class="fa fa-cog"></i>
@@ -89,14 +86,13 @@
                                         <span></span>
                                     </label>
                                 </th>
-                                <th> Full name </th>
-                                <th> Date in </th>
-                                <th> Time in </th>
+                                <th> Teacher name </th>
+                                <th> Number of subject </th>
                                 <th> Action </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each visits}}
+                            {{#each classes}}
                             <tr>
                                 <td>
                                     <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -105,11 +101,13 @@
                                     </label>
                                 </td>
                                 <td> {{displayName}} </td>
-                                <td> {{toDate dateIn}} </td>
-                                <td> {{toTime dateIn}} </td>
+                                <td> {{subjects.length}} </td>
                                 <td> 
-                                    <a class="btn dark btn-xs btn-outline sbold uppercase" onclick="signout('{{visitorId}}')">
-                                        <i class="fa fa-sign-out"></i> <span class="hidden-xs"> Signout </span>
+                                    <a href="{{../ app_root}}/assign-subjects/" class="btn dark btn-xs btn-outline">
+                                        <i class="fa fa-plus"></i> <span class="hidden-xs"> Assign </span>
+                                    </a>
+                                    <a href="javascript:;" class="btn dark btn-xs btn-outline">
+                                        <i class="fa fa-eye"></i> <span class="hidden-xs"> View </span>
                                     </a>
                                 </td>
                             </tr>
@@ -118,10 +116,9 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <!-- End: life time stats -->
     </div>
 </div>
+
 <!-- END PAGE CONTENT-->
 {{> copyright }}
  
@@ -134,50 +131,87 @@
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
-
 <!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 <script type="text/javascript">
-    function signout(id) {
-        var visits = {{{json visits}}};
-        for(index = 0; index < visits.length; index++) {
-            var v = visits[index];
-            if (v.visitorId == id) {
-                v.dateOut = new Date();
+    $('#delete_btn').click(function(event) {
+        event.preventDefault(); 
+        var names = $('input[type=checkbox]:checked').map(function() {
+            return $(this).val();
+        }).get();
+        
+        function deleteSession(index) {
+            if (index == -1) {
+                swal({
+                    title: "Delete Operation",
+                    text: "Delete operation terminated.",
+                    type: "warning",
+                    showCancelButton: false,
+                    closeOnConfirm: true
+                }, function(isConfirm){
+                    if (isConfirm) {
+                        window.location.href="{{app_root}}/view-classes";
+                    }
+                });
+            } else if (index >= names.length) { //this is the end
+                //be sure something was deleted
+                if (names.length > 0) {
+                    //Sweet alert
+                    swal({
+                        title: "Delete Operation",
+                        text: "Delete operation completed.",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    }, function(isConfirm){
+                        if (isConfirm) {
+                            window.location.href="{{app_root}}/view-classes";
+                        }
+                    });
+                }
+            } else {
+                var name = names[index];
                 $.ajax({
-                    url: "{{bolt_root}}/api/db/visits/update?visitorId=" + id,
+                    url: "{{bolt_root}}/api/db/classes/remove?_id=" + name,
                     type: 'POST',
-                    data: { values: {dateOut: v.dateOut} },
+                    data: JSON.stringify({}),
+                    //processData: false,
+                    dataType: 'json',
+                    contentType: 'application/json',
                     headers: {'X-Bolt-App-Token': '{{app_token}}'},
                     success: function(response, status, xhr) {
                         if(response.code === 0){
+                            deleteSession(++index);
+                        }
+                        else {
                             swal({
-                                title: "Visitor Signed Out!",
-                                text: v.displayName + " has been signed out.",
-                                type: "success",
-                                showCancelButton: false,
+                                title: response.errorUserTitle,
+                                text: response.errorUserMessage,
+                                type: "error",
+                                showCancelButton: true,
                                 closeOnConfirm: true
                             }, function(isConfirm){
                                 if (isConfirm) {
-                                    window.location.href="{{app_root}}/signout-visitor";
+                                    deleteSession(++index);
+                                }
+                                else {
+                                    deleteSession(-1);
                                 }
                             });
                         }
-                        else {
-                            sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
-                        }
                     }, 
-                    error: function(xhr2, status2, err2){
-                        alert(xhr2.responseText);
+                    error: function(xhr, status, err){
+                        alert(xhr.responseText);
                     }
                 });
-                break;
             }
         }
-    }
+
+        deleteSession(0);
+    });
 </script>
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="/public/metronic-for-bolt/assets/pages/scripts/table-datatables-managed.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
- {{> footer }}
+{{> footer }}

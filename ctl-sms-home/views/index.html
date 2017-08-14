@@ -12,42 +12,41 @@
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
-        <link href="{{app_root}}/assets/global/plugins/pace/css/pace-theme-minimal.css" rel="stylesheet" type="text/css" />
-        <script src="{{app_root}}/assets//global/plugins/pace/js/pace.min.js"></script>
+        <link href="/public/metronic-for-bolt/assets/global/plugins/pace/css/pace-theme-minimal.css" rel="stylesheet" type="text/css" />
+        <script src="/public/metronic-for-bolt/assets//global/plugins/pace/js/pace.min.js"></script>
 
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
         <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-        <link href="{{app_root}}/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-        <link href="{{app_root}}/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-        <link href="{{app_root}}/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="{{app_root}}/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
-        <link href="{{app_root}}/assets/global/css/components-md.min.css" rel="stylesheet" id="style_components" type="text/css" />
-        <link href="{{app_root}}/assets/global/css/plugins-md.min.css" rel="stylesheet" type="text/css" />
+        <link href="/public/metronic-for-bolt/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="/public/metronic-for-bolt/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="/public/metronic-for-bolt/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="/public/metronic-for-bolt/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+        <link href="/public/metronic-for-bolt/assets/global/css/components-md.min.css" rel="stylesheet" id="style_components" type="text/css" />
+        <link href="/public/metronic-for-bolt/assets/global/css/plugins-md.min.css" rel="stylesheet" type="text/css" />
         <!-- END THEME GLOBAL STYLES -->
         <!-- BEGIN THEME LAYOUT STYLES -->
-        <link href="{{app_root}}/assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
-        <link href="{{app_root}}/assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
-        <link href="{{app_root}}/assets/layouts/layout/css/notification.css" rel="stylesheet" type="text/css" />
+        <link href="/public/metronic-for-bolt/assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
+        <link href="/public/metronic-for-bolt/assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+        <link href="/public/metronic-for-bolt/assets/layouts/layout/css/notification.css" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
-        <link rel="shortcut icon" href="{{app_root}}/assets/pages/img/icon.png" /> 
+        <link rel="shortcut icon" href="/public/ctl-sms-home/assets/pages/img/icon.png" /> 
         <!-- Insert this line before script imports for JQuery to load on electron  -->
         <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-        <script src="{{app_root}}/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
         <!-- Insert this line after script imports for JQuery to load on electron -->
         <script>if (window.module) module = window.module;</script>
     </head>
     <!-- END HEAD -->
 
-    <!-- <body class="page-sidebar-closed-hide-logo page-content-white page-md page-sidebar-fixed" style="overflow-y: hidden;"> -->
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md page-sidebar-fixed" style="overflow-y: hidden;">
         <!-- BEGIN HEADER -->
-        <div class="page-header navbar navbar-fixed-top"><!--  style="border-bottom: 1px solid #36C6D3;" -->
+        <div class="page-header navbar navbar-fixed-top">
             <!-- BEGIN HEADER INNER -->
             <div class="page-header-inner ">
                 <!-- BEGIN LOGO -->
                 <div class="page-logo">
                     <a href="{{app_root}}">
-                        <img src="{{app_root}}/assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" /> </a>
+                        <img src="/public/ctl-sms-home/assets/pages/img/logo.png" alt="logo" class="logo-default" /> </a>
                     <div class="menu-toggler sidebar-toggler">
                         <span></span>
                     </div>
@@ -64,14 +63,14 @@
                         <!-- BEGIN NOTIFICATION DROPDOWN -->
                         <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                         <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="" data-close-others="true">
                                 <i class="icon-bell"></i>
                                 <!-- <span class="badge badge-default"> 7 </span> -->
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="external">
                                     <!-- <h3> <span class="bold">12 pending</span> notifications</h3> -->
-                                    <a href="page_user_profile_1.html">view all</a>
+                                    <a href="#">view all</a>
                                 </li>
                                 <li>
                                     <ul class="dropdown-menu-list scroller" id="public_notification" style="height: 250px;" data-handle-color="#637283">
@@ -83,14 +82,14 @@
                         <!-- BEGIN INBOX DROPDOWN -->
                         <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                         <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="" data-close-others="true">
                                 <i class="icon-envelope-open"></i>
                                 <!-- <span class="badge badge-default"> 4 </span> -->
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="external">
                                     <!-- <h3>You have <span class="bold">7 New</span> Messages</h3> -->
-                                    <a href="app_inbox.html">view all</a>
+                                    <a href="#">view all</a>
                                 </li>
                                 <li>
                                     <ul class="dropdown-menu-list scroller" id="private_notification" style="height: 275px;" data-handle-color="#637283">
@@ -102,7 +101,7 @@
                         <!-- BEGIN USER LOGIN DROPDOWN -->
                         <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                         <li class="dropdown dropdown-user">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="" data-close-others="true">
                                 <img alt="" class="img-circle" src="/{{user.displayPic}}" />
                                 <span class="username username-hide-on-mobile"> {{user.displayName}} </span>
                                 <i class="fa fa-angle-down"></i>
@@ -270,14 +269,14 @@
                                         <div class="media-status">
                                             <span class="badge badge-success">8</span>
                                         </div>
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar3.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar3.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Bob Nilson</h4>
                                             <div class="media-heading-sub"> Project Manager </div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar1.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar1.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Nick Larson</h4>
                                             <div class="media-heading-sub"> Art Director </div>
@@ -287,14 +286,14 @@
                                         <div class="media-status">
                                             <span class="badge badge-danger">3</span>
                                         </div>
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar4.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar4.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Deon Hubert</h4>
                                             <div class="media-heading-sub"> CTO </div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar2.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar2.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Ella Wong</h4>
                                             <div class="media-heading-sub"> CEO </div>
@@ -307,7 +306,7 @@
                                         <div class="media-status">
                                             <span class="badge badge-warning">2</span>
                                         </div>
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar6.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar6.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Lara Kunis</h4>
                                             <div class="media-heading-sub"> CEO, Loop Inc </div>
@@ -318,7 +317,7 @@
                                         <div class="media-status">
                                             <span class="label label-sm label-success">new</span>
                                         </div>
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar7.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar7.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Ernie Kyllonen</h4>
                                             <div class="media-heading-sub"> Project Manager,
@@ -326,7 +325,7 @@
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar8.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar8.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Lisa Stone</h4>
                                             <div class="media-heading-sub"> CTO, Keort Inc </div>
@@ -337,14 +336,14 @@
                                         <div class="media-status">
                                             <span class="badge badge-success">7</span>
                                         </div>
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar9.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar9.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Deon Portalatin</h4>
                                             <div class="media-heading-sub"> CFO, H&D LTD </div>
                                         </div>
                                     </li>
                                     <li class="media">
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar10.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar10.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Irina Savikova</h4>
                                             <div class="media-heading-sub"> CEO, Tizda Motors Inc </div>
@@ -354,7 +353,7 @@
                                         <div class="media-status">
                                             <span class="badge badge-danger">4</span>
                                         </div>
-                                        <img class="media-object" src="{{app_root}}/assets/layouts/layout/img/avatar11.jpg" alt="...">
+                                        <img class="media-object" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar11.jpg" alt="...">
                                         <div class="media-body">
                                             <h4 class="media-heading">Maria Gomez</h4>
                                             <div class="media-heading-sub"> Manager, Infomatic Inc </div>
@@ -371,7 +370,7 @@
                                     </div>
                                     <div class="page-quick-sidebar-chat-user-messages">
                                         <div class="post out">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar3.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar3.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Bob Nilson</a>
@@ -380,7 +379,7 @@
                                             </div>
                                         </div>
                                         <div class="post in">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar2.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar2.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Ella Wong</a>
@@ -389,7 +388,7 @@
                                             </div>
                                         </div>
                                         <div class="post out">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar3.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar3.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Bob Nilson</a>
@@ -398,7 +397,7 @@
                                             </div>
                                         </div>
                                         <div class="post in">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar2.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar2.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Ella Wong</a>
@@ -407,7 +406,7 @@
                                             </div>
                                         </div>
                                         <div class="post out">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar3.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar3.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Bob Nilson</a>
@@ -416,7 +415,7 @@
                                             </div>
                                         </div>
                                         <div class="post in">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar2.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar2.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Ella Wong</a>
@@ -425,7 +424,7 @@
                                             </div>
                                         </div>
                                         <div class="post out">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar3.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar3.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Bob Nilson</a>
@@ -434,7 +433,7 @@
                                             </div>
                                         </div>
                                         <div class="post in">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar2.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar2.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Ella Wong</a>
@@ -443,7 +442,7 @@
                                             </div>
                                         </div>
                                         <div class="post out">
-                                            <img class="avatar" alt="" src="{{app_root}}/assets/layouts/layout/img/avatar3.jpg" />
+                                            <img class="avatar" alt="" src="{{bolt_root}}/public/metronic-for-bolt/assets/layouts/layout/img/avatar3.jpg" />
                                             <div class="message">
                                                 <span class="arrow"></span>
                                                 <a href="javascript:;" class="name">Bob Nilson</a>
@@ -795,50 +794,52 @@
       
         <!-- END FOOTER -->
         <!--[if lt IE 9]>
-            <script src="{{app_root}}/assets/global/plugins/respond.min.js"></script>
-            <script src="{{app_root}}/assets/global/plugins/excanvas.min.js"></script> 
+            <script src="/public/metronic-for-bolt/assets/global/plugins/respond.min.js"></script>
+            <script src="/public/metronic-for-bolt/assets/global/plugins/excanvas.min.js"></script> 
         <![endif]-->
         <!-- BEGIN CORE PLUGINS -->
-        <script src="{{app_root}}/assets/layouts/global/scripts/frame.js" type="text/javascript"></script>
-        <script src="{{app_root}}/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/layouts/global/scripts/frame.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         
-        <script src="{{app_root}}/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
-        <script src="{{app_root}}/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        <script src="{{app_root}}/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-        <script src="{{app_root}}/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-        <script src="{{app_root}}/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <!-- END CORE PLUGINS -->
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
-        <script src="{{app_root}}/assets/global/scripts/app.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/scripts/app.min.js" type="text/javascript"></script>
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
-        <script src="{{app_root}}/assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
-        <script src="{{app_root}}/assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
-        <script src="{{app_root}}/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
-        <script src="{{app_root}}/assets/global/plugins/bootstrap-growl/jquery.bootstrap-growl.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+        <script src="/public/metronic-for-bolt/assets/global/plugins/bootstrap-growl/jquery.bootstrap-growl.min.js" type="text/javascript"></script>
         <!-- END THEME LAYOUT SCRIPTS -->
 
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        <script src="{{bolt_root}}/socket.io/socket.io.js" type="text/javascript"></script>
-        <script src="{{bolt_root}}/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
+        <script src="/socket.io/socket.io.js" type="text/javascript"></script>
+        <script src="/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
 
         <script type="text/javascript">
             var modules = {{{json modules}}};
             var userRoles = {{{json user.roles}}};
 
-            function postback(app, user, notifId, data) {
-                alert(app + ' ' + user + ' ' + (notifId || 'no-id') + ' ' + data);
+            function postback(app, username, notifId, data) {
+                //alert(app + ' ' + username + ' ' + (notifId || 'no-id') + ' ' + data);
 
-                /*$.ajax({
-                    url: '{{bolt_root}}/api/notifications/postback',
-                    type: 'POST',
-                    data: JSON.stringify({app: 'bolt-module-notifications', query: {}}),
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                    success: function(response, status, xhr) {},
-                    error: function(xhr, status, err) {}
-                });*/
+                if (notifId) {
+                    $.ajax({
+                        url: '{{bolt_root}}/api/notifications/postback',
+                        type: 'POST',
+                        data: JSON.stringify({notificationId: notifId, data: data}),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                        success: function(response, status, xhr) {},
+                        error: function(xhr, status, err) {}
+                    });
+                }
             }
 
             $(document).ready(function(){

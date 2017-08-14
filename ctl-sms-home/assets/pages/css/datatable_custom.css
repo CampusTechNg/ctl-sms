@@ -1,4 +1,0 @@
-table.dataTable thead > tr > th.sorting_asc:first-child, table.dataTable thead > tr > th.sorting_desc:first-child, table.dataTable thead > tr > th.sorting:first-child {
-    padding-right: 0;
-    background: none !important;
-}
