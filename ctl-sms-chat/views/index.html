@@ -1,0 +1,306 @@
+{{> header}}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    <link href="{{app_root}}/assets/pages/css/forum.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<!-- <div class="container-fluid">
+    <div class="col-md-12">
+        <h3 class="page-title"> Chat</h3>
+    </div>
+</div> -->
+<!-- END PAGE TITLE-->
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="container-fluid">
+    <div class="col-md-4 col-sm-4">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-bubble font-hide hide"></i>
+                    <span class="caption-subject font-hide bold uppercase">Users</span>
+                </div>
+            </div>
+            <div class="portlet-body" id="chats">
+                <div class="scroller chat_box1" data-always-visible="1" data-rail-visible1="1">
+                    
+                </div>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+
+
+    <div class="col-md-8 col-sm-8">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-bubble font-hide hide"></i>
+                    <span class="caption-subject font-hide bold uppercase">Chats</span>
+                </div>
+            </div>
+            <div class="portlet-body" id="chats">
+                <div class="scroller chat_box2" data-always-visible="1" data-rail-visible1="1">
+                    <ul class="chats">
+                        <li class="in">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar2.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Lisa Wong </a>
+                                <span class="datetime"> at 20:11 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                            </div>
+                        </li>
+                        <li class="out">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar2.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Lisa Wong </a>
+                                <span class="datetime"> at 20:11 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                            </div>
+                        </li>
+                        <li class="in">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Bob Nilson </a>
+                                <span class="datetime"> at 20:30 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                            </div>
+                        </li>
+                        <li class="in">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Bob Nilson </a>
+                                <span class="datetime"> at 20:30 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                            </div>
+                        </li>
+                        <li class="out">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Richard Doe </a>
+                                <span class="datetime"> at 20:33 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                            </div>
+                        </li>
+                        <li class="in">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Richard Doe </a>
+                                <span class="datetime"> at 20:35 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                            </div>
+                        </li>
+                        <li class="out">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Bob Nilson </a>
+                                <span class="datetime"> at 20:40 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                            </div>
+                        </li>
+                        <li class="in">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Richard Doe </a>
+                                <span class="datetime"> at 20:40 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                            </div>
+                        </li>
+                        <li class="out">
+                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> Bob Nilson </a>
+                                <span class="datetime"> at 20:54 </span>
+                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. sed diam nonummy nibh euismod tincidunt ut laoreet. </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="chat-form">
+                    <div class="input-cont">
+                        <input class="form-control" type="text" placeholder="Type a message here..." /> </div>
+                    <div class="btn-cont">
+                        <span class="arrow"> </span>
+                        <a href="" class="btn blue icn-only">
+                            <i class="fa fa-check icon-white"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>
+<!-- END PAGE CONTENT-->
+{{> copyright }}
+ 
+ {{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<script src="{{bolt_root}}/socket.io/socket.io.js" type="text/javascript"></script>
+<script src="{{bolt_root}}/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
+
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+<script type="text/javascript">
+    function resizeChatBox1() {
+        var chat_box1 = $('.chat_box1');
+        var window_height = $(window).height();
+        var submenu_height = $('#submenu').height();
+        var height = window_height - submenu_height - 150;
+
+        chat_box1.prop({'style': 'height:' + height + 'px' });
+    }
+    function resizeChatBox2() {
+        var chat_box2 = $('.chat_box2');
+        var window_height = $(window).height();
+        var submenu_height = $('#submenu').height();
+        var height = window_height - submenu_height - 220;
+
+        chat_box2.prop({'style': 'height:' + height + 'px' });
+    }
+    resizeChatBox1();
+    resizeChatBox2();
+
+    $( window ).resize(function() {
+        resizeChatBox1();
+        resizeChatBox2();
+    });
+</script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var excerpt = function(message) {
+        message = message.toString();
+        var max = 200;
+        return message.substr(0, max) + (message.length > max ? "..." : "");
+    }
+
+    $('#create_topic_section').hide();
+    $('#new_topic_btn').click(function() {
+        $('#create_topic_section').slideToggle();
+    });
+    $('#cancel').click(function() {
+        $('#create_topic_section').slideToggle();
+    });
+
+    Bolt.Events.on("ctl-sms-forum/topic-posted", function(event) {
+        if (event.token != '{{app_token}}') return;
+
+        var post = event.body;
+
+        post.date = new Date(post.date); //because the date comes in as a string
+
+        var post_block = '<div class="blog-post-lg bordered blog-container">' +
+                '<div class="blog-post-content">' +
+                    '<h2 class="blog-title blog-post-title">' +
+                        '<a href="{{app_root}}/posts/' + post._id + '">' + post.subject + '</a>' +
+                    '</h2>' +
+                    '<p class="blog-post-desc"> ' +
+                        excerpt(post.message) + 
+                    '</p>' +
+                    '<div class="blog-post-foot">' +
+                        '<div class="blog-post-meta">' +
+                            '<img width="25" height="25" src="{{bolt_root}}/' + post.user.displayPic + '" class="img-circle">' +
+                            '<span>' + post.user.displayName + '</span>' +
+                        '</div>' +
+                        '<div class="blog-post-meta">' +
+                            '<i class="icon-calendar font-blue"></i>' +
+                            '<span>' + post.date.toDateString() + '</span>' +
+                        '</div>' +
+                        '<div class="blog-post-meta">' +
+                            '<i class="icon-bubble font-blue"></i>' +
+                            '<span>' + post.comments.length + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+        $('#posts-list').prepend(post_block);
+    });
+
+    $('#submit').click(function() {
+        var subject = $('#subject').val();
+        var message = $('#message').val();
+
+        if (!subject) {
+            sweetAlert("Missing Field!", "Please enter a subject for the post", "warning");
+            return;
+        }
+        if (!message) {
+            sweetAlert("Missing Field!", "Please enter a message for the post", "warning");
+            return;
+        }
+
+        //store post
+        var post = {};
+        post.subject = subject;
+        post.message = message;
+        post.date = new Date();
+        post.user = {
+            name: '{{user.name}}',
+            displayName: '{{user.displayName}}',
+            displayPic: '{{user.displayPic}}'
+        };
+        post.comments = [];
+
+        $.ajax({
+            url: '{{bolt_root}}/api/db/posts/insert',
+            type: 'POST',
+            data: JSON.stringify({ object: post }),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success: function(response) {
+                if(response.code === 0){
+                    $('#subject').val("");
+                    $('#message').val("");
+                    $('#create_topic_section').slideToggle();
+                    /*swal({
+                        title: "Post Created!",
+                        text: "Post has been successfully created.",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    }, function(isConfirm){
+                        if (isConfirm) {
+                            $('#create_topic_section').slideToggle();
+                            window.location.href="{{app_root}}/";
+                        }
+                    });*/
+                }
+                else {
+                    sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
+                }
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+ 
+ {{> footer }}
