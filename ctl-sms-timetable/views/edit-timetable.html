@@ -1,0 +1,314 @@
+{{> header}}
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/ctl-sms-home/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/ctl-sms-home/assets/global/plugins/clockface/css/clockface.css" rel="stylesheet" type="text/css" />
+
+<link href="/public/ctl-sms-home/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/ctl-sms-home/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/public/ctl-sms-home/assets/pages/css/datatable_custom.css" rel="stylesheet" type="text/css" />
+<link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+<!-- END PAGE LEVEL PLUGINS -->
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<div class="container-fluid">
+    <div class="col-md-12">
+        <h3 class="page-title"> Edit Timetable</h3>
+    </div>
+</div>
+<!-- END PAGE TITLE-->
+
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="container-fluid">
+    <div class="col-md-12">
+        <!-- Begin: life time stats -->
+        <div class="portlet light portlet-fit portlet-datatable bordered">
+
+            <div class="portlet-body">
+
+                <div class="table-container">
+
+                    <div class="table-toolbar">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-12">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group form-md-line-input">
+                                    <input type="hidden" id="row_index">
+                                        <select name="classes" id="classes" class="form-control ">
+                                            {{#each student_classes}}
+                                            <option value="{{displayName}}">{{displayName}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <label for="classes" class="control-label">Classes</label>
+                                    </div>                                
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group form-md-line-input">
+                                        <select name="event_title" id="event_title" class="form-control ">
+
+                                            <option value="maths">Maths</option>
+                                            <option value="english">English</option>
+                                            <option value="chemistry">Chemistry</option>
+                                            
+                                        </select>
+                                        <label for="event_title" class="control-label">Subject</label>
+                                    </div>                                     
+
+                                </div>
+
+                                <label class="control-label col-md-12">Start</label>
+                                <div class="col-md-12 col-sm-12">
+
+                                    <div class="input-group date form_datetime">
+                                        <input id="start_time" type="text" size="16" readonly class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn default date-set" type="button">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    
+                                </div>
+                                <br/><br/><br/>
+
+                                <label class="control-label col-md-12">End</label>
+                                <div class="col-md-12 col-sm-12">
+
+                                    <div class="input-group date form_datetime">
+                                        <input id="end_time" type="text" size="16" readonly class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn default date-set" type="button">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <br clear="all" /><br/>
+                                <div>
+
+                                    <button id="update_timetable" type="button" data-loading-text="Loading..." class="btn green mt-ladda-btn ladda-button mt-progress-demo" data-style="expand-left">
+                                        <span class="ladda-label">Update</span>
+                                    </button>
+
+                                    <button id="delete_timetable" type="button" data-loading-text="Loading..." class="btn green mt-ladda-btn ladda-button mt-progress-demo" data-style="expand-left">
+                                        <span class="ladda-label">Delete</span>
+                                    </button>
+                                </div>
+
+
+                                
+                                
+                            </div>
+                            <div class="col-md-9 col-sm-12">
+                                <table class="table table-striped table-bordered table-hover table-checkable" id="">
+                                    <thead>
+                                        <tr>
+                                            <th class="table-checkbox" width="5%">
+                                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                    <input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" />
+                                                    <span></span>
+                                                </label>
+                                            </th>
+                                            <th> Subject</th>
+                                            <th> Start </th>
+                                            <th> End </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="timetable_rows">
+
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    
+                    
+                </div>
+            </div>
+        </div>
+        <!-- End: life time stats -->
+    </div>
+</div>
+
+
+<!-- END PAGE CONTENT-->
+{{> copyright }}
+
+{{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+
+
+
+<script src="/public/ctl-sms-home/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+<script type="text/javascript">
+var SCH_COLLECTION;
+
+function displayTimetableRows(selection){
+    //appends rows of timetable
+    var items=selection[0];
+    $('#timetable_rows').html('');
+    SCH_COLLECTION=items;
+
+    for(var index=0;index < items.schedules.length;index++){
+        var item =items.schedules[index];
+        var start_date=moment(item.start).format('dddd HH:mm');
+        var end_date=moment(item.end).format('dddd HH:mm');
+
+        rows='<tr class="timetable_row"><td>';
+        rows+='<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">';
+        rows+='<input type="checkbox" class="checkboxes" value="'+index+'" />';
+        rows+='<span></span></label></td>';
+        rows+='<td class="display_name">'+item.title+'</td>';
+        rows+='<td class="start_date">'+start_date+'</td>'; 
+        rows+='<td class="end_date">'+end_date+'</td></tr>'; 
+        $('#timetable_rows').append(rows);
+    }
+}
+
+function getTimetableList(){//fetches timetable rows based on classes & date selected
+    var curr_class_code= $('#classes').val();
+
+    $.ajax({//fetches timetable rows
+        url:'{{bolt_root}}/api/db/timetable/find',
+        type:'POST',
+        data: JSON.stringify({query:{'class_code':curr_class_code}}),
+        dataType:'json',
+        contentType:'application/json',
+        headers:{'X-Bolt-App-Token':'{{app_token}}'},
+        success:function(response,textStatus, jqXHR){
+            $('#timetable_rows').html('');
+
+            if(response.code ===0){                
+
+                var items = response.body;
+                if(items.length >0){                    
+                    displayTimetableRows(items);
+                }
+
+            } 
+        },
+        error:function(xhr,status,err){
+            alert(xhr.responseText);
+        }
+    });
+}
+
+
+
+$(document).ready(function(){
+
+    getTimetableList(); //fetches timetable rows on page load 
+
+    //get attendance when class or date is changed
+    $('body').on('change','#classes',function(){
+        getTimetableList();
+    });
+
+    $('body').on('click','.timetable_row',function(){
+        var $this = $(this);
+        var today=new Date();
+        var curr_year=today.getFullYear();
+        var subject=$this.find('td.display_name').text();
+        $('#event_title').val(subject);
+        var start_date=$this.find('td.start_date').text();
+        start_date=moment(start_date+ ' '+curr_year,'dddd HH:mm YYYY').format('YYYY dddd HH:mm');
+        $('#start_time').val(start_date);
+        var end_date=$this.find('td.end_date').text();
+        end_date=moment(end_date+ ' '+curr_year,'dddd HH:mm YYYY').format('YYYY dddd HH:mm');
+        $('#end_time').val(end_date);
+        $("input[type='checkbox']").prop('checked',false);
+        $this.find('input').prop('checked',true);
+        //get row index
+        var row_index = $this.find('input').val();
+        $('#row_index').val(row_index);
+    });
+
+    $('body').on('click','#delete_timetable',function(){
+        //get selected checkbox,pop off array,update array
+        $('.timetable_row').each(function(index,item){
+            if($(this).find('.checkboxes').is(':checked')){
+                SCH_COLLECTION.schedules.splice(index,1);
+                //update
+                $.ajax({
+                    url:'{{bolt_root}}/api/db/timetable/update',
+                    type:'POST',
+                    data:JSON.stringify({'upsert':true,'values':{schedules: SCH_COLLECTION.schedules},'query':{_id:SCH_COLLECTION._id}}),
+                    dataType:'json',
+                    contentType:'application/json',
+                    headers:{'X-Bolt-App-Token':'{{app_token}}'},
+                    success:function(response){
+                        console.log(response.code);
+                    },
+                    error:function(xhr,status,err){
+                        console.log(xhr.responseText);
+                    }
+                });
+            }            
+        });
+    });
+
+    $('body').on('click','#update_timetable',function(){
+        var row_index=$('#row_index').val();
+        var title=$('#event_title').val();
+
+        var start_time=$('#start_time').val();
+        var start = moment(start_time,'YYYY dddd HH:mm');
+
+        var end_time=$('#end_time').val();
+        var end = moment(end_time,'YYYY dddd HH:mm');
+
+        //get selected data,swap object,update array
+        var schedule={start:start,end:end,background_color:'green',title:title};
+        SCH_COLLECTION.schedules[row_index]=schedule;
+        //update
+        $.ajax({
+            url:'{{bolt_root}}/api/db/timetable/update',
+            type:'POST',
+            data:JSON.stringify({'upsert':true,'values':{schedules: SCH_COLLECTION.schedules},'query':{_id:SCH_COLLECTION._id}}),
+            dataType:'json',
+            contentType:'application/json',
+            headers:{'X-Bolt-App-Token':'{{app_token}}'},
+            success:function(response){
+                console.log(response.code);
+            },
+            error:function(xhr,status,err){
+                console.log(xhr.responseText);
+            }
+        });
+    });
+   
+
+});
+
+</script>
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/public/ctl-sms-home/assets/pages/scripts/table-datatables-managed.min.js" type="text/javascript"></script>
+<script src="/public/ctl-sms-home/assets/global/plugins/moment.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+{{> footer }}
