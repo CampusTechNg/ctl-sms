@@ -47,16 +47,6 @@ app.post('/app-starting', function(req, res){
 	apptoken = event.body.appToken;
 });
 
-//Route
-/*app.get('/', function(req, res){
-	res.render('view-attendance', {
-		attendance_menu: 'selected',
-		attendance_active: 'active',
-		app_root: req.app_root
-	});
-});*/
-
-
 app.get('/view-attendance', function(req, res){
 	var courses='';
 	request.post({
@@ -67,9 +57,9 @@ app.get('/view-attendance', function(req, res){
 		var classes = body.body;
 
 		request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/courses/find', 
+		url: process.env.BOLT_ADDRESS + '/api/db/subjects/find', 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}, app: 'ctl-sms-courses'}}, 
+		json: {object:{}, app: 'ctl-sms-subjects'}}, 
 		function(error2, response2, body2) {
 		courses = body2.body;
 
