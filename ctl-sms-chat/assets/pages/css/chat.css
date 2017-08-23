@@ -1,0 +1,24 @@
+#livefilter-list {
+    margin: 0;
+    padding: 0;
+}
+.user_tab {
+    cursor: pointer;
+    display: block;
+    padding: 5px 0 5px 5px;
+    margin: 0;
+}
+.user_tab:hover, .user_tab:nth-child(2n+1):hover {
+    background-color: #eee;
+}
+.user_tab img {
+    height: 45px;
+    width: 45px;
+    vertical-align: middle;
+    border-radius: 50% !important;
+    margin-right: 20px;
+}
+
+.user_tab:nth-child(2n+1) {
+    background-color: #FAFAFA;
+}
