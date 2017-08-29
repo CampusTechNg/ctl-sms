@@ -27,6 +27,17 @@ app.set('view engine', 'html');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+function getCurrentSession(req, res, next) {
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/sessions/findone', 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {query: {isCurrent:true}}}, 
+		function(error, response, body) {console.log('Middleware')
+			req.currentSession = body.body;console.log(body.body)
+			next()
+		});
+}
+
 //Set Static Path
 app.use("**/assets", express.static(path.join(__dirname, 'assets')));
 
@@ -80,6 +91,57 @@ app.post('/hooks/bolt/app-collection-inserted', function(req, res){
 				}
 			});
 	}
+});
+
+app.post('/assign-student-to-class/:classid/:studentname', getCurrentSession, function(req, res){console.log('got here')
+	//fetch student
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/students/findone?name=' + req.params.studentname, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {app: 'ctl-sms-students'}}, 
+		function(error, response, body) {
+			var student = body.body;console.log(student)
+
+			//fetch class
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.classid, 
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {app: 'ctl-sms-classes'}}, 
+				function(error, response, body) {
+					var _class = body.body;console.log(_class)
+
+					if (student && _class) {
+						//ensure u dont assign a student to a class more than once in the same session
+						request.post({
+							url: process.env.BOLT_ADDRESS + '/api/db/class-students/remove', 
+							headers: {'X-Bolt-App-Token': apptoken},
+							json: {query: {'classId': _class._id, 'studentId': student._id, 'sessionId': req.currentSession._id}}}, 
+							function(error, response, body) {
+								var classStudent = {
+									classId: _class._id,
+									classDisplayName: _class.displayName,
+									studentId: student._id,
+									studentDisplayName: student.displayName,
+									sessionId: req.currentSession._id,
+									sessionDisplayName: req.currentSession.displayName,
+									dateCreated: new Date()
+								};
+
+								request.post({
+									url: process.env.BOLT_ADDRESS + '/api/db/class-students/insert', 
+									headers: {'X-Bolt-App-Token': apptoken},
+									json: {object: classStudent}}, 
+									function(error, response, body) {
+										//TODO: raise event
+										res.send();
+									});
+							});
+					}
+					else {
+						//TODO:
+					}
+				});
+		});
 });
 
 //Route

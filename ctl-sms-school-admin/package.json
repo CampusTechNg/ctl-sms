@@ -38,6 +38,7 @@
         "guests": "*",
         "tenants": ["ctl-sms-subjects", "ctl-sms-classes"]
       },
+      "class-students": "*",
       "grades": "*"
     },
     "hooks": {

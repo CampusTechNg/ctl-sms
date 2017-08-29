@@ -428,6 +428,15 @@ var FormValidationMd = function() {
                                                                                     error: function(xhr5, status5, err5) {}
                                                                                 });
                                                                             });
+
+                                                                            $.ajax({
+                                                                                url: '{{bolt_root}}/x/ctl-sms-school-admin/assign-student-to-class/' + student_class + '/' + username,
+                                                                                type: 'POST',
+                                                                                contentType: 'application/json',
+                                                                                headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                                                                success: function(response5, status5, xhr5){},
+                                                                                error: function(xhr5, status5, err5) {}
+                                                                            });
                                                                             
                                                                             //Sweet alert
                                                                             swal({
