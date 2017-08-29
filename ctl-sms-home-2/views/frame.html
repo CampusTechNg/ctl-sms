@@ -171,8 +171,8 @@
                                             '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                             '<div class="details">' +
                                             '<div class="number">' +
-                                            '<span id="tile_subject_' + tile.app + '" data-counter="counterup" data-value="' + tile.subject + '">' + tile.subject + '</span></div>' +
-                                            '<div class="desc"> ' + tile.message + ' </div></div>' +
+                                            '<span id="tile_message_' + tile.app + '" data-counter="counterup" data-value="' + tile.message + '">' + tile.message + '</span></div>' +
+                                            '<div class="desc"> ' + tile.subject + ' </div></div>' +
                                             '</a>' +
                                             '</div>';
                         $( "#home-tiles" ).append(tile_frame);
@@ -282,14 +282,14 @@
                                 '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                 '<div class="details">' +
                                 '<div class="number">' +
-                                '<span id="tile_subject_' + tile.app + '" data-counter="counterup" data-value="' + tile.subject + '">' + tile.subject + '</span></div>' +
-                                '<div class="desc"> ' + tile.message + ' </div></div>' +
+                                '<span id="tile_message_' + tile.app + '" data-counter="counterup" data-value="' + tile.message + '">' + tile.message + '</span></div>' +
+                                '<div class="desc"> ' + tile.subject + ' </div></div>' +
                                 '</a>' +
                                 '</div>';
             $( "#home-tiles" ).prepend(tile_frame);
         } else {
-            $('#tile_subject_' + tile.app).attr('data-value', tile.subject);
-            $('#tile_subject_' + tile.app).text(tile.subject);
+            $('#tile_message_' + tile.app).attr('data-value', tile.message);
+            $('#tile_message_' + tile.app).text(tile.message);
         }    
     });
 

@@ -47,7 +47,8 @@
                                 </th>
                                 <th style="width: 25%"> Subject name </th>
                                 <th style="width: 20%"> Subject code </th>
-                                <th style="width: 50%"> Compulsory </th>
+                                <th style="width: 15%"> Compulsory </th>
+                                <th style="width: 35%"> Subject Teacher </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,6 +71,16 @@
                                             </label> --> <!-- class="make-switch" -->
                                             <input type="checkbox" data-on-color="success" data-off-color="danger" data-size="small"  data-on-text="Yes" data-off-text="No" id="compulsory" checked>
                                         </div> 
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="portlet-input input-inline input-medium">
+                                        <select class="form-control" id="teacher">
+                                            <option value="">Select Teacher</option>
+                                            {{#each ../teachers}}
+                                            <option value="{{name}}">{{displayName}}</option>
+                                            {{/each}}
+                                        </select> 
                                     </div>
                                 </td>
                             </tr>
@@ -101,15 +112,18 @@
 
     $('tbody tr').find('#compulsory').prop('class', 'make-switch');
 
-    var schClass = {{{json schClass}}};
+    var classSubjects = {{{json classSubjects}}};
     var table= $('#assign_subject');
 
-    if (schClass.subjects) {
-        var subjectIds = schClass.subjects.map(function (s) {
+    if (classSubjects) {
+        var subjectIds = classSubjects.map(function (s) {
             return s.subjectId;
         });
-        var compulsories = schClass.subjects.map(function (s) {
+        var compulsories = classSubjects.map(function (s) {
             return s.compulsory;
+        });
+        var teacherNames = classSubjects.map(function (s) {
+            return s.teacherName;
         });
         
         $('tbody input:checkbox#subject_id', table).each(function(index, elem) {
@@ -117,14 +131,10 @@
                 var idx = subjectIds.indexOf(elem.value);
                 elem.checked = true;
                 $(this).closest('tbody tr').find('#compulsory').attr('checked', compulsories[idx]);
+                var tName = teacherNames[idx];
+                if (tName) $(this).closest('tbody tr').find('#teacher option[value=' + tName + ']').attr('selected', true);
             }
         });
-
-        /*var ddd = $('tbody tr #compulsory', table); console.log(ddd)
-        $('tbody tr #compulsory', table).each(function(index, elem) {
-            console.log(elem);
-            elem.checked = compulsories[index];
-        });*/
     }
 
     //Select all checkboxes that are NOT disabled
@@ -137,23 +147,42 @@
         var arrayOfValues = [];
 
         $('tbody input:checkbox#subject_id:checked', table).each(function() {
+            var schClass = {{{json schClass}}};
             var object = {};
             object.compulsory = $(this).closest('tbody tr').find('#compulsory').is(':checked');
-            object.subjectName = $(this).closest('tbody tr').find('#subjectName').text();
             object.subjectId = $(this).val();
-            arrayOfValues.push(object);
+            object.subjectName = $(this).closest('tbody tr').find('#subjectName').text();
+            object.classId = schClass._id;
+            object.className = schClass.displayName;
+            object.teacherName = $(this).closest('tbody tr').find('#teacher option:selected').val();
+            object.teacherDisplayName = $(this).closest('tbody tr').find('#teacher option:selected').text();
+            
+            arrayOfValues.push(object); 
         });
-
+        
         var schClass = {{{json schClass}}};
         $.ajax({
-            url: '{{bolt_root}}/api/db/classes/update?_id={{schClass._id}}',
+            url: '{{bolt_root}}/api/db/class-subjects/remove?classId={{schClass._id}}',
             type: 'POST',
-            data: JSON.stringify({ values: { subjects: arrayOfValues } }),
+            data: JSON.stringify({ app:'ctl-sms-school-admin' }),
             dataType: 'json',
             contentType: 'application/json',
             headers: {'X-Bolt-App-Token': '{{app_token}}'},
             success: function(response) {
                 if(response.code === 0){
+                    arrayOfValues.forEach(function (a) {
+                        $.ajax({
+                            url: '{{bolt_root}}/api/db/class-subjects/insert',
+                            type: 'POST',
+                            data: JSON.stringify({app:'ctl-sms-school-admin', object: a}),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                            success: function(response2, status2, xhr2){},
+                            error: function(xhr2, status2, err2) {}
+                        });
+                    });
+
                     //Sweet alert
                     swal({
                         title: "Class Updated!",

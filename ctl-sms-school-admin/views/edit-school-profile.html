@@ -102,7 +102,7 @@
                             <div class="col-md-6 col-sm-6">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;">
-                                        <img src="{{bolt_root}}/{{profile.logo}}">
+                                        <img src="{{profile.logo}}">
                                     </div>
                                     <div>
                                         <span class="btn dark btn-outline btn-file">
@@ -265,8 +265,21 @@ var FormValidationMd = function() {
                         xhr.setRequestHeader('X-Bolt-App-Token', '{{app_token}}');
                     },
                     success: function(response) {
-                        if(response.code === 0){
-                            profile.logo = response.body[0];
+                        if(response.code === 0) {
+                            if (response.body.length > 0) {
+                                //delete previous logo
+                                var prevLogo = '{{profile.logo}}';
+                                if (prevLogo) {
+                                    var indexOfLastSlash = prevLogo.lastIndexOf('/');
+                                    var filename = prevLogo.substring(indexOfLastSlash + 1);
+                                    $.ajax({
+                                        url: '{{bolt_root}}/public/upload/' + filename,
+                                        type: 'DELETE',
+                                        headers: {'X-Bolt-App-Token': '{{app_token}}'}
+                                    });
+                                }
+                                profile.logo = response.body[0].url;
+                            }
 
                             $.ajax({
                                 url: "{{bolt_root}}/api/db/school-profile/update?app={{appname}}",

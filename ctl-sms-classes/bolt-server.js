@@ -30,6 +30,17 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Set Static Path
 app.use("**/assets", express.static(path.join(__dirname, 'assets')));
 
+function getClass(req, res, next){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.id, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {}}, 
+		function(error, response, body) {
+			req.schClass = body.body;
+			next();
+		});
+}
+
 //Middleware to check for the app root directory of an app
 app.use(function(req, res, next){
 	if (process.env.BOLT_CHILD_PROC || app.get('running_outside_bolt')) {
@@ -123,13 +134,13 @@ app.get('/class-settings', function(req, res){
 	});
 });
 
-app.get('/assign-class-subject/:id', function(req, res){
+app.get('/assign-class-subject/:id', getClass, function(req, res){
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.id, 
+		url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/find?classId=' + req.params.id, 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {}}, 
+		json: {app: 'ctl-sms-school-admin'}}, 
 		function(error, response, body) {
-		var schClass = body.body;
+		var classSubjects = body.body; 
 
 			request.post({
 			url: process.env.BOLT_ADDRESS + '/api/db/subjects/find', 
@@ -137,15 +148,53 @@ app.get('/assign-class-subject/:id', function(req, res){
 			json: {object:{}, app: 'ctl-sms-subjects'}}, 
 			function(error, response, body) {
 			var subjects = body.body;
+				request.post({
+				url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
+				headers: {'X-Bolt-App-Token': apptoken, },
+				json: {object:{}, app: 'ctl-sms-staff'}}, 
+				function(error, response, body) {
+				var teachers = body.body;
 
-			res.render('assign-class-subject', {
+				res.render('assign-class-subject', {
+					class_settings_menu: 'selected',
+					class_settings_active: 'active',
+					app_root: req.app_root,
+					app_token: apptoken,
+					bolt_root: process.env.BOLT_ADDRESS,
+					classSubjects: classSubjects,
+					schClass: req.schClass,
+					subjects: subjects,
+					teachers: teachers
+				});
+			});
+		});		
+	});
+});
+
+app.get('/assign-form-teacher/:id', getClass, function(req, res){
+	request.post({
+		url: process.env.BOLT_ADDRESS + '/api/db/class-teachers/findone?classId=' + req.params.id, 
+		headers: {'X-Bolt-App-Token': apptoken},
+		json: {app: 'ctl-sms-school-admin'}}, 
+		function(error, response, body) {
+		var classTeacher = body.body;
+
+			request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
+			headers: {'X-Bolt-App-Token': apptoken, },
+			json: {object:{}, app:'ctl-sms-staff'}}, 
+			function(error, response, body) {
+			var teachers = body.body;
+
+			res.render('assign-form-teacher', {
 				class_settings_menu: 'selected',
 				class_settings_active: 'active',
 				app_root: req.app_root,
 				app_token: apptoken,
 				bolt_root: process.env.BOLT_ADDRESS,
-				schClass: schClass,
-				subjects: subjects
+				schClass: req.schClass,
+				classTeacher: classTeacher,
+				teachers: teachers
 			});
 		});		
 	});

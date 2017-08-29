@@ -322,15 +322,16 @@ var FormValidationMd = function() {
                 var dob = $("#dob").val();
                 var address = $("#address").val();
 
-                formData.append('name', username);
-                formData.append('password', password);
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
-                    
-                //create staff as a bolt user
+                var user = {
+                    name: username,
+                    password: password,
+                    displayName: displayname,
+                    email: email,
+                    phone: phone
+                };
+
                 $.ajax({
-                    url: '{{bolt_root}}/api/users',
+                    url: '{{bolt_root}}/public/upload',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -338,90 +339,109 @@ var FormValidationMd = function() {
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('X-Bolt-App-Token', '{{app_token}}');
                     },
-                    success: function(response) {
-                        if(response.code === 0){
-                            //second, create an staff role
-                            var rolenm = $("#role option:selected").val();
-                            var dataBody;
-                            if (rolenm === 'management') {
-                                dataBody = { name: "management", isAdmin: true, displayName: "Management", description: "A member of the school management" };
-                            }
-                            else if (rolenm === 'center_head') {
-                                dataBody = { name: "center_head", isAdmin: true, displayName: "Center Head", description: "The center head" };
-                            }
-                            else if (rolenm === 'front_desk') {
-                                dataBody = { name: "front_desk", isAdmin: false, displayName: "Front Desk", description: "A member of the front desk team" };
-                            }
-                            else if (rolenm === 'faculty') {
-                                dataBody = { name: "faculty", isAdmin: false, displayName: "Faculty", description: "A member of the faculty" };
-                            }
-                            else if (rolenm === 'auxilliary_staff') {
-                                dataBody = { name: "auxilliary_staff", isAdmin: false, displayName: "Auxilliary Staff", description: "A member of the auxilliary staff" };
-                            }
+                    success: function(response){
+                        if(response.code === 0) {
+                            if (response.body.length > 0) user.displayPic = response.body[0].url;
+
+                            //create staff as a bolt user
                             $.ajax({
-                                url: "{{bolt_root}}/api/roles",
+                                url: '{{bolt_root}}/api/users',
                                 type: 'POST',
-                                data: dataBody,
+                                data: user,
                                 headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                success: function(response2, status2, xhr2) {
-                                    if(response2.code === 0 || response2.code === 301){
-                                        //code 0 means no error occured, code 301 means the role already exists; either way, we are good
-                                        //third, associate user and role
+                                success: function(response1) {
+                                    if(response1.code === 0){
+                                        //second, create an staff role
+                                        var rolenm = $("#role option:selected").val();
+                                        var dataBody;
+                                        if (rolenm === 'management') {
+                                            dataBody = { name: "management", isAdmin: true, displayName: "Management", description: "A member of the school management" };
+                                        }
+                                        else if (rolenm === 'center_head') {
+                                            dataBody = { name: "center_head", isAdmin: true, displayName: "Center Head", description: "The center head" };
+                                        }
+                                        else if (rolenm === 'front_desk') {
+                                            dataBody = { name: "front_desk", isAdmin: false, displayName: "Front Desk", description: "A member of the front desk team" };
+                                        }
+                                        else if (rolenm === 'faculty') {
+                                            dataBody = { name: "faculty", isAdmin: false, displayName: "Faculty", description: "A member of the faculty" };
+                                        }
+                                        else if (rolenm === 'auxilliary_staff') {
+                                            dataBody = { name: "auxilliary_staff", isAdmin: false, displayName: "Auxilliary Staff", description: "A member of the auxilliary staff" };
+                                        }
                                         $.ajax({
-                                            url: "{{bolt_root}}/api/user-roles",
-                                            type: "POST",
-                                            data: { user: response.body.name, role: rolenm },
+                                            url: "{{bolt_root}}/api/roles",
+                                            type: 'POST',
+                                            data: dataBody,
                                             headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                            success: function(response3, status3, xhr3) {
-                                                if(response3.code === 0){
-                                                    //fourth, insert the staff into the staff collection
+                                            success: function(response2, status2, xhr2) {
+                                                if(response2.code === 0 || response2.code === 301){
+                                                    //code 0 means no error occured, code 301 means the role already exists; either way, we are good
+                                                    //third, associate user and role
                                                     $.ajax({
-                                                        url: '{{bolt_root}}/api/db/staff/insert',
-                                                        type: 'POST',
-                                                        data: JSON.stringify({ object: { name: username, gender: gender, dob: dob, address: address }}),
-                                                        //processData: false,
-                                                        dataType: 'json',
-                                                        contentType: 'application/json',
+                                                        url: "{{bolt_root}}/api/user-roles",
+                                                        type: "POST",
+                                                        data: { user: response1.body.name, role: rolenm },
                                                         headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                                        success: function(response4, status4, xhr4){
-                                                            if(response4.code === 0){
-                                                                //Sweet alert
-                                                                swal({
-                                                                    title: "Staff Registered!",
-                                                                    text: displayname + " has been registered.",
-                                                                    type: "success",
-                                                                    showCancelButton: false,
-                                                                    closeOnConfirm: true
-                                                                }, function(isConfirm){
-                                                                    if (isConfirm) {
-                                                                        window.location.href="{{app_root}}/register-staff";
+                                                        success: function(response3, status3, xhr3) {
+                                                            if(response3.code === 0){
+                                                                //fourth, insert the staff into the staff collection
+                                                                $.ajax({
+                                                                    url: '{{bolt_root}}/api/db/staff/insert',
+                                                                    type: 'POST',
+                                                                    data: JSON.stringify({ object: { name: username, gender: gender, dob: dob, address: address }}),
+                                                                    //processData: false,
+                                                                    dataType: 'json',
+                                                                    contentType: 'application/json',
+                                                                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                                                    success: function(response4, status4, xhr4){
+                                                                        if(response4.code === 0){
+                                                                            //Sweet alert
+                                                                            swal({
+                                                                                title: "Staff Registered!",
+                                                                                text: displayname + " has been registered.",
+                                                                                type: "success",
+                                                                                showCancelButton: false,
+                                                                                closeOnConfirm: true
+                                                                            }, function(isConfirm){
+                                                                                if (isConfirm) {
+                                                                                    window.location.href="{{app_root}}/register-staff";
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        else {
+                                                                            sweetAlert(response4.errorUserTitle, response4.errorUserMessage, "error");
+                                                                        }
+                                                                    },
+                                                                    error: function(xhr4, status4, err4){
+                                                                        alert(xhr4.responseText);
                                                                     }
                                                                 });
                                                             }
                                                             else {
-                                                                sweetAlert(response4.errorUserTitle, response4.errorUserMessage, "error");
+                                                              sweetAlert(response3.errorUserTitle, response3.errorUserMessage, "error");
                                                             }
                                                         },
-                                                        error: function(xhr4, status4, err4){
-                                                            alert(xhr4.responseText);
+                                                        error: function(xhr3, status3, err3){
+                                                            alert(xhr3.responseText);
                                                         }
                                                     });
                                                 }
                                                 else {
-                                                  sweetAlert(response3.errorUserTitle, response3.errorUserMessage, "error");
+                                                    sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
                                                 }
-                                            },
-                                            error: function(xhr3, status3, err3){
-                                                alert(xhr3.responseText);
+                                            }, 
+                                            error: function(xhr2, status2, err2){
+                                                alert(xhr2.responseText);
                                             }
                                         });
                                     }
                                     else {
-                                        sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
+                                        sweetAlert(response1.errorUserTitle, response1.errorUserMessage, "error");
                                     }
-                                }, 
-                                error: function(xhr2, status2, err2){
-                                    alert(xhr2.responseText);
+                                },
+                                error: function(xhr1, status1, err1){
+                                    alert(xhr1.responseText);
                                 }
                             });
                         }

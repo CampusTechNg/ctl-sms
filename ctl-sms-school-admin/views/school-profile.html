@@ -35,7 +35,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="text-center">
-                                    <img src="{{bolt_root}}/{{profile.logo}}" class="img-circle" width="50%" height="50%">
+                                    <img src="{{profile.logo}}" class="img-circle" width="50%" height="50%">
                                 </div>
                             </div>
 
@@ -296,7 +296,7 @@ var FormValidationMd = function() {
                     success: function(response) {
                         if(response.code === 0){
                             //second, create an staff role
-                            profile.logo = response.body[0];
+                            if (response.body.length > 0) profile.logo = response.body[0].url;
 
                             $.ajax({
                                 url: "{{bolt_root}}/api/db/school-profile/insert",

@@ -223,7 +223,7 @@
          $(".modal-body #email").text( student.email );
          $(".modal-body #phone").text( student.phone );
          $(".modal-body #address").text( student.address );
-         $(".modal-body #dp").attr( 'src', "{{bolt_root}}/" + student.displayPic );
+         $(".modal-body #dp").attr( 'src', student.displayPic );
 
          $("#diaplay_guardians").html("");
          $.ajax({

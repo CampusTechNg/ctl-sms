@@ -21,9 +21,9 @@
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN PAGE LEVEL PLUGINS -->
     <link href="/public/metronic-for-bolt/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
-        <link href="/public/metronic-for-bolt/assets/global/plugins/morris/morris.css" rel="stylesheet" type="text/css" />
-        <link href="/public/metronic-for-bolt/assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
-        <link href="/public/metronic-for-bolt/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css" />
+    <link href="/public/metronic-for-bolt/assets/global/plugins/morris/morris.css" rel="stylesheet" type="text/css" />
+    <link href="/public/metronic-for-bolt/assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
+    <link href="/public/metronic-for-bolt/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css" />
      <!-- END PAGE LEVEL PLUGINS -->
     <!-- BEGIN THEME GLOBAL STYLES -->
     <link href="/public/metronic-for-bolt/assets/global/css/components-md.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -137,7 +137,7 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="/public/metronic-for-bolt/assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
 <script src="{{bolt_root}}/socket.io/socket.io.js" type="text/javascript"></script>
-<script src="/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
+<script src="{{bolt_root}}/public/bolt/native/js/bolt.events.js" type="text/javascript"></script>
 <script type="text/javascript">
     var modules = {{{json modules}}};
 
@@ -171,8 +171,8 @@
                                             '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                             '<div class="details">' +
                                             '<div class="number">' +
-                                            '<span id="tile_subject_' + tile.app + '" data-counter="counterup" data-value="' + tile.subject + '">' + tile.subject + '</span></div>' +
-                                            '<div class="desc"> ' + tile.message + ' </div></div>' +
+                                            '<span id="tile_message_' + tile.app + '" data-counter="counterup" data-value="' + tile.message + '">' + tile.message + '</span></div>' +
+                                            '<div class="desc"> ' + tile.subject + ' </div></div>' +
                                             '</a>' +
                                             '</div>';
                         $( "#home-tiles" ).append(tile_frame);
@@ -282,14 +282,14 @@
                                 '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                 '<div class="details">' +
                                 '<div class="number">' +
-                                '<span id="tile_subject_' + tile.app + '" data-counter="counterup" data-value="' + tile.subject + '">' + tile.subject + '</span></div>' +
-                                '<div class="desc"> ' + tile.message + ' </div></div>' +
+                                '<span id="tile_message_' + tile.app + '" data-counter="counterup" data-value="' + tile.message + '">' + tile.message + '</span></div>' +
+                                '<div class="desc"> ' + tile.subject + ' </div></div>' +
                                 '</a>' +
                                 '</div>';
             $( "#home-tiles" ).prepend(tile_frame);
         } else {
-            $('#tile_subject_' + tile.app).attr('data-value', tile.subject);
-            $('#tile_subject_' + tile.app).text(tile.subject);
+            $('#tile_message_' + tile.app).attr('data-value', tile.message);
+            $('#tile_message_' + tile.app).text(tile.message);
         }    
     });
 

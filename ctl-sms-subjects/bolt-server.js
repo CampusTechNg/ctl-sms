@@ -104,13 +104,13 @@ app.get('/edit-subject/:id', function(req, res){
 	});
 });
 
-app.get('/view-assigned-subjects', function(req, res){
+/*app.get('/view-assigned-subjects', function(req, res){
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/classes/find', 
+		url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}, app: 'ctl-sms-classes'}}, 
+		json: {object:{}, app: 'ctl-sms-staff'}}, 
 		function(error, response, body) {
-		var classes = body.body;
+		var teachers = body.body;
 
 		res.render('view-assigned-subjects', {
 			assign_subject_menu: 'selected',
@@ -118,25 +118,25 @@ app.get('/view-assigned-subjects', function(req, res){
 			app_root: req.app_root,
 			app_token: apptoken,
 			bolt_root: process.env.BOLT_ADDRESS,
-			classes: classes
+			teachers: teachers
 		});
 	});
 });
 
-app.get('/assign-subjects', function(req, res){
+app.get('/assign-subjects/:name', function(req, res){
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/classes/find', 
+		url: process.env.BOLT_ADDRESS + '/api/db/staff/findone?name=' + req.params.name, 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}, app: 'ctl-sms-classes'}}, 
+		json: {app: 'ctl-sms-staff'}}, 
 		function(error, response, body) {
-		var schClass = body.body;
+		var teacher = body.body; 
 
 			request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/subjects/find', 
+			url: process.env.BOLT_ADDRESS + '/api/db/classes/find', 
 			headers: {'X-Bolt-App-Token': apptoken, },
-			json: {object:{}}}, 
+			json: {object:{}, app: 'ctl-sms-classes'}},
 			function(error, response, body) {
-			var subjects = body.body;
+			var schClass = body.body;
 
 			res.render('assign-subjects', {
 				assign_subject_menu: 'selected',
@@ -145,11 +145,11 @@ app.get('/assign-subjects', function(req, res){
 				app_token: apptoken,
 				bolt_root: process.env.BOLT_ADDRESS,
 				schClass: schClass,
-				subjects: subjects
+				teacher: teacher
 			});
 		});		
 	});
-});
+});*/
 
 app.get('*', function(req, res){
 	res.render('404', {

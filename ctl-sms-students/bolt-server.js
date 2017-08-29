@@ -124,13 +124,22 @@ app.get('/register-student', function(req, res){
 		function(error, response, body) {
 			var guardians = body.body;
 
-			res.render('register-student', {
-				register_student_menu: 'selected',
-				register_student_active: 'active',
-				app_root: req.app_root,
-				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS,
-				guardians: guardians
+				request.post({
+				url: process.env.BOLT_ADDRESS + '/api/db/classes/find', 
+				headers: {'X-Bolt-App-Token': apptoken, },
+				json: {object:{}, app:'ctl-sms-classes'}}, 
+				function(error, response, body) {
+				var schClasses = body.body;
+
+				res.render('register-student', {
+					register_student_menu: 'selected',
+					register_student_active: 'active',
+					app_root: req.app_root,
+					app_token: apptoken,
+					bolt_root: process.env.BOLT_ADDRESS,
+					guardians: guardians,
+					schClasses: schClasses
+				});
 			});
 		});
 });
@@ -186,8 +195,8 @@ app.get('/edit-student/:name', function(req, res){
 						}
 
 						res.render('edit-student', {
-							register_student_menu: 'selected',
-							register_student_active: 'active',
+							view_students_menu: 'selected',
+							view_students_active: 'active',
 							app_root: req.app_root,
 							app_token: apptoken,
 							bolt_root: process.env.BOLT_ADDRESS,
@@ -198,8 +207,8 @@ app.get('/edit-student/:name', function(req, res){
 					});
 				} else {
 					res.render('edit-student', {
-						register_student_menu: 'selected',
-						register_student_active: 'active',
+						view_students_menu: 'selected',
+						view_students_active: 'active',
 						app_root: req.app_root,
 						app_token: apptoken,
 						bolt_root: process.env.BOLT_ADDRESS,

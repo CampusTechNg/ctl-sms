@@ -56,93 +56,61 @@ app.use(function(req, res, next){
 	next();
 });
 
+//get all users except currently logged-in user
+app.use(function(req, res, next){
+	request.get({
+		url: process.env.BOLT_ADDRESS + '/api/users', 
+		headers: {'X-Bolt-App-Token': apptoken}}, 
+		function(error, response, body) {
+			body = JSON.parse(body);
+			var users = body.body || [];
+			users.forEach(function(user) { if (!user.displayPic) user.displayPic = "public/bolt/users/user.png"; })
+			req.allOtherUsers = users.filter(function(user) { 
+				if (req.user && user) return req.user.name != user.name; 
+				else return false;
+			});
+			next();
+		});
+});
+
 app.post('/app-starting', function(req, res){
 	var event = req.body;
 	appname = event.body.appName;
 	apptoken = event.body.appToken;
 });
 
-app.post('/hooks/bolt/app-collection-inserted', function(req, res){
-	var event = req.body;
-	
-	if (event.body.collection == 'posts') {
-		var id = event.body.result.insertedIds[0];
-
-		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/posts/find', 
-			headers: {'X-Bolt-App-Token': apptoken},
-			json: {}}, 
-			function(error, response, body) {
-			var posts = body.body;
-
-			//var post = posts.find(function(p) { p._id.toString() == id.toString(); }); //for some reason this doesnt work
-			var post;
-			for (var index = 0; index < posts.length; index++) {
-				var p = posts[index];
-				if (p._id.toString() == id.toString()) {
-					post = p;
-					break;
-				}
-			}
-			
-			if(post)
-				utils.Events.fire('topic-posted', { body: post }, apptoken, function(eventError, eventResponse){});
-
-			request.post({
-				url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
-				headers: {'X-Bolt-App-Token': apptoken},
-				json: {background: '#FF7C26', caption: posts.length, message: 'forum topics', route: '/'}}, 
-				function(error, response, body) {});
-
-			//TODO: raise notification
-			/*if (event.name == 'app-collection-inserted') {
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/notifications', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {
-						message: 'A new student has been created',
-						route: '/view-students',
-						to: ['kelvin'],
-						buttons: [
-						{
-							type: 'link',
-							text: 'Click',
-							data: '/apps/ctl-sms-students'
-						},
-						{
-							type: 'phone',
-							text: 'Call',
-							data: '+2347012345678'
-						},
-						{
-							type: 'postback',
-							text: 'Post',
-							data: 'A'
-						}
-						],
-						toast: {
-							message: 'A new student has been created',
-							duration: 8000
-						}
-					}
-				}, 
-					function(error, response, body) {
-						
-					});
-			}*/
-		});
-	}
-});
-
 //Route
 app.get('/', function(req, res){
+	res.render('index', {
+		chat_menu: 'selected',
+		chat_active: 'active',
+		app_root: req.app_root,
+		app_token: apptoken,
+		bolt_root: process.env.BOLT_ADDRESS,
+
+		user: req.user,
+		users: req.allOtherUsers
+	});
+});
+
+app.get('/with/:username', function(req, res){
+	var otherUser = req.allOtherUsers.filter(function(user) { return user.name == req.params.username; });
+	otherUser = otherUser[0];
+	req.allOtherUsers.forEach(function(user) {
+		if (user.name == otherUser.name) {
+			user.isOtherUser = true;
+		}
+	});
 	request.post({
 		url: process.env.BOLT_ADDRESS + '/api/db/chats/find', 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {}}, 
+		json: { query: { $and: [{users: req.params.username}, {users: req.user.name}] } }}, 
 		function(error, response, body) {
 			var chats = body.body || [];
-			chats = chats.reverse();
+			chats.forEach(function(chat) {
+				if (chat.username == req.user.name) chat.out = true;
+			});
+
 			res.render('index', {
 				chat_menu: 'selected',
 				chat_active: 'active',
@@ -150,87 +118,49 @@ app.get('/', function(req, res){
 				app_token: apptoken,
 				bolt_root: process.env.BOLT_ADDRESS,
 
+				user: req.user,
+				users: req.allOtherUsers,
 				chats: chats,
-				user: req.user
+				chatName: otherUser.displayName,
+				otherUser: otherUser
 			});
 		});
 });
 
-/*app.get('/posts/:id', function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/posts/findone?_id=' + req.params.id, 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {}}, 
-		function(error, response, body) {
-			var post = body.body;
-
-			if (post) {
-				res.render('post', {
-					forum_menu: 'selected',
-					forum_active: 'active',
-					app_root: req.app_root,
-					app_token: apptoken,
-					bolt_root: process.env.BOLT_ADDRESS,
-
-					post: post,
-					user: req.user
-				});
-			} else {
-				res.render('404', {
-					app_root: req.app_root,
-					bolt_root: process.env.BOLT_ADDRESS
-				});
-			}
-		});
-});*/
-
-/*app.post('/posts/:id/comments', function(req, res){
+app.post('/with/:username', function(req, res){
 	//TODO: before proceeding confirm that the 'X-Bolt-App-Token' of req matches yours
 
 	res.set('Content-Type', 'application/json');
 
-	var comment = req.body;
+	var chat = req.body;
 
-	comment.date = comment.date || new Date();
-	comment.user = comment.user || {
+	chat.date = chat.date || new Date();
+	chat.users = chat.users || [req.user.name, req.params.username];
+	chat.userId = req.user._id;
+	chat.username = req.user.name;
+	chat.user = chat.user || {
 		name: req.user.name,
 		displayName: req.user.displayName,
 		displayPic: req.user.displayPic,
 	};
 
 	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/posts/findone?_id=' + req.params.id, 
+		url: process.env.BOLT_ADDRESS + '/api/db/chats/insert', 
 		headers: {'X-Bolt-App-Token': apptoken},
-		json: {}}, 
+		json: { object: chat }}, 
 		function(error, response, body) {
-			var post = body.body;
-
-			if (post) {
-				post.comments = post.comments || [];
-				post.comments.push(comment);
-
-				//update post
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/db/posts/update?_id=' + req.params.id, 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: { values: {comments: post.comments} }
-				}, function(error2, response2, body2) {
-					if (body2.code === 0) {
-						//fire event for new comment
-						comment.postId = post._id;
-						utils.Events.fire('comment-posted', { body: comment, subscribers: ['ctl-sms-forum'] }, apptoken, function(eventError, eventResponse){});
-					}
-					else {
-						//TODO: a way to specify error (raise an event??)
-					}
-					res.send(JSON.stringify({}));
-				});
-			} else {
-				//TODO: a way to specify error (raise an event??)
-				res.send(JSON.stringify({}));
+			if (body.code === 0) {
+				//fire event for new chat
+				utils.Events.fire('chat-posted', { body: chat, subscribers: ['ctl-sms-chat'] }, apptoken, function(eventError, eventResponse){});
 			}
+			else {
+				//TODO: a way to specify error (raise an event??)
+			}
+			res.send(JSON.stringify({}));
 		});
-});*/
+});
+
+//app.get('/in/:groupname', function(req, res){});
 
 app.get('*', function(req, res){
 	res.render('404', {

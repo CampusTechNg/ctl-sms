@@ -105,7 +105,7 @@
                             <div class="col-md-6 col-sm-6">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;">
-                                        <img src="{{bolt_root}}/{{staff.userInfo.displayPic}}">
+                                        <img src="{{staff.userInfo.displayPic}}">
                                     </div>
                                     <div>
                                         <span class="btn red btn-outline btn-file">
@@ -254,14 +254,15 @@ var FormValidationMd = function() {
                 var dob = $("#dob").val();
                 var address = $("#address").val();
 
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
-                    
-                //update staff as a bolt user
+                var user = {
+                    displayName: displayname,
+                    email: email,
+                    phone: phone
+                };
+
                 $.ajax({
-                    url: '{{bolt_root}}/api/users/{{staff.name}}',
-                    type: 'PUT',
+                    url: '{{bolt_root}}/public/upload',
+                    type: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false, //'multipart/form-data',
@@ -269,37 +270,69 @@ var FormValidationMd = function() {
                         xhr.setRequestHeader('X-Bolt-App-Token', '{{app_token}}');
                     },
                     success: function(response) {
-                        if(response.code === 0){
+                        if(response.code === 0) {
+                            if (response.body.length > 0) {
+                                //delete previous logo
+                                var prevLogo = '{{staff.displayPic}}';
+                                if (prevLogo) {
+                                    var indexOfLastSlash = prevLogo.lastIndexOf('/');
+                                    var filename = prevLogo.substring(indexOfLastSlash + 1);
+                                    $.ajax({
+                                        url: '{{bolt_root}}/public/upload/' + filename,
+                                        type: 'DELETE',
+                                        headers: {'X-Bolt-App-Token': '{{app_token}}'}
+                                    });
+                                }
+                                user.displayPic = response.body[0].url;
+                            }
+
+                            //update staff as a bolt user
                             $.ajax({
-                                url: "{{bolt_root}}/api/db/staff/update",
-                                type: 'POST',
-                                data: JSON.stringify({ object: { name: "{{staff.name}}" }, 
-                                    values: {gender: gender, dob: dob, address: address}}),
-                                //processData: false,
-                                dataType: 'json',
-                                contentType: 'application/json',
+                                url: '{{bolt_root}}/api/users/{{staff.name}}',
+                                type: 'PUT',
+                                data: user,
                                 headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                success: function(response2, status2, xhr2) {
-                                    if(response2.code === 0){
-                                        //Sweet alert
-                                        swal({
-                                            title: "Staff Updated!",
-                                            text: displayname + " has been updated.",
-                                            type: "success",
-                                            showCancelButton: false,
-                                            closeOnConfirm: true
-                                        }, function(isConfirm){
-                                            if (isConfirm) {
-                                                window.location.href="{{app_root}}/view-staff";
+                                success: function(response) {
+                                    if(response.code === 0){
+                                        $.ajax({
+                                            url: "{{bolt_root}}/api/db/staff/update",
+                                            type: 'POST',
+                                            data: JSON.stringify({ object: { name: "{{staff.name}}" }, 
+                                                values: {gender: gender, dob: dob, address: address}}),
+                                            //processData: false,
+                                            dataType: 'json',
+                                            contentType: 'application/json',
+                                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                            success: function(response2, status2, xhr2) {
+                                                if(response2.code === 0){
+                                                    //Sweet alert
+                                                    swal({
+                                                        title: "Staff Updated!",
+                                                        text: displayname + " has been updated.",
+                                                        type: "success",
+                                                        showCancelButton: false,
+                                                        closeOnConfirm: true
+                                                    }, function(isConfirm){
+                                                        if (isConfirm) {
+                                                            window.location.href="{{app_root}}/view-staff";
+                                                        }
+                                                    });
+                                                }
+                                                else {
+                                                    sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
+                                                }
+                                            }, 
+                                            error: function(xhr2, status2, err2){
+                                                alert(xhr2.responseText);
                                             }
                                         });
                                     }
                                     else {
-                                        sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
+                                        sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
                                     }
-                                }, 
-                                error: function(xhr2, status2, err2){
-                                    alert(xhr2.responseText);
+                                },
+                                error: function(xhr, status, err){
+                                    alert(xhr.responseText);
                                 }
                             });
                         }

@@ -141,7 +141,7 @@
                             <div class="col-md-6 col-sm-6">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;">
-                                        <img src="{{bolt_root}}/{{student.displayPic}}">
+                                        <img src="{{student.displayPic}}">
                                     </div>
                                     <div>
                                         <span class="btn red btn-outline btn-file">
@@ -293,14 +293,15 @@ var FormValidationMd = function() {
                   guardians[i] = selected.value; 
                 });
 
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
-                    
-                //update student as a bolt user
+                var user = {
+                    displayName: displayname,
+                    email: email,
+                    phone: phone
+                };
+
                 $.ajax({
-                    url: '{{bolt_root}}/api/users/{{student.name}}',
-                    type: 'PUT',
+                    url: '{{bolt_root}}/public/upload',
+                    type: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false, //'multipart/form-data',
@@ -308,63 +309,95 @@ var FormValidationMd = function() {
                         xhr.setRequestHeader('X-Bolt-App-Token', '{{app_token}}');
                     },
                     success: function(response) {
-                        if(response.code === 0){
+                        if(response.code === 0) {
+                            if (response.body.length > 0) {
+                                //delete previous logo
+                                var prevLogo = '{{student.displayPic}}';
+                                if (prevLogo) {
+                                    var indexOfLastSlash = prevLogo.lastIndexOf('/');
+                                    var filename = prevLogo.substring(indexOfLastSlash + 1);
+                                    $.ajax({
+                                        url: '{{bolt_root}}/public/upload/' + filename,
+                                        type: 'DELETE',
+                                        headers: {'X-Bolt-App-Token': '{{app_token}}'}
+                                    });
+                                }
+                                user.displayPic = response.body[0].url;
+                            }
+
+                            //update student as a bolt user
                             $.ajax({
-                                url: "{{bolt_root}}/api/db/students/update",
-                                type: 'POST',
-                                data: JSON.stringify({ object: { name: "{{student.name}}" }, 
-                                    values: {address: address, displayName: displayname, displayPic: response.body.displayPic, dob: dob, email: email, gender: gender, phone: phone}}),
-                                //processData: false,
-                                dataType: 'json',
-                                contentType: 'application/json',
+                                url: '{{bolt_root}}/api/users/{{student.name}}',
+                                type: 'PUT',
+                                data: user,
                                 headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                success: function(response2, status2, xhr2) {
-                                    if(response2.code === 0){
+                                success: function(response1) {
+                                    if(response1.code === 0){
                                         $.ajax({
-                                            url: '{{bolt_root}}/api/db/student-guardian/remove',
+                                            url: "{{bolt_root}}/api/db/students/update",
                                             type: 'POST',
-                                            data: JSON.stringify({object: {ward: "{{student.name}}"}}),
+                                            data: JSON.stringify({ query: { name: "{{student.name}}" }, 
+                                                values: {address: address, displayName: displayname, displayPic: response1.body.displayPic, dob: dob, email: email, gender: gender, phone: phone}}),
+                                            //processData: false,
                                             dataType: 'json',
                                             contentType: 'application/json',
                                             headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                            success: function(response3, status3, xhr3){
-                                                if (response3.code === 0) {
-                                                    guardians.forEach(function (g) {
-                                                        $.ajax({
-                                                            url: '{{bolt_root}}/api/db/student-guardian/insert',
-                                                            type: 'POST',
-                                                            data: JSON.stringify({object: {guardian: g, ward: "{{student.name}}"}}),
-                                                            dataType: 'json',
-                                                            contentType: 'application/json',
-                                                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                                                            success: function(response3, status3, xhr3){},
-                                                            error: function(xhr3, status3, err3) {}
-                                                        });
-                                                    });
+                                            success: function(response2, status2, xhr2) {
+                                                if(response2.code === 0){
+                                                    $.ajax({
+                                                        url: '{{bolt_root}}/api/db/student-guardian/remove',
+                                                        type: 'POST',
+                                                        data: JSON.stringify({query: {ward: "{{student.name}}"}}),
+                                                        dataType: 'json',
+                                                        contentType: 'application/json',
+                                                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                                        success: function(response3, status3, xhr3){
+                                                            if (response3.code === 0) {
+                                                                guardians.forEach(function (g) {
+                                                                    $.ajax({
+                                                                        url: '{{bolt_root}}/api/db/student-guardian/insert',
+                                                                        type: 'POST',
+                                                                        data: JSON.stringify({object: {guardian: g, ward: "{{student.name}}"}}),
+                                                                        dataType: 'json',
+                                                                        contentType: 'application/json',
+                                                                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                                                        success: function(response3, status3, xhr3){},
+                                                                        error: function(xhr3, status3, err3) {}
+                                                                    });
+                                                                });
 
-                                                    //Sweet alert
-                                                    swal({
-                                                        title: "Student Updated!",
-                                                        text: displayname + " has been updated.",
-                                                        type: "success",
-                                                        showCancelButton: false,
-                                                        closeOnConfirm: true
-                                                    }, function(isConfirm){
-                                                        if (isConfirm) {
-                                                            window.location.href="{{app_root}}/view-students";
-                                                        }
+                                                                //Sweet alert
+                                                                swal({
+                                                                    title: "Student Updated!",
+                                                                    text: displayname + " has been updated.",
+                                                                    type: "success",
+                                                                    showCancelButton: false,
+                                                                    closeOnConfirm: true
+                                                                }, function(isConfirm){
+                                                                    if (isConfirm) {
+                                                                        window.location.href="{{app_root}}/view-students";
+                                                                    }
+                                                                });
+                                                            }
+                                                        },
+                                                        error: function(xhr3, status3, err3) {}
                                                     });
                                                 }
-                                            },
-                                            error: function(xhr3, status3, err3) {}
+                                                else {
+                                                    sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
+                                                }
+                                            }, 
+                                            error: function(xhr2, status2, err2){
+                                                alert(xhr2.responseText);
+                                            }
                                         });
                                     }
                                     else {
-                                        sweetAlert(response2.errorUserTitle, response2.errorUserMessage, "error");
+                                        sweetAlert(response1.errorUserTitle, response1.errorUserMessage, "error");
                                     }
-                                }, 
-                                error: function(xhr2, status2, err2){
-                                    alert(xhr2.responseText);
+                                },
+                                error: function(xhr, status, err){
+                                    alert(xhr.responseText);
                                 }
                             });
                         }

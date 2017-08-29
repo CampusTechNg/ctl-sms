@@ -118,7 +118,7 @@ app.post('/hooks/bolt/app-collection-inserted', function(req, res){
 			request.post({
 				url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
 				headers: {'X-Bolt-App-Token': apptoken},
-				json: {background: '#2F42EC', subject: notices.length, message: 'public notices', route: '/'}}, 
+				json: {background: '#2F42EC', message: notices.length, subject: 'public notices', route: '/'}}, 
 				function(error, response, body) {});
 		});
 	}
@@ -143,7 +143,7 @@ app.post('/hooks/bolt/app-collection-removed', function(req, res){
 				request.post({
 					url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
 					headers: {'X-Bolt-App-Token': apptoken},
-					json: {background: '#2F42EC', subject: notices.length, message: 'public notices', route: '/'}}, 
+					json: {background: '#2F42EC', message: notices.length, subject: 'public notices', route: '/'}}, 
 					function(error, response, body) {});
 
 				var notice = notices[notices.length - 1];

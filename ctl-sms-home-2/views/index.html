@@ -157,7 +157,7 @@
                         <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                          <li class="dropdown dropdown-user">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="" data-close-others="true">
-                                <img alt="" class="img-circle" src="/{{user.displayPic}}" />
+                                <img alt="" class="img-circle" src="{{user.displayPic}}" />
                                 <span class="username username-hide-on-mobile"> {{user.displayName}} </span>
                                 <i class="fa fa-angle-down"></i>
                             </a>
@@ -374,7 +374,7 @@
                                         var notf_frame =   '<li>' +
                                             '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
                                                 '<span class="photo">' +
-                                                    '<img src="{{bolt_root}}/' + notification.from.displayPic + '" class="img-circle" alt="">' +
+                                                    '<img src="' + notification.from.displayPic + '" class="img-circle" alt="">' +
                                                 '</span>' +
                                                 '<span class="subject">' +
                                                     '<span class="from">' + notification.from.displayName + '</span>' +
@@ -488,7 +488,7 @@
                         var notf_frame =   '<li">' +
                                 '<a href="{{bolt_root}}/apps/' + notification.app + append + '" target="main_frame">' +
                                     '<span class="photo">' +
-                                        '<img src="{{bolt_root}}/' + notification.from.displayPic + '" class="img-circle" alt="">' +
+                                        '<img src="' + notification.from.displayPic + '" class="img-circle" alt="">' +
                                     '</span>' +
                                     '<span class="subject">' +
                                         '<span class="from">' + notification.from.displayName + '</span>' +

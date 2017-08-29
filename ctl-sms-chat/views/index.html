@@ -39,13 +39,14 @@
             <div class="portlet-body" id="chats">
                 <div class="scroller chat_box1" data-always-visible="1" data-rail-visible1="1">
                     <ul id="livefilter-list">
-                        <li class="user_tab"><img class="avatar" alt="" src="/public/bolt/users/user.png" /> <span>cool</span></li>
-                        <li class="user_tab"><img class="avatar" alt="" src="/public/bolt/users/user.png" /> <span>nice</span><li class="user_tab"><img class="avatar" alt="" src="/public/bolt/users/user.png" /> <span>interesting</span></li>
-                        <li class="user_tab"><img class="avatar" alt="" src="/public/bolt/users/user.png" /> <span>javascript</span></li>
-                        <li class="user_tab"><img class="avatar" alt="" src="/public/bolt/users/user.png" /> <span>css</span></li>
-                        <li class="user_tab"><img class="avatar" alt="" src="/public/bolt/users/user.png" /> <span>html</span></li>
-                        <li class="user_tab"><img class="avatar" alt="" src="/public/bolt/users/user.png" /> <span>script</span></li>
-                        <li class="user_tab"><img class="avatar" alt="" src="/public/bolt/users/user.png" /> <span>international</span></li>
+                        {{#each users}}
+                        <li class="user_tab">
+                            <a href="{{../app_root}}/with/{{name}}">
+                            <img class="avatar" alt="" src="{{displayPic}}" /> 
+                            <span>{{displayName}} {{#if isOtherUser}}<span class="badge badge-empty badge-success"></span>{{/if}}</span>
+                            </a>
+                        </li>
+                        {{/each}}
                     </ul>
                 </div>
             </div>
@@ -56,111 +57,45 @@
 
     <div class="col-md-8 col-sm-8">
         <!-- BEGIN PORTLET-->
+        {{#if otherUser}}
         <div class="portlet light bordered">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="icon-bubble font-hide hide"></i>
-                    <span class="caption-subject font-hide bold uppercase">Chats</span>
+                    <img class="avatar" alt="" src="{{otherUser.displayPic}}" width="32" height="32" />
+                    <span class="caption-subject font-hide bold uppercase">{{chatName}}</span>
                 </div>
             </div>
             <div class="portlet-body" id="chats">
                 <div class="scroller chat_box2" data-always-visible="1" data-rail-visible1="1">
-                    <ul class="chats">
-                        <li class="in">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar2.jpg" />
+                    {{#if chats}}
+                    <ul id="chat-box" class="chats">
+                        {{#each chats}}
+                        <li {{#if out}}class="out"{{else}}class="in"{{/if}}>
+                            <img class="avatar" alt="" src="{{user.displayPic}}" />
                             <div class="message">
                                 <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Lisa Wong </a>
-                                <span class="datetime"> at 20:11 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                                <a href="javascript:;" class="name"> {{user.displayName}} </a>
+                                <span class="datetime"> at {{date}} </span>
+                                <span class="body"> {{message}} </span>
                             </div>
                         </li>
-                        <li class="out">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar2.jpg" />
-                            <div class="message">
-                                <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Lisa Wong </a>
-                                <span class="datetime"> at 20:11 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                            </div>
-                        </li>
-                        <li class="in">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
-                            <div class="message">
-                                <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Bob Nilson </a>
-                                <span class="datetime"> at 20:30 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                            </div>
-                        </li>
-                        <li class="in">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
-                            <div class="message">
-                                <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Bob Nilson </a>
-                                <span class="datetime"> at 20:30 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                            </div>
-                        </li>
-                        <li class="out">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
-                            <div class="message">
-                                <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Richard Doe </a>
-                                <span class="datetime"> at 20:33 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                            </div>
-                        </li>
-                        <li class="in">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
-                            <div class="message">
-                                <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Richard Doe </a>
-                                <span class="datetime"> at 20:35 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                            </div>
-                        </li>
-                        <li class="out">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
-                            <div class="message">
-                                <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Bob Nilson </a>
-                                <span class="datetime"> at 20:40 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                            </div>
-                        </li>
-                        <li class="in">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
-                            <div class="message">
-                                <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Richard Doe </a>
-                                <span class="datetime"> at 20:40 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                            </div>
-                        </li>
-                        <li class="out">
-                            <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar1.jpg" />
-                            <div class="message">
-                                <span class="arrow"> </span>
-                                <a href="javascript:;" class="name"> Bob Nilson </a>
-                                <span class="datetime"> at 20:54 </span>
-                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. sed diam nonummy nibh euismod tincidunt ut laoreet. </span>
-                            </div>
-                        </li>
+                        {{/each}}
                     </ul>
+                    {{/if}}
                 </div>
                 <div class="chat-form">
                     <div class="input-cont">
-                        <input class="form-control" type="text" placeholder="Type a message here..." /> </div>
+                        <input id="message" class="form-control" type="text" placeholder="Type a message here..." /> </div>
                     <div class="btn-cont">
                         <span class="arrow"> </span>
-                        <a href="" class="btn blue icn-only">
+                        <a id="submit" class="btn blue icn-only">
                             <i class="fa fa-check icon-white"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
+        {{/if}}
         <!-- END PORTLET-->
     </div>
 </div>
@@ -216,110 +151,84 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-    var excerpt = function(message) {
-        message = message.toString();
-        var max = 200;
-        return message.substr(0, max) + (message.length > max ? "..." : "");
-    }
-
-    $('#create_topic_section').hide();
-    $('#new_topic_btn').click(function() {
-        $('#create_topic_section').slideToggle();
-    });
-    $('#cancel').click(function() {
-        $('#create_topic_section').slideToggle();
-    });
-
-    Bolt.Events.on("ctl-sms-forum/topic-posted", function(event) {
+    Bolt.Events.on("ctl-sms-chat/chat-posted", function(event) {
         if (event.token != '{{app_token}}') return;
 
-        var post = event.body;
+        var chat = event.body;
+        if (chat.users.indexOf('{{user.name}}') > -1 && chat.users.indexOf('{{otherUser.name}}') == -1) {
+            //TODO: put a badge next to the user
+            $.ajax({
+                url: '{{bolt_root}}/api/notifications',
+                type: 'POST',
+                data: JSON.stringify({
+                        toast: {
+                            message: chat.user.displayName + ': ' + chat.message,
+                            duration: 8000
+                        },
+                        to: {
+                            users: ['{{user.name}}']
+                        }
+                    }),
+                dataType: 'json',
+                contentType: 'application/json',
+                headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                success: function(response) {}
+            });
+            return;
+        }
 
-        post.date = new Date(post.date); //because the date comes in as a string
+        chat.date = new Date(chat.date); //because the date comes in as a string
 
-        var post_block = '<div class="blog-post-lg bordered blog-container">' +
-                '<div class="blog-post-content">' +
-                    '<h2 class="blog-title blog-post-title">' +
-                        '<a href="{{app_root}}/posts/' + post._id + '">' + post.subject + '</a>' +
-                    '</h2>' +
-                    '<p class="blog-post-desc"> ' +
-                        excerpt(post.message) +
-                    '</p>' +
-                    '<div class="blog-post-foot">' +
-                        '<div class="blog-post-meta">' +
-                            '<img width="25" height="25" src="{{bolt_root}}/' + post.user.displayPic + '" class="img-circle">' +
-                            '<span>' + post.user.displayName + '</span>' +
-                        '</div>' +
-                        '<div class="blog-post-meta">' +
-                            '<i class="icon-calendar font-blue"></i>' +
-                            '<span>' + post.date.toDateString() + '</span>' +
-                        '</div>' +
-                        '<div class="blog-post-meta">' +
-                            '<i class="icon-bubble font-blue"></i>' +
-                            '<span>' + post.comments.length + '</span>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>' +
-            '</div>';
-        $('#posts-list').prepend(post_block);
+        var chat_block = (chat.username == '{{user.name}}' ? '<li class="out">' : '<li class="in">') +
+                            '<img class="avatar" alt="" src="' + chat.user.displayPic + '" />' +
+                            '<div class="message">' +
+                                '<span class="arrow"> </span>' +
+                                '<a href="javascript:;" class="name"> ' + chat.user.displayName + ' </a>' +
+                                '<span class="datetime"> at ' + chat.date + ' </span>' +
+                                '<span class="body"> ' + chat.message +' </span>' +
+                            '</div>' +
+                        '</li>';
+        $('#chat-box').append(chat_block);
     });
 
     $('#submit').click(function() {
-        var subject = $('#subject').val();
         var message = $('#message').val();
 
-        if (!subject) {
-            sweetAlert("Missing Field!", "Please enter a subject for the post", "warning");
-            return;
-        }
         if (!message) {
             sweetAlert("Missing Field!", "Please enter a message for the post", "warning");
             return;
         }
 
-        //store post
-        var post = {};
-        post.subject = subject;
-        post.message = message;
-        post.date = new Date();
-        post.user = {
+        var chat = {};
+        chat.message = message;
+        chat.date = new Date();
+        chat.users = ['{{user.name}}', '{{otherUser.name}}'];
+        chat.userId = '{{user._id}}';
+        chat.username = '{{user.name}}';
+        chat.user = {
             name: '{{user.name}}',
             displayName: '{{user.displayName}}',
             displayPic: '{{user.displayPic}}'
         };
-        post.comments = [];
 
         $.ajax({
-            url: '{{bolt_root}}/api/db/posts/insert',
+            url: '{{app_root}}/with/{{otherUser.name}}',
             type: 'POST',
-            data: JSON.stringify({ object: post }),
+            data: JSON.stringify(chat),
             dataType: 'json',
             contentType: 'application/json',
             headers: {'X-Bolt-App-Token': '{{app_token}}'},
             success: function(response) {
-                if(response.code === 0){
-                    $('#subject').val("");
-                    $('#message').val("");
-                    $('#create_topic_section').slideToggle();
-                    /*swal({
-                        title: "Post Created!",
-                        text: "Post has been successfully created.",
-                        type: "success",
-                        showCancelButton: false,
-                        closeOnConfirm: true
-                    }, function(isConfirm){
-                        if (isConfirm) {
-                            $('#create_topic_section').slideToggle();
-                            window.location.href="{{app_root}}/";
-                        }
-                    });*/
+                $("#message").val("");
+                /*if(response.code === 0){
+                    $("#message").val("");
                 }
                 else {
                     sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
-                }
+                }*/
             },
             error: function(xhr, status, err){
-                alert(xhr.responseText);
+                //alert(xhr.responseText);
             }
         });
     });

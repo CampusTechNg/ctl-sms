@@ -87,8 +87,7 @@
                                     </label>
                                 </th>
                                 <th> Class name </th>
-                                <th> Form teacher </th>
-                                <th> Number of subject </th>
+                                <th> Class code </th>
                                 <th> Assign </th>
                             </tr>
                         </thead>
@@ -103,13 +102,12 @@
                                 </td>
                                 <td> {{displayName}} </td>
                                 <td> {{code}} </td>
-                                <td> {{subjects.length}} </td>
                                 <td> 
                                     <a href="{{../ app_root}}/assign-class-subject/{{_id}}" class="btn dark btn-xs btn-outline">
-                                        Subject
+                                        Subject & Subject Teacher
                                     </a>
-                                    <a href="#" class="btn dark btn-xs btn-outline">
-                                        Form teacher
+                                    <a href="{{../ app_root}}/assign-form-teacher/{{_id}}" class="btn dark btn-xs btn-outline">
+                                        Class teacher
                                     </a>
                                 </td>
                             </tr>

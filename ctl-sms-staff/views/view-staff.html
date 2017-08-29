@@ -211,7 +211,7 @@
          $(".modal-body #email").text( teacher.userInfo.email );
          $(".modal-body #phone").text( teacher.userInfo.phone );
          $(".modal-body #address").text( teacher.address );
-         $(".modal-body #dp").attr( 'src', "{{bolt_root}}/" + teacher.userInfo.displayPic );
+         $(".modal-body #dp").attr( 'src', teacher.userInfo.displayPic );
     });
 
     $('#delete_btn').click(function(event) {

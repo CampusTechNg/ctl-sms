@@ -29,7 +29,16 @@
     "collections": {
       "school-profile": "*",
       "sessions": "*",
-      "terms": "*"
+      "terms": "*",
+      "class-subjects": {
+        "guests": "*",
+        "tenants": ["ctl-sms-subjects", "ctl-sms-classes"]
+      },
+      "class-teachers": {
+        "guests": "*",
+        "tenants": ["ctl-sms-subjects", "ctl-sms-classes"]
+      },
+      "grades": "*"
     },
     "hooks": {
       "bolt/app-starting": "/app-starting",

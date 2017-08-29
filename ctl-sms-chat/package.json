@@ -36,8 +36,7 @@
       "bolt/user-updated": "/user-updated",
       "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted",
 
-      "ctl-sms-chat/topic-posted": "/hooks/ctl-sms-chat/topic-posted",
-      "ctl-sms-chat/comment-posted": "/hooks/ctl-sms-chat/comment-posted"
+      "ctl-sms-chat/chat-posted": "/hooks/ctl-sms-chat/chat-posted"
     },
     "dependencies": {
       "ctl-sms-home": "*"
