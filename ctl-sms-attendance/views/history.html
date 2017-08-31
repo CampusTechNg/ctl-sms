@@ -1,0 +1,381 @@
+{{> header}}
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<link href="/public/metronic-for-bolt/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/metronic-for-bolt/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/metronic-for-bolt/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/public/metronic-for-bolt/assets/pages/css/datatable_custom.css" rel="stylesheet" type="text/css" />
+<link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+<!-- END PAGE LEVEL PLUGINS -->
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<div class="container-fluid">
+    <div class="col-md-12">
+        <h3 class="page-title"> View Student History</h3>
+    </div>
+</div>
+<!-- END PAGE TITLE-->
+
+
+
+<div class="container-fluid">
+    <div class="col-md-12 ">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered">
+            
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group form-md-line-input form-md-floating-label">
+                                <div class="input-group">
+                                    <div class="input-group-control">
+                                        <input class="form-control" name="search_name" id="search_name" type="text">
+                                        <label for="search_name">Student's name</label>
+                                    </div>
+                                    <span class="input-group-btn btn-right">
+                                        <button id="search" class="btn green" type="button">Search</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="date_selectors">                      
+
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group form-md-line-input">
+                                <input class="form-control date-picker" type="text" readonly data-date-format="dd-mm-yyyy" id="start_day">   
+                                <label for="start_day" class="control-label">Start From</label>                   
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group form-md-line-input">
+                                <input class="form-control date-picker" type="text" readonly data-date-format="dd-mm-yyyy" id="end_day">   
+                                <label for="end_day" class="control-label">End At</label>                    
+                            </div>
+                        </div>
+                      
+                        <br clear="all" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+
+    <div class="col-md-12 ">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered" id="result_section">
+            <div class="portlet-title">
+                <div class="caption font-green">
+                    <i class="icon-doc font-green"></i>
+                    <span class="caption-subject bold uppercase"> Search Result</span>
+                </div>
+                <div class="actions">
+                    <span id="search_icon"></span> <span id="result_count"> </span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="table-container">                
+                    <table class="table table-hover table-light">
+                        <tbody id="result_frame">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="portlet light bordered" id="attendance_section">
+            <div class="portlet-title">
+                <div class="caption font-green">
+                    <i class="icon-doc font-green"></i>
+                    <span class="caption-subject bold uppercase"> Attendance</span>
+                </div>                
+            </div>
+            <div class="portlet-body form">
+                <div class="table-container">                
+                    <table class="table table-hover table-light">
+                        <tbody id="attendance_result_frame">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="history_section">
+            <div class="col-md-12">
+                <!-- BEGIN SAMPLE TABLE PORTLET-->
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">                            
+                            <span class="caption-subject font-green bold uppercase" id="history_title"></span>
+                        </div>
+                        
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-hover" id="history_table">
+                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- END SAMPLE TABLE PORTLET-->
+            </div>
+
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-md-6">
+                <div class="portlet light portlet-fit bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class=" icon-layers font-yellow"></i>
+                            <span class="caption-subject font-yellow bold uppercase">Records</span>
+                        </div>
+                       
+                    </div>
+                    <div class="portlet-body">
+                        <h4>Added a semi-transparent background to the labels and a custom labelFormatter function.</h4>
+                        <div id="pie_chart_6" class="chart"> </div>
+                    </div>
+                </div>
+            </div>
+                         -->
+                    </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>    
+</div>
+{{> copyright }}
+
+{{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/public/metronic-for-bolt/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="/public/metronic-for-bolt/assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+
+<!-- <script src="/public/metronic-for-bolt/assets/global/plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
+<script src="/public/metronic-for-bolt/assets/global/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
+<script src="/public/metronic-for-bolt/assets/global/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
+<script src="/public/metronic-for-bolt/assets/global/plugins/flot/jquery.flot.pie.min.js" type="text/javascript"></script> -->
+
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+<script type="text/javascript">
+    window.onload = function() {
+        document.getElementById("search_name").focus();
+    };
+
+    function getformattedToday(field,the_date){//returns a date & sets the date field
+    var today;
+    if(the_date){
+        today = moment(the_date,'DD-MM-YYYY');//processes string date
+    }else{
+        var new_date=new Date();
+        var year = new_date.getFullYear();
+        var month = new_date.getMonth();
+        var day = new_date.getDate();
+        var this_day = new Date(year, month, day);
+
+        today = moment(this_day,'DD-MM-YYYY');
+    }    
+    $(field).val(today.format('DD-MM-YYYY'));
+    return today;
+}
+
+
+</script>
+<script type="text/javascript">
+
+
+
+$(document).ready(function(){
+    
+    $('#result_section,#date_selectors,#attendance_section,#history_section').hide();
+    
+    $('#search').click(function() {
+        var name = $("#search_name").val();
+        if(name === "") { return; }
+        $('#result_frame,#attendance_result_frame').children().remove();
+        $('#date_selectors,#attendance_section').hide();
+        
+        $.ajax({
+            url: '{{bolt_root}}/api/db/students/find',
+            type: 'POST',
+            data: JSON.stringify({ query: {}, app: 'ctl-sms-students' }),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            beforeSend : function() {
+                $('#result_count').hide();
+                $( '#search_icon' ).fadeIn(function() {
+                    $( this ).html('<span>Searching </span> <img src="{{app_root}}/assets/pages/img/loading.gif">');
+                });  
+            },
+            success: function(response) {
+                if (response.code == 0) {
+                    var users = response.body;
+
+                    users = users.filter(function(user) {
+                        return user.displayName.toLowerCase().indexOf(name.toLowerCase()) > -1 || 
+                        user.name.toLowerCase().indexOf(name.toLowerCase()) > -1;
+                    });
+
+                    if(users.length > 0) {
+                        for (index = 0; index < users.length; index++) {
+                            var user = users[index];
+                            if (!user.displayPic) user.displayPic = "public/bolt/users/user.png";
+                            var result_row = '<tr id="result_row">' +
+                                                    '<td> ' +
+                                                        '<img src="{{bolt_root}}/' + user.displayPic + '" style="height: 50px; width: 50px; border-radius: 50% !important">' +
+                                                    '</td>' +
+                                                    '<td class="displayName">' + user.displayName + '</td>' +
+                                                    '<td><input class="student_class" type="hidden" value="' + user.student_class + '"></td>' +
+                                                    '<td>' +
+                                                        '<a class="btn yellow-crusta btn-xs uppercase history">' + 
+                                                            '<span class="hidden-xs">Proceed</span>' +                                                          
+                                                        '</a>' +
+                                                    '</td>' +
+                                                '</tr>';
+
+                            $('#result_section').show();
+                            $('#result_frame').append(result_row);
+
+                            $( '#search_icon' ).fadeOut(function() {
+                                var r = (users.length > 1) ? ' results' : ' result';
+                                $('#result_count').text(users.length + r + ' found').show();   
+                            });
+                        }
+
+                        getformattedToday('#start_day');
+                        getformattedToday('#end_day');
+                        $('#date_selectors').show();
+                        
+                    }
+                    else {
+                        var result_row2 = '<tr id="result_row">' +
+                                                '<td colspan="4"> No result found! </td>' +
+                                            '</tr>';  
+
+                        $('#result_section').show();
+                        $( '#search_icon' ).fadeOut(function() {
+                        $('#result_count').hide();
+                        $('#result_frame').append(result_row2);
+                        });
+                         
+                    }
+                }
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
+            }
+        });
+    });
+
+    $('body').on('click','.history',function(){
+        $('#history_title,#history_table').html('');
+        var search_name =$(this).parents('tr').find('td.displayName').text();
+        var class_id =$(this).parents('tr').find('.student_class').val();
+        var start_day_temp=$('#start_day').val();
+        var start_day=getformattedToday('#start_day',start_day_temp);
+        var end_day_temp=$('#end_day').val();
+            end_day=getformattedToday('#end_day',end_day_temp);
+
+            var history_req={
+                'name':search_name,
+                'start_day':new Date(start_day),
+                'end_day':new Date(end_day),
+                'class':class_id
+            };
+
+            $.ajax({
+                url:'{{app_root}}/view-history',
+                type:'POST',
+                data:history_req,
+                dataType: 'json',
+                success: function(response,textStatus, jqXHR) {
+
+                    if(textStatus=='success'){
+                        console.log(response);
+                        var subjects=response.subjects;
+                        if(subjects.length > 0){
+                            $('#history_section').show();
+                            $('#history_title').text(response.name +' ('+start_day_temp+' - '+end_day_temp+') ');
+
+                            var th='<thead><tr><th> Date </th>';
+                        for(var i=0;i<subjects.length;i++){
+                            th+='<th>'+subjects[i].subjectName+'</th>';
+                        }
+                        th+='</tr></thead><tbody>';
+                        $('#history_table').append(th);
+                        var tbody='';
+
+                        var history=response.attendance_history;
+                        for(var i=0;i < history.length;i++){
+                            
+                            tbody+='<tr><td>'+moment(history[i].selected_day).format('DD-MM-YYYY')+'</td>';
+                            var statuses=history[i].subject_statuses;
+                            for(var x=0;x<statuses.length;x++){
+                                var status=statuses[x].status
+                                var display_status='';
+                                var display_title='';
+
+                                switch(status){
+                                    case '0':
+                                    display_status='label-danger';
+                                    display_title='Unauthorised Absent';
+                                    break;
+                                    case '1':
+                                    display_status='label-success';
+                                    display_title='Present';
+                                    break;
+                                    case '2':
+                                    display_status='label-warning';
+                                    display_title='Authorised Absent';
+                                    break;
+                                    case 'weekend':
+                                    display_status='label-default';
+                                    display_title='weekend';
+                                    break;
+                                    default:
+                                    display_status='label-info';
+                                    display_title='Unavailable';
+                                    break;
+                                }
+
+                                tbody+='<td><span class="label label-sm '+display_status+'">'+display_title+'</span></td>';
+                            }
+                            tbody+='</tr>';
+                        }
+                        tbody+='</tbody>';
+                        $('#history_table').append(tbody);
+                        }
+                        
+                    }
+
+                },
+                error: function(xhr, status, err){
+                        console.log(xhr.responseText);
+                }
+            });
+        
+    });
+    
+    });
+
+</script>
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<!-- <script src="/public/metronic-for-bolt/assets/pages/scripts/charts-flotcharts.min.js" type="text/javascript"></script> -->
+<script src="/public/metronic-for-bolt/assets/global/plugins/moment.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+{{> footer }}

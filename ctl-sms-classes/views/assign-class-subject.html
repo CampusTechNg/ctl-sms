@@ -65,10 +65,6 @@
                                 <td>
                                     <div class="col-md-6">
                                         <div class="row">
-                                            <!-- <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                                <input type="checkbox" class="checkboxes" id="compulsory" checked />
-                                                <span></span>
-                                            </label> --> <!-- class="make-switch" -->
                                             <input type="checkbox" data-on-color="success" data-off-color="danger" data-size="small"  data-on-text="Yes" data-off-text="No" id="compulsory" checked>
                                         </div> 
                                     </div>
@@ -76,7 +72,7 @@
                                 <td>
                                     <div class="portlet-input input-inline input-medium">
                                         <select class="form-control" id="teacher">
-                                            <option value="">Select Teacher</option>
+                                            <option value=""></option>
                                             {{#each ../teachers}}
                                             <option value="{{name}}">{{displayName}}</option>
                                             {{/each}}
@@ -151,9 +147,9 @@
             var object = {};
             object.compulsory = $(this).closest('tbody tr').find('#compulsory').is(':checked');
             object.subjectId = $(this).val();
-            object.subjectName = $(this).closest('tbody tr').find('#subjectName').text();
+            object.subjectDisplayName = $(this).closest('tbody tr').find('#subjectName').text();
             object.classId = schClass._id;
-            object.className = schClass.displayName;
+            object.classDisplayName = schClass.displayName;
             object.teacherName = $(this).closest('tbody tr').find('#teacher option:selected').val();
             object.teacherDisplayName = $(this).closest('tbody tr').find('#teacher option:selected').text();
             

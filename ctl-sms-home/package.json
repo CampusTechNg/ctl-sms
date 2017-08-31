@@ -24,20 +24,23 @@
       "icon-md": "assets/pages/img/icon-md.png"
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/app-installed": "/app-installed",
-      "bolt/dashboard-card-posted": "/hooks/bolt/dashboard-card-posted",
-      "bolt/dashboard-tile-posted": "/hooks/bolt/dashboard-tile-posted",
-      "bolt/dashboard-view-posted": "/hooks/bolt/dashboard-view-posted",
-      "bolt/dashboard-card-deleted": "/hooks/bolt/dashboard-card-deleted",
-      "bolt/dashboard-tile-deleted": "/hooks/bolt/dashboard-tile-deleted",
-      "bolt/dashboard-view-deleted": "/hooks/bolt/dashboard-view-deleted",
-      "bolt/notification-posted": "/hooks/bolt/notification-posted",
-      "bolt/notification-deleted": "/hooks/bolt/notification-deleted"
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/app-installed": "/hook/bolt/app-installed",
+      "bolt/dashboard-card-posted": "/hook/bolt/dashboard-card-posted",
+      "bolt/dashboard-tile-posted": "/hook/bolt/dashboard-tile-posted",
+      "bolt/dashboard-view-posted": "/hook/bolt/dashboard-view-posted",
+      "bolt/dashboard-card-deleted": "/hook/bolt/dashboard-card-deleted",
+      "bolt/dashboard-tile-deleted": "/hook/bolt/dashboard-tile-deleted",
+      "bolt/dashboard-view-deleted": "/hook/bolt/dashboard-view-deleted",
+      "bolt/notification-posted": "/hook/bolt/notification-posted",
+      "bolt/notification-deleted": "/hook/bolt/notification-deleted"
     },
     "index": "/",
     "system": true,
     "public": ["assets"],
-    "tags": ["home", "main", "ctl", "ctl-sms", "ctl-sms-home"]
+    "tags": ["home", "main", "ctl", "ctl-sms", "ctl-sms-home"],
+    "dependencies": {
+      "metronic-for-bolt": "*"
+    }
   }
 }

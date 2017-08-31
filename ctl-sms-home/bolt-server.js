@@ -1,17 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
-var request = require('request');
 var exphbs = require('express-handlebars');
 
-var sockets = require('bolt-internal-sockets');
-var utils = require('bolt-internal-utils');
+var controller = require('./controllers/controller');
+var router = require('./routers/router');
 
 var app = express();
-
-var appname, appToken;
-
-app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt environment
 
 //View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -33,57 +28,28 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Set Static Path
 app.use("**/assets", express.static(path.join(__dirname, 'assets')));
 
-//Middleware to check for the app root directory of an app
 app.use(function(req, res, next){
-	if (process.env.BOLT_CHILD_PROC || app.get('running_outside_bolt')) {
-		req.app_root = "";
+	if (process.env.BOLT_CHILD_PROC) { //check to be sure it is running as a system app
+		res.send("This app has to run as a system app.");
 	}
-	else {
-		req.app_root = process.env.BOLT_ADDRESS + "/x/" + appname;
+	else { //check for logged-in user
+		req.app_root = process.env.BOLT_ADDRESS + "/x/" + controller.getAppName();
+		if (req.user) {
+			if (!req.user.displayPic) req.user.displayPic = process.env.BOLT_ADDRESS + 'public/bolt/uploads/user.png';
+			next();
+		}
+		else { //there is no logged-in user
+			if (req.originalUrl.indexOf('/hooks/') > 0 || req.originalUrl.indexOf('/api/') > 0) {
+				next();
+			}
+			else {
+				var success = encodeURIComponent(req.protocol + '://' + req.get('host') + req.originalUrl);
+				res.redirect(process.env.BOLT_ADDRESS + '/login?success=' + success + '&no_query=true'); //we don't want it to add any query string
+			}
+		}
 	}
-
-	next();
 });
 
-app.post('/app-starting', function(req, res){
-	var event = req.body;
-	appname = event.body.appName;
-	appToken = event.body.appToken;
-});
-
-function getVisibleApps(req, res, next) {
-	request(process.env.BOLT_ADDRESS + '/api/checks/visible-apps/' + req.user.name + '?tags=ctl-sms-plugins', function(error, response, body){
-		body = JSON.parse(body);
-		var modules = body.body;
-        modules.sort(function(a, b){
-          var orderA = a.order || 0;
-          var orderB = b.order || 0;
-          return parseInt(orderA, 10) - parseInt(orderB, 10);
-        });
-        req.modules = modules;
-        next();
-	});
-}
-
-//Route
-app.get('/', getVisibleApps, function(req, res){
-	var scope = {
-      app_root: req.app_root,
-      app_token: appToken,
-	  bolt_root: process.env.BOLT_ADDRESS,
-      modules: req.modules,
-      user: req.user
-    };
-    res.render("index", scope);
-});
-
-app.get('/frame', getVisibleApps, function(req, res){
-	res.render('frame', {
-		app_root: req.app_root,
-		app_token: appToken,
-		bolt_root: process.env.BOLT_ADDRESS,
-		modules: req.modules,
-	});
-});
+app.use(router);
 
 module.exports = app;

@@ -42,10 +42,11 @@
       "grades": "*"
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted"
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted"
     },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
     }
   },

@@ -4,10 +4,10 @@ var path = require('path');
 var request = require('request');
 var exphbs = require('express-handlebars');
 
-var app = express();
+var controller = require('./controllers/controller');
+var router = require('./routers/router');
 
-var appname, apptoken, appDisplayName;
-app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt environment
+var app = express();
 
 //View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -27,182 +27,32 @@ app.set('view engine', 'html');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-function getCurrentSession(req, res, next) {
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/sessions/findone', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {query: {isCurrent:true}}}, 
-		function(error, response, body) {console.log('Middleware')
-			req.currentSession = body.body;console.log(body.body)
-			next()
-		});
-}
-
 //Set Static Path
 app.use("**/assets", express.static(path.join(__dirname, 'assets')));
 
-//Middleware to check for the app root directory of an app
 app.use(function(req, res, next){
-	if (process.env.BOLT_CHILD_PROC || app.get('running_outside_bolt')) {
-		req.app_root = "";
+	if (process.env.BOLT_CHILD_PROC) { //check to be sure it is running as a system app
+		res.send("This app has to run as a system app.");
 	}
-	else {
-		req.app_root = process.env.BOLT_ADDRESS + "/x/" + appname;
-	}
-	next();
-});
-
-app.post('/app-starting', function(req, res){
-	var event = req.body;
-	appname = event.body.appName;
-	apptoken = event.body.appToken;
-});
-
-app.post('/hooks/bolt/app-collection-inserted', function(req, res){
-	var event = req.body;
-	
-	if (event.body.collection == 'sessions' || event.body.collection == 'terms') {
-		var collection = event.body.collection;
-
-		var id = event.body.result.insertedIds[0];
-		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/'+ collection + '/findone?_id=' + id, 
-			headers: {'X-Bolt-App-Token': apptoken},
-			json: {}}, 
-			function(error, response, body) {
-				var object = body.body;
-				if (object.isCurrent) {
-					request.post({
-						url: process.env.BOLT_ADDRESS + '/api/db/'+ collection + '/find',
-						headers: {'X-Bolt-App-Token': apptoken},
-						json: { query: {isCurrent:true}}},
-						function(error2, response2, body2) {
-							var objects = body2.body;
-							objects.forEach(function (s) {
-								if (s._id != object._id) {
-									request.post({
-										url: process.env.BOLT_ADDRESS + '/api/db/'+ collection + '/update?_id=' + s._id, 
-										headers: {'X-Bolt-App-Token': apptoken},
-										json: { values: {isCurrent:false}}},
-										function(error3, response3, body3) {});
-								}
-							});
-						});
-				}
-			});
+	else { //check for logged-in user
+		req.app_root = process.env.BOLT_ADDRESS + "/x/" + controller.getAppName();
+		if (req.user) {
+			if (!req.user.displayPic) req.user.displayPic = process.env.BOLT_ADDRESS + 'public/bolt/uploads/user.png';
+			next();
+		}
+		else { //there is no logged-in user
+			if (req.originalUrl.indexOf('/hooks/') > 0 || req.originalUrl.indexOf('/api/') > 0) {
+				next();
+			}
+			else {
+				var success = encodeURIComponent(req.protocol + '://' + req.get('host') + req.originalUrl);
+				res.redirect(process.env.BOLT_ADDRESS + '/login?success=' + success + '&no_query=true'); //we don't want it to add any query string
+			}
+		}
 	}
 });
 
-app.post('/assign-student-to-class/:classid/:studentname', getCurrentSession, function(req, res){console.log('got here')
-	//fetch student
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/students/findone?name=' + req.params.studentname, 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {app: 'ctl-sms-students'}}, 
-		function(error, response, body) {
-			var student = body.body;console.log(student)
-
-			//fetch class
-			request.post({
-				url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.classid, 
-				headers: {'X-Bolt-App-Token': apptoken},
-				json: {app: 'ctl-sms-classes'}}, 
-				function(error, response, body) {
-					var _class = body.body;console.log(_class)
-
-					if (student && _class) {
-						//ensure u dont assign a student to a class more than once in the same session
-						request.post({
-							url: process.env.BOLT_ADDRESS + '/api/db/class-students/remove', 
-							headers: {'X-Bolt-App-Token': apptoken},
-							json: {query: {'classId': _class._id, 'studentId': student._id, 'sessionId': req.currentSession._id}}}, 
-							function(error, response, body) {
-								var classStudent = {
-									classId: _class._id,
-									classDisplayName: _class.displayName,
-									studentId: student._id,
-									studentDisplayName: student.displayName,
-									sessionId: req.currentSession._id,
-									sessionDisplayName: req.currentSession.displayName,
-									dateCreated: new Date()
-								};
-
-								request.post({
-									url: process.env.BOLT_ADDRESS + '/api/db/class-students/insert', 
-									headers: {'X-Bolt-App-Token': apptoken},
-									json: {object: classStudent}}, 
-									function(error, response, body) {
-										//TODO: raise event
-										res.send();
-									});
-							});
-					}
-					else {
-						//TODO:
-					}
-				});
-		});
-});
-
-//Route
-app.get('/', function(req, res){
-	res.render('index', {
-		school_admin_menu: 'selected',
-		school_admin_active: 'active',
-		bolt_root: process.env.BOLT_ADDRESS,
-		app_token: apptoken,
-		app_root: req.app_root
-	});
-});
-
-app.get('/school-profile', function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/school-profile/findone?app=' + appname, 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {}}, 
-		function(error, response, body) {
-			var profile = body.body;
-
-			res.render('school-profile', {
-				school_profile_menu: 'selected',
-				school_profile_active: 'active',
-				appname: appname,
-				app_root: req.app_root,
-				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS,
-				profile: profile
-			});
-		});
-});
-
-app.get('/new-session', function(req, res){
-	res.render('new-session', {
-		new_session_menu: 'selected',
-		new_session_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
-});
-
-app.get('/view-sessions', function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/sessions/find', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}}}, 
-		function(error, response, body) {
-		var sessions = body.body;
-
-		res.render('view-sessions', {
-			view_sessions_menu: 'selected',
-			view_sessions_active: 'active',
-			app_root: req.app_root,
-			app_token: apptoken,
-			bolt_root: process.env.BOLT_ADDRESS,
-			sessions: sessions
-		});
-	});
-});
+app.use(router);
 
 app.get('/edit-session/:id', function(req, res){
 	request.post({
@@ -368,13 +218,6 @@ app.get('/edit-grade/:id', function(req, res){
 			bolt_root: process.env.BOLT_ADDRESS,
 			grade: grade
 		});
-	});
-});
-
-app.get('*', function(req, res){
-	res.render('404', {
-		app_root: req.app_root,
-		bolt_root: process.env.BOLT_ADDRESS
 	});
 });
 

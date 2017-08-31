@@ -117,7 +117,7 @@
                                     <select name="student_class" class="form-control" id="student_class">
                                         <option value=""></option>
                                         {{#each schClasses}}
-                                        <option value="{{code}}">{{displayName}}</option>
+                                        <option value="{{_id}}">{{displayName}}</option>
                                         {{/each}}
                                     </select>
                                     <label for="student_class">
@@ -430,13 +430,14 @@ var FormValidationMd = function() {
                                                                             });
 
                                                                             $.ajax({
-                                                                                url: '{{bolt_root}}/x/ctl-sms-school-admin/assign-student-to-class/' + student_class + '/' + username,
+                                                                                url: '{{bolt_root}}/x/ctl-sms-school-admin/action/assign-student-to-class/' + student_class + '/' + username,
                                                                                 type: 'POST',
                                                                                 contentType: 'application/json',
                                                                                 headers: {'X-Bolt-App-Token': '{{app_token}}'},
                                                                                 success: function(response5, status5, xhr5){},
                                                                                 error: function(xhr5, status5, err5) {}
                                                                             });
+                                                                            
                                                                             
                                                                             //Sweet alert
                                                                             swal({

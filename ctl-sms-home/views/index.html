@@ -832,7 +832,7 @@
                     $.ajax({
                         url: '{{bolt_root}}/api/notifications/postback',
                         type: 'POST',
-                        data: JSON.stringify({notificationId: notifId, data: data}),
+                        data: JSON.stringify({notification_id: notifId, data: data}),
                         dataType: 'json',
                         contentType: 'application/json',
                         headers: {'X-Bolt-App-Token': '{{app_token}}'},
