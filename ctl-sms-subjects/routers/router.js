@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewSubjectsPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/create-subject', middleware.checkForCreateSubjectsPermission, controller.getCreateSubject);
 
 router.get('/edit-subject/:id', middleware.checkForEditSubjectsPermission, controller.getEditSubject);

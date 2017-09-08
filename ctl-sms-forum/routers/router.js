@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewTopicsPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/posts/:id', middleware.checkForViewCommentsPermission, controller.getPostById);
 
 router.post('/hook/bolt/app-collection-inserted', controller.postHookBoltAppCollectionInserted);

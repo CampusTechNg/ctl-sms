@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewNoticesPermission, middleware.checkForWriteNoticesPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.post('/hook/bolt/app-collection-inserted', controller.postHookBoltAppCollectionInserted);
 
 router.post('/hook/bolt/app-collection-removed', controller.postHookBoltAppCollectionRemoved);

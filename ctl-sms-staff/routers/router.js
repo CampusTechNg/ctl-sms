@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewStaffPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/register-staff', middleware.checkForCreateStaffPermission, controller.getRegisterStaff);
 
 router.get('/edit-staff/:name', middleware.checkForEditStaffPermission, controller.getEditStaff);

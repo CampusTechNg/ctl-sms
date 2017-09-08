@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewItemsPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/add-category', middleware.checkForCreateCategoriesPermission, controller.getAddCategory);
 
 router.get('/view-categories', middleware.checkForViewCategoriesPermission, controller.getViewCategories);

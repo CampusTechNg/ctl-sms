@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewPaymentsPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/invoice/:id', middleware.checkForCreatePaymentsPermission, controller.getInvoice);
 
 router.get('/make-payment/:name', middleware.checkForCreatePaymentsPermission, controller.getMakePayment);

@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewStudentsPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/register-student', middleware.checkForCreateStudentsPermission, controller.getRegisterStudent);
 
 router.get('/view-students', middleware.checkForViewStudentsPermission, controller.getViewStudents);

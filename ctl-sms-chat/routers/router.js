@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForChatPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/with/:username', middleware.checkForChatPermission, controller.getChatWithUser);
 
 //router.get('/in/:groupname', controller.getChatInGroup);

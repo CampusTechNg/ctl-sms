@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewSchoolProfilePermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/edit-school-profile', middleware.checkForEditSchoolProfilePermission, controller.getEditSchoolProfile);
 
 router.get('/school-profile', middleware.checkForViewSchoolProfilePermission, controller.getSchoolProfile);

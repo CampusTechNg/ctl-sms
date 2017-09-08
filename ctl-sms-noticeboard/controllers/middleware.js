@@ -21,7 +21,7 @@ var middleware = {
 					next();
 				}
 				else {
-					res.redirect(req.app_root + '/403');
+					res.render('403');
 				}
 			});
 	}

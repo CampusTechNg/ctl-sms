@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForSignInVisitorsPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/signout-visitor', middleware.checkForSignOutVisitorsPermission, controller.getSignVisitorsOut);
 
 router.get('/view-visits', middleware.checkForViewVisitorsPermission, controller.getViewVisits);
