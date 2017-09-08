@@ -4,10 +4,10 @@ var path = require('path');
 var request = require('request');
 var exphbs = require('express-handlebars');
 
-var app = express();
+var controller = require('./controllers/controller');
+var router = require('./routers/router');
 
-var appname, apptoken;
-app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt environment
+var app = express();
 
 //View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -30,181 +30,28 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Set Static Path
 app.use("**/assets", express.static(path.join(__dirname, 'assets')));
 
-function getClass(req, res, next){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.id, 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {}}, 
-		function(error, response, body) {
-			req.schClass = body.body;
-			next();
-		});
-}
-
-//Middleware to check for the app root directory of an app
 app.use(function(req, res, next){
-	if (process.env.BOLT_CHILD_PROC || app.get('running_outside_bolt')) {
-		req.app_root = "";
+	if (process.env.BOLT_CHILD_PROC) { //check to be sure it is running as a system app
+		res.send("This app has to run as a system app.");
 	}
-	else {
-		req.app_root = process.env.BOLT_ADDRESS + "/x/" + appname;
+	else { //check for logged-in user
+		req.app_root = process.env.BOLT_ADDRESS + "/x/" + controller.getAppName();
+		if (req.user) {
+			if (!req.user.displayPic) req.user.displayPic = process.env.BOLT_ADDRESS + 'public/bolt/uploads/user.png';
+			next();
+		}
+		else { //there is no logged-in user
+			if (req.originalUrl.indexOf('/hook/') > 0 || req.originalUrl.indexOf('/action/') > 0) {
+				next();
+			}
+			else {
+				var success = encodeURIComponent(req.protocol + '://' + req.get('host') + req.originalUrl);
+				res.redirect(process.env.BOLT_ADDRESS + '/login?success=' + success + '&no_query=true'); //we don't want it to add any query string
+			}
+		}
 	}
-	next();
 });
 
-app.post('/app-starting', function(req, res){
-	var event = req.body;
-	appname = event.body.appName;
-	apptoken = event.body.appToken;
-});
-
-//Route
-app.get('/', function(req, res){
-	res.render('index', {
-		class_menu: 'selected',
-		class_active: 'active',
-		app_root: req.app_root
-	});
-});
-
-app.get('/create-class', function(req, res){
-	res.render('create-class', {
-		create_class_menu: 'selected',
-		create_class_active: 'active',
-		app_root: req.app_root,
-		app_token: apptoken,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
-});
-
-app.get('/view-classes', function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/classes/find', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}}}, 
-		function(error, response, body) {
-		var classes = body.body;
-
-		res.render('view-classes', {
-			view_classes_menu: 'selected',
-			view_classes_active: 'active',
-			app_root: req.app_root,
-			app_token: apptoken,
-			bolt_root: process.env.BOLT_ADDRESS,
-			classes: classes
-		});
-	});
-});
-
-app.get('/edit-class/:id', function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.id, 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {}}, 
-		function(error, response, body) {
-		var schClass = body.body;
-
-		res.render('edit-class', {
-			view_sessions_menu: 'selected',
-			view_sessions_active: 'active',
-			app_root: req.app_root,
-			app_token: apptoken,
-			bolt_root: process.env.BOLT_ADDRESS,
-			schClass: schClass
-		});
-	});
-});
-
-app.get('/class-settings', function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/classes/find', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {object:{}}}, 
-		function(error, response, body) {
-		var classes = body.body;
-
-		res.render('class-settings', {
-			class_settings_menu: 'selected',
-			class_settings_active: 'active',
-			app_root: req.app_root,
-			app_token: apptoken,
-			bolt_root: process.env.BOLT_ADDRESS,
-			classes: classes
-		});
-	});
-});
-
-app.get('/assign-class-subject/:id', getClass, function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/find?classId=' + req.params.id, 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {app: 'ctl-sms-school-admin'}}, 
-		function(error, response, body) {
-		var classSubjects = body.body; 
-
-			request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/subjects/find', 
-			headers: {'X-Bolt-App-Token': apptoken, },
-			json: {object:{}, app: 'ctl-sms-subjects'}}, 
-			function(error, response, body) {
-			var subjects = body.body;
-				request.post({
-				url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
-				headers: {'X-Bolt-App-Token': apptoken, },
-				json: {object:{}, app: 'ctl-sms-staff'}}, 
-				function(error, response, body) {
-				var teachers = body.body;
-
-				res.render('assign-class-subject', {
-					class_settings_menu: 'selected',
-					class_settings_active: 'active',
-					app_root: req.app_root,
-					app_token: apptoken,
-					bolt_root: process.env.BOLT_ADDRESS,
-					classSubjects: classSubjects,
-					schClass: req.schClass,
-					subjects: subjects,
-					teachers: teachers
-				});
-			});
-		});		
-	});
-});
-
-app.get('/assign-form-teacher/:id', getClass, function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/class-teachers/findone?classId=' + req.params.id, 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {app: 'ctl-sms-school-admin'}}, 
-		function(error, response, body) {
-		var classTeacher = body.body;
-
-			request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
-			headers: {'X-Bolt-App-Token': apptoken, },
-			json: {object:{}, app:'ctl-sms-staff'}}, 
-			function(error, response, body) {
-			var teachers = body.body;
-
-			res.render('assign-form-teacher', {
-				class_settings_menu: 'selected',
-				class_settings_active: 'active',
-				app_root: req.app_root,
-				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS,
-				schClass: req.schClass,
-				classTeacher: classTeacher,
-				teachers: teachers
-			});
-		});		
-	});
-});
-
-app.get('*', function(req, res){
-	res.render('404', {
-		app_root: req.app_root,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
-});
+app.use(router);
 
 module.exports = app;

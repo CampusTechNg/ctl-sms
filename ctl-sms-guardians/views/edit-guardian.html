@@ -167,8 +167,6 @@ var FormValidationMd = function() {
                 success1.show();
                 error1.hide();
 
-                var formData = new FormData();
-
                 var displayname = $("#fullname").val();
                 var email = $("#email").val();
                 var phone = $("#phone").val();
@@ -179,20 +177,18 @@ var FormValidationMd = function() {
                   wards[i] = selected.value; 
                 });
 
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
+                var user = {
+                    displayName: displayname,
+                    email: email,
+                    phone: phone
+                };
                     
                 //update guardian as a bolt user
                 $.ajax({
                     url: '{{bolt_root}}/api/users/{{guardian.name}}',
                     type: 'PUT',
-                    data: formData,
-                    processData: false,
-                    contentType: false, //'multipart/form-data',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-Bolt-App-Token', '{{app_token}}');
-                    },
+                    data: user,
+                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
                     success: function(response) {
                         if(response.code === 0){
                             $.ajax({

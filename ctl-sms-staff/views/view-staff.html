@@ -98,13 +98,13 @@
                             <tr>
                                 <td>
                                     <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="checkboxes" value="{{userInfo.name}}" />
+                                        <input type="checkbox" class="checkboxes" value="{{name}}" />
                                         <span></span>
                                     </label>
                                 </td>
-                                <td> {{userInfo.displayName}} </td>
+                                <td> {{displayName}} </td>
                                 <td> {{gender}} </td>
-                                <td> {{userInfo.phone}} </td>
+                                <td> {{phone}} </td>
                                 <td> 
                                     <a href="{{../ app_root}}/edit-staff/{{name}}" class="btn dark btn-xs btn-outline sbold uppercase">
                                         <i class="fa fa-edit"></i> <span class="hidden-xs"> Edit </span>
@@ -205,13 +205,13 @@
          var index = $(this).data('id');
          var staff = {{{json staff}}};
          var teacher = staff[index];
-         $(".modal-body #displayname").text( teacher.userInfo.displayName );
+         $(".modal-body #displayname").text( teacher.displayName );
          $(".modal-body #gender").text( teacher.gender );
          $(".modal-body #dob").text( teacher.dob );
-         $(".modal-body #email").text( teacher.userInfo.email );
-         $(".modal-body #phone").text( teacher.userInfo.phone );
+         $(".modal-body #email").text( teacher.email );
+         $(".modal-body #phone").text( teacher.phone );
          $(".modal-body #address").text( teacher.address );
-         $(".modal-body #dp").attr( 'src', teacher.userInfo.displayPic );
+         $(".modal-body #dp").attr( 'src', teacher.displayPic );
     });
 
     $('#delete_btn').click(function(event) {

@@ -17,13 +17,15 @@
     "index": "/",
     "system": true,
     "extensions": {
+      "/notice": "/",
+      "/notices": "/",
       "/noticeboard": "/"
     },
     "files": {
       "icon": "assets/pages/img/icon.png",
       "icon-md": "assets/pages/img/icon-md.png"
     },
-    "order": 3,
+    "order": 4,
     "public": ["assets"],
     "tags": ["noticeboard", "ctl", "ctl-sms", "ctl-sms-noticeboard", "ctl-sms-plugins"],
     "collections": {
@@ -41,22 +43,25 @@
       }
     },
     "permissions": {
-      "write-notice": {
-        "displayName": "Create Notice",
-        "description": "Permission to create, edit or delete notice"
+      "view-notices": {
+        "displayName": "Permission to view the noticeboard",
+        "description": "Permission to view notices on the noticeboard"
+      },
+      "write-notices": {
+        "displayName": "Permission to alter the noticeboard",
+        "description": "Permission to create, edit or delete notices on the noticeboard"
       }
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated",
-      "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted",
-      "bolt/app-collection-removed": "/hooks/bolt/app-collection-removed",
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted",
+      "bolt/app-collection-removed": "/hook/bolt/app-collection-removed",
 
-      "ctl-sms-noticeboard/notice-posted": "/hooks/ctl-sms-noticeboard/notice-posted",
-      "ctl-sms-noticeboard/notice-deleted": "/hooks/ctl-sms-noticeboard/notice-deleted"
+      "ctl-sms-noticeboard/notice-posted": "/hook/ctl-sms-noticeboard/notice-posted",
+      "ctl-sms-noticeboard/notice-deleted": "/hook/ctl-sms-noticeboard/notice-deleted"
     },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
     }
   },

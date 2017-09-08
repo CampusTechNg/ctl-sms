@@ -30,7 +30,7 @@
                 <div class="blog-single-head">
                     <h1 class="blog-single-head-title">{{post.subject}}</h1>
                     <div class="blog-single-head-date">
-                        <img src="{{bolt_root}}/{{post.user.displayPic}}" class="img-circle">
+                        <img src="{{post.user.displayPic}}" class="img-circle">
                         <span>{{post.user.displayName}}</span>
 
                         <i class="icon-calendar font-blue"></i>
@@ -52,7 +52,7 @@
                         {{#each post.comments}}
                         <div class="media">
                             <div class="media-left">
-                                <img src="{{../bolt_root}}/{{user.displayPic}}" class="media-object">  
+                                <img src="{{user.displayPic}}" class="media-object">  
                             </div>
                             <div class="media-body">
                                 <h4 class="media-heading">
@@ -115,7 +115,7 @@ $(document).ready(function() {
 
         var comment_block = '<div class="media">' + 
                             '<div class="media-left">' +
-                                '<img src="{{bolt_root}}/' + comment.user.displayPic + '" class="media-object">' +
+                                '<img src="' + comment.user.displayPic + '" class="media-object">' +
                             '</div>' +
                             '<div class="media-body">' +
                                 '<h4 class="media-heading">' +

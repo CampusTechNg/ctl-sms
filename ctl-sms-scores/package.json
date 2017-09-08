@@ -12,7 +12,7 @@
     "express-handlebars": "^3.0.0"
   },
   "bolt": {
-    "displayName": "Score",
+    "displayName": "Scores",
     "main": "bolt-server.js",
     "index": "/",
     "system": true,
@@ -24,17 +24,26 @@
       "icon": "assets/pages/img/icon.png",
       "icon-md": "assets/pages/img/icon-md.png"
     },
-    "order": 1,
+    "order": 2,
     "public": ["assets"],
     "tags": ["scores", "score", "ctl", "ctl-sms", "ctl-sms-scores", "ctl-sms-score", "ctl-sms-plugins"],
-    "collections": {
-      "scores": "*"
-    },
     "hooks": {
-      "bolt/app-starting": "/app-starting"
+      "bolt/app-starting": "/hook/bolt/app-starting"
+    },
+    "permissions": {
+      "edit-scores": {
+        "displayName": "Permission to edit scores",
+        "description": "This grants the permission to edit scores"
+      },
+      "view-scores": {
+        "displayName": "Permission to view scores",
+        "description": "This grants the permission to view scores"
+      }
     },
     "dependencies": {
-      "ctl-sms-home": "*"
+      "metronic-for-bolt": "*",
+      "ctl-sms-home": "*",
+      "ctl-sms-school-admin": "*"
     }
   },
   "author": "Campus Technologies Limited",

@@ -4,12 +4,10 @@ var path = require('path');
 var request = require('request');
 var exphbs = require('express-handlebars');
 
-var utils = require("bolt-internal-utils");
+var controller = require('./controllers/controller');
+var router = require('./routers/router');
 
 var app = express();
-
-var appname, apptoken;
-app.set('running_outside_bolt', false); //Checks if app is ran outside Bolt environment
 
 //View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -37,17 +35,6 @@ app.engine('html', exphbs({
 }));
 app.set('view engine', 'html');
 
-function checkForWriteNoticePermission(req, res, next) {
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/checks/has-permission', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: { app: appname, permission: 'write-notice', user: req.user.name }}, 
-		function(error, response, body) {
-			req.hasWriteNoticePermission = body.body.result;
-			next();
-		});
-}
-
 //Body Parser Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -55,149 +42,28 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Set Static Path
 app.use("**/assets", express.static(path.join(__dirname, 'assets')));
 
-//Middleware to check for the app root directory of an app
 app.use(function(req, res, next){
-	if (process.env.BOLT_CHILD_PROC || app.get('running_outside_bolt')) {
-		req.app_root = "";
+	if (process.env.BOLT_CHILD_PROC) { //check to be sure it is running as a system app
+		res.send("This app has to run as a system app.");
 	}
-	else {
-		req.app_root = process.env.BOLT_ADDRESS + "/x/" + appname;
-	}
-	next();
-});
-
-app.post('/app-starting', function(req, res){
-	var event = req.body;
-	appname = event.body.appName;
-	apptoken = event.body.appToken;
-});
-
-app.post('/hooks/bolt/app-collection-inserted', function(req, res){
-	var event = req.body;
-	
-	if (event.body.collection == 'notices') {
-		var id = event.body.result.insertedIds[0];
-
-		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/notices/find', 
-			headers: {'X-Bolt-App-Token': apptoken},
-			json: {}}, 
-			function(error, response, body) {
-			var notices = body.body;
-
-			var notice;
-			for (var index = 0; index < notices.length; index++) {
-				var n = notices[index];
-				if (n._id.toString() == id.toString()) {
-					notice = n;
-					break;
-				}
-			}
-			
-			if(notice){
-				utils.Events.fire('notice-posted', { body: notice }, apptoken, function(eventError, eventResponse){});
-
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/notifications', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {
-						toast: {
-							message: notice.message,
-							duration: 8000
-						}
-					}
-				}, function(error, response, body) {});
-
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {subject: notice.subject, message: notice.message}}, 
-					function(error, response, body) {});
-			}
-
-			request.post({
-				url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
-				headers: {'X-Bolt-App-Token': apptoken},
-				json: {background: '#2F42EC', message: notices.length, subject: 'public notices', route: '/'}}, 
-				function(error, response, body) {});
-		});
-	}
-});
-
-app.post('/hooks/bolt/app-collection-removed', function(req, res){
-	var event = req.body;
-	
-	if (event.body.collection == 'notices') {
-		var id = event.body.meta.query._id;
-
-		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/notices/find', 
-			headers: {'X-Bolt-App-Token': apptoken},
-			json: {}}, 
-			function(error, response, body) {
-			var notices = body.body;
-			
-			utils.Events.fire('notice-deleted', { body: { _id: id } }, apptoken, function(eventError, eventResponse){});
-
-			if (notices.length > 0) {
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {background: '#2F42EC', message: notices.length, subject: 'public notices', route: '/'}}, 
-					function(error, response, body) {});
-
-				var notice = notices[notices.length - 1];
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {subject: notice.subject, message: notice.message}}, 
-					function(error, response, body) {});
+	else { //check for logged-in user
+		req.app_root = process.env.BOLT_ADDRESS + "/x/" + controller.getAppName();
+		if (req.user) {
+			if (!req.user.displayPic) req.user.displayPic = process.env.BOLT_ADDRESS + 'public/bolt/uploads/user.png';
+			next();
+		}
+		else { //there is no logged-in user
+			if (req.originalUrl.indexOf('/hook/') > 0 || req.originalUrl.indexOf('/action/') > 0) {
+				next();
 			}
 			else {
-				request.delete({
-					url: process.env.BOLT_ADDRESS + '/api/dashboard/tile', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {}}, 
-					function(error, response, body) {});
-
-				request.delete({
-					url: process.env.BOLT_ADDRESS + '/api/dashboard/card', 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {}}, 
-					function(error, response, body) {});
+				var success = encodeURIComponent(req.protocol + '://' + req.get('host') + req.originalUrl);
+				res.redirect(process.env.BOLT_ADDRESS + '/login?success=' + success + '&no_query=true'); //we don't want it to add any query string
 			}
-		});
+		}
 	}
 });
 
-//Route
-app.get('/', checkForWriteNoticePermission, function(req, res){
-	request.post({
-		url: process.env.BOLT_ADDRESS + '/api/db/notices/find', 
-		headers: {'X-Bolt-App-Token': apptoken},
-		json: {}}, 
-		function(error, response, body) {
-			var notices = body.body || [];
-			//notices = notices.reverse();
-			res.render('index', {
-				noticeboard_menu: 'selected',
-				noticeboard_active: 'active',
-				app_root: req.app_root,
-				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS,
-
-				editable: req.hasWriteNoticePermission,
-				notices: notices,
-				user: req.user
-			});
-		});
-});
-
-app.get('*', function(req, res){
-	res.render('404', {
-		app_root: req.app_root,
-		bolt_root: process.env.BOLT_ADDRESS
-	});
-});
+app.use(router);
 
 module.exports = app;

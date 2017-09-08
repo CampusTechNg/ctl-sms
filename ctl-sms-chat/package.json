@@ -24,23 +24,61 @@
       "icon": "assets/pages/img/icon.png",
       "icon-md": "assets/pages/img/icon-md.png"
     },
-    "order": 3,
+    "order": 4,
     "public": ["assets"],
     "tags": ["chat", "ctl", "ctl-sms", "ctl-sms-chat", "ctl-sms-plugins"],
     "collections": {
-      "chats": "*"
+      "chats": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"date": { "$type": "date" }},
+              {"message": { "$type": "string" }},
+              {"users": { "$type": "string" }},
+              {"user": { "$type": "object" }},
+              {"userId": { "$type": "string" }},
+              {"username": { "$type": "string" }}
+            ]
+          }
+        }
+      }
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated",
-      "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted",
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/user-deleted": "/hook/bolt/user-deleted",
+      "bolt/user-updated": "/hook/bolt/user-updated",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted",
 
-      "ctl-sms-chat/chat-posted": "/hooks/ctl-sms-chat/chat-posted"
+      "ctl-sms-chat/chat-posted": "/hook/ctl-sms-chat/chat-posted"
+    },
+    "permissions": {
+      "chat": {
+        "displayName": "Permission to chat",
+        "description": "This grants the permission to chat with other users"
+      }
     },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
-    }
+    },
+
+    "$sample-chat": {
+      "message": "How are you?",
+      "date": "2017-08-24T15:15:16.606Z",
+      "users": ["frank", "henry"],
+      "user": {
+        "name": "frank",
+        "displayName": "Franklin Chieze",
+        "displayPic": "http://127.0.0.1:400/public/bolt/users/b4073366878ca2c7c40dea220d58feeb.jpg"
+      },
+      "userId": "590f36886b8a0421c83084fc",
+      "username": "frank"
+    },
+    "$comments": [
+      "The reason $type of chat.users is set to string and not array is: https://docs.mongodb.com/manual/reference/operator/query/type/#document-querying-by-array-type",
+      "The field chat.userId (and, maybe, chat.username) may be removed, so limit its use in code"
+    ]
   },
   "author": "Campus Technologies Limited",
   "license": "ISC"

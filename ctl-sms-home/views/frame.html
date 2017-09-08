@@ -48,7 +48,7 @@
 <!-- BEGIN PAGE TITLE-->
 <div class="container-fluid">
     <div class="container-fluid">
-        <!-- <h3 class="page-title"> School Management Dashboard </h3> -->
+        <h3 class="page-title"> School Management Dashboard </h3>
     </div>
 </div>
 <!-- END PAGE TITLE-->
@@ -79,7 +79,7 @@
     <div class="col-md-6 col-sm-6" id="view_4">
     </div>
 </div>
-
+<div style="min-height: 300px;"></div>
 <!-- BEGIN FOOTER -->
 <div class="page-footer" style="background-color: #fff; margin-top:200px;border-top: 1px solid #e7ecf1 !important;"> 
     <div class="page-footer-inner" style="color: #2f353b; text-align:center;float:none;display:block;"> 
@@ -167,7 +167,7 @@
                             append += 'query=' + encodeURIComponent(tile.query);
                         }
                         var tile_frame =    '<div id="tile_' + tile.app + '" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' +
-                                            '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ tile.background +' !important" href="{{bolt_root}}/apps/' + tile.app + append + '">' +
+                                            '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ tile.background +' !important" id="tile_link_' + tile.app + '" href="{{bolt_root}}/apps/' + tile.app + append + '">' +
                                             '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                             '<div class="details">' +
                                             '<div class="number">' +
@@ -220,7 +220,7 @@
                                             card.subject +
                                         '</span>' +
                                         '<span class="card_footer">' +
-                                            '<a href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
+                                            '<a id="card_link_' + card.app + '" href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
                                         '</span>' +
                                     '</span>' +
                                 '</div>' +
@@ -237,7 +237,7 @@
                                             card.message +
                                         '</span>' +
                                         '<span class="card_footer">' +
-                                            '<a href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
+                                            '<a id="card_link_' + card.app + '" href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
                                         '</span>' +
                                     '</span>' +
                                 '</div>' +
@@ -259,6 +259,16 @@
 
         if (modules.map(function(app) {return app.name;}).indexOf(tile.app) == -1) return;
 
+        var append = '';
+        if (tile.route) {
+            var route = (tile.route.indexOf('/') == 0) ? tile.route : '/' + tile.route;
+            append = '?route=' + encodeURIComponent(route);
+        }
+        if (tile.query) {
+            append += (tile.route) ? '&' : '?';
+            append += 'query=' + encodeURIComponent(tile.query);
+        }
+
         var elems = $('#tile_' + tile.app);
 
         if (typeof elems.length == 'undefined' || elems.length == 0) {
@@ -267,18 +277,8 @@
                 $('#home-tiles div:last').remove();
             }
 
-            var append = '';
-            if (tile.route) {
-                var route = (tile.route.indexOf('/') == 0) ? tile.route : '/' + tile.route;
-                append = '?route=' + encodeURIComponent(route);
-            }
-            if (tile.query) {
-                append += (tile.route) ? '&' : '?';
-                append += 'query=' + encodeURIComponent(tile.query);
-            }
-
             var tile_frame =    '<div id="tile_' + tile.app + '" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' +
-                                '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ tile.background +' !important" href="{{bolt_root}}/apps/' + tile.app + append + '">' +
+                                '<a class="dashboard-stat dashboard-stat-v2 blue" style="background-color:'+ tile.background +' !important" id="tile_link_' + tile.app + '" href="{{bolt_root}}/apps/' + tile.app + append + '">' +
                                 '<div class="visual"><img src="{{bolt_root}}/files/' + tile.app + '/icon-md" style="opacity:0.6"></div>' +
                                 '<div class="details">' +
                                 '<div class="number">' +
@@ -290,6 +290,7 @@
         } else {
             $('#tile_message_' + tile.app).attr('data-value', tile.message);
             $('#tile_message_' + tile.app).text(tile.message);
+            $('#tile_link_' + tile.app).attr('href', '{{bolt_root}}/apps/' + tile.app + append);
         }    
     });
 
@@ -306,22 +307,22 @@
 
         if (modules.map(function(app) {return app.name;}).indexOf(card.app) == -1) return;
 
+        var append = '';
+        if (card.route) {
+            var route = (card.route.indexOf('/') == 0) ? card.route : '/' + card.route;
+            append = '?route=' + encodeURIComponent(route);
+        }
+        if (card.query) {
+            append += (card.route) ? '&' : '?';
+            append += 'query=' + encodeURIComponent(card.query);
+        }
+
         var elems = $('#card_' + card.app);
 
         if (typeof elems.length == 'undefined' || elems.length == 0) {
             var count = $("#home-tiles").children().length;
             if (count == 8) {
                 $('#home-tiles div:last').remove();
-            }
-
-            var append = '';
-            if (card.route) {
-                var route = (card.route.indexOf('/') == 0) ? card.route : '/' + card.route;
-                append = '?route=' + encodeURIComponent(route);
-            }
-            if (card.query) {
-                append += (card.route) ? '&' : '?';
-                append += 'query=' + encodeURIComponent(card.query);
             }
 
             var card_frame = "";
@@ -337,7 +338,7 @@
                                 card.subject +
                             '</span>' +
                             '<span class="card_footer">' +
-                                '<a href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
+                                '<a id="card_link_' + card.app + '" href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
                             '</span>' +
                         '</span>' +
                     '</div>' +
@@ -354,7 +355,7 @@
                                 card.message +
                             '</span>' +
                             '<span class="card_footer">' +
-                                '<a href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
+                                '<a id="card_link_' + card.app + '" href="{{bolt_root}}/apps/' + card.app + append + '" class="btn green">View more</a>' +
                             '</span>' +
                         '</span>' +
                     '</div>' +
@@ -366,6 +367,7 @@
             $('#card_img_' + card.app).attr('src', card.background);
             $('#card_subject_' + card.app).text(card.subject);
             $('#card_message_' + card.app).text(card.message);
+            $('#card_link_' + card.app).attr('href', '{{bolt_root}}/apps/' + card.app + append);
         }    
     });
 

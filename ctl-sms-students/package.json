@@ -28,20 +28,65 @@
     "public": ["assets"],
     "tags": ["students", "student", "ctl", "ctl-sms", "ctl-sms-students", "ctl-sms-plugins"],
     "collections": {
-      "students": "*",
+      "students": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"address": { "$type": "string" }},
+              {"admissionDate": { "$type": "date" }},
+              {"displayName": { "$type": "string" }},
+              {"displayPic": { "$type": "string" }},
+              {"dob": { "$type": "date" }},
+              {"email": { "$type": "string" }},
+              {"gender": { "$type": "string" }},
+              {"name": { "$type": "string" }},
+              {"phone": { "$type": "string" }},
+              {"status": { "$in": ["active", "discontinued", "expelled", "graduated", "suspended", "transferred"] }}
+            ]
+          }
+        }
+      },
       "student-guardian": {
         "guests": "*",
-        "tenants": ["ctl-sms-guardians"]
+        "tenants": ["ctl-sms-guardians"],
+        "options": {
+          "validator": {
+            "$and": [
+              {"gaurdian": { "$type": "string" }},
+              {"ward": { "$type": "string" }}
+            ]
+          }
+        }
       }
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated",
-      "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted-or-removed",
-      "bolt/app-collection-removed": "/hooks/bolt/app-collection-inserted-or-removed"
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/user-deleted": "/hook/bolt/user-deleted",
+      "bolt/user-updated": "/hook/bolt/user-updated",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted",
+      "bolt/app-collection-removed": "/hook/bolt/app-collection-removed"
+    },
+    "permissions": {
+      "create-students": {
+        "displayName": "Permission to create students",
+        "description": "This grants the permission to create new students"
+      },
+      "delete-students": {
+        "displayName": "Permission to delete students",
+        "description": "This grants the permission to delete existing students"
+      },
+      "edit-students": {
+        "displayName": "Permission to edit students",
+        "description": "This grants the permission to edit existing students"
+      },
+      "view-students": {
+        "displayName": "Permission to view students",
+        "description": "This grants the permission to view existing students"
+      }
     },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
     }
   },

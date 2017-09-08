@@ -28,12 +28,44 @@
     "public": ["assets"],
     "tags": ["subjects", "subject", "ctl", "ctl-sms", "ctl-sms-subjects", "ctl-sms-subject", "ctl-sms-plugins"],
     "collections": {
-      "subjects": "*"
+      "subjects": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"code": { "$type": "string" }},
+              {"displayName": { "$type": "string" }},
+              {"description": { "$type": "string" }}
+            ]
+          }
+        }
+      }
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting"
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted",
+      "bolt/app-collection-removed": "/hook/bolt/app-collection-removed"
+    },
+    "permissions": {
+      "create-subjects": {
+        "displayName": "Permission to create subjects",
+        "description": "This grants the permission to create new subjects"
+      },
+      "delete-subjects": {
+        "displayName": "Permission to delete subjects",
+        "description": "This grants the permission to delete existing subjects"
+      },
+      "edit-subjects": {
+        "displayName": "Permission to edit subjects",
+        "description": "This grants the permission to edit existing subjects"
+      },
+      "view-subjects": {
+        "displayName": "Permission to view subjects",
+        "description": "This grants the permission to view existing subjects"
+      }
     },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
     }
   },

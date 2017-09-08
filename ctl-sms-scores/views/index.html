@@ -17,6 +17,7 @@
 <!-- END PAGE TITLE-->
 
 <!-- BEGIN PAGE CONTENT-->
+{{#if classSubjects}}
 <div class="container-fluid">
     <div class="col-md-12 ">
         <!-- BEGIN SAMPLE FORM PORTLET-->
@@ -24,40 +25,25 @@
             <div class="portlet-title">
                 <div class="caption font-green">
                     <i class="icon-doc font-green"></i>
-                    <span class="caption-subject bold uppercase"> List of My Subjejcts</span>
+                    <span class="caption-subject bold uppercase"> List of My Subjects</span>
                 </div>
             </div>
             <div class="portlet-body form">
                 <div class="table-container">
                     <table class="table table-hover table-light">
                         <tbody>
+                            {{#each classSubjects}}
                             <tr>
-                                <td>English Language</td>
+                                <td>{{subjectDisplayName}}</td>
+                                <td>{{classDisplayName}}</td>
                                 <td>
-                                    <a href="score-students/maths" class="btn yellow-crusta btn-xs uppercase">
+                                    <a href="score-students/{{_id}}" class="btn yellow-crusta btn-xs uppercase">
                                         <span class="hidden-xs">Proceed</span>
                                          <span><i class="fa fa-long-arrow-right"></i></span>
                                     </a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Mathematics</td>
-                                <td>
-                                    <a href="score-students/maths" class="btn yellow-crusta btn-xs uppercase">
-                                        <span class="hidden-xs">Proceed</span>
-                                         <span><i class="fa fa-long-arrow-right"></i></span>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Physics</td>
-                                <td>
-                                    <a href="score-students/maths" class="btn yellow-crusta btn-xs uppercase">
-                                        <span class="hidden-xs">Proceed</span>
-                                         <span><i class="fa fa-long-arrow-right"></i></span>
-                                    </a>
-                                </td>
-                            </tr>
+                            {{/each}}
                         </tbody>
                     </table>
                 </div>
@@ -66,6 +52,24 @@
         <!-- END SAMPLE FORM PORTLET-->
     </div>    
 </div>
+{{else}}
+<div class="container-fluid">
+    <div class="col-md-12 col-sm-12">
+        <div class="note note-success">
+            <h4 class="block">No assigned subjects.</h4>
+            <p> 
+                No subjects have been assigned to you. Please contact an authorized personnel to assign subjects to you.
+            </p>
+            <!-- <p>&nbsp;</p>
+            <p>
+                How do you wish to proceed?<br><br>
+                <a class="btn green" href="{{app_root}}/new-session">New session</a>
+                <a class="btn green" href="{{app_root}}/view-sessions">Existing session</a>
+            </p> -->
+        </div>
+    </div>
+</div>
+{{/if}}
 <!-- END PAGE CONTENT-->
 {{> copyright }}
  

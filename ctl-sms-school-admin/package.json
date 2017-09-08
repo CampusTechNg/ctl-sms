@@ -27,28 +27,212 @@
     "public": ["assets"],
     "tags": ["school-admin", "ctl", "ctl-sms", "ctl-sms-school-admin", "ctl-sms-plugins"],
     "collections": {
-      "school-profile": "*",
-      "sessions": "*",
-      "terms": "*",
+      "school-profile": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"app": { "$type": "string" }},
+              {"displayName": { "$type": "string" }},
+              {"address": { "$type": "string" }},
+              {"email": { "$type": "string" }},
+              {"logo": { "$type": "string" }},
+              {"phone": { "$type": "string" }},
+              {"website": { "$type": "string" }}
+            ]
+          }
+        }
+      },
+      "sessions": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"displayName": { "$type": "string" }},
+              {"begin": { "$type": "date" }},
+              {"end": { "$type": "date" }},
+              {"isCurrent": { "$type": "bool" }}
+            ]
+          }
+        }
+      },
+      "terms": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"displayName": { "$type": "string" }},
+              {"begin": { "$type": "date" }},
+              {"end": { "$type": "date" }},
+              {"isCurrent": { "$type": "bool" }},
+              {"sessionId": { "$type": "string" }}
+            ]
+          }
+        }
+      },
       "class-subjects": {
         "guests": "*",
-        "tenants": ["ctl-sms-subjects", "ctl-sms-classes"]
+        "tenants": ["bolt", "ctl-sms-subjects", "ctl-sms-classes"],
+        "options": {
+          "validator": {
+            "$and": [
+              {"compulsory": { "$type": "bool" }},
+              {"subjectId": { "$type": "string" }},
+              {"subjectDisplayName": { "$type": "string" }},
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"teacherName": { "$type": "string" }},
+              {"teacherDisplayName": { "$type": "string" }}
+            ]
+          }
+        }
       },
       "class-teachers": {
         "guests": "*",
-        "tenants": ["ctl-sms-subjects", "ctl-sms-classes"]
+        "tenants": ["bolt", "ctl-sms-staff", "ctl-sms-classes"],
+        "options": {
+          "validator": {
+            "$and": [
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"teacherName": { "$type": "string" }},
+              {"teacherDisplayName": { "$type": "string" }}
+            ]
+          }
+        }
       },
-      "class-students": "*",
-      "grades": "*"
+      "class-students": {
+        "guests": "*",
+        "tenants": ["bolt"],
+        "options": {
+          "validator": {
+            "$and": [
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"studentId": { "$type": "string" }},
+              {"studentDisplayName": { "$type": "string" }},
+              {"sessionId": { "$type": "string" }},
+              {"sessionDisplayName": { "$type": "string" }},
+              {"dateCreated": { "$type": "date" }}
+            ]
+          }
+        }
+      },
+      "student-subjects": {
+        "guests": "*",
+        "tenants": ["bolt", "ctl-sms-subjects", "ctl-sms-students", "ctl-sms-scores"],
+        "options": {
+          "validator": {
+            "$and": [
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"subjectId": { "$type": "string" }},
+              {"subjectDisplayName": { "$type": "string" }},
+              {"studentId": { "$type": "string" }},
+              {"studentDisplayName": { "$type": "string" }},
+              {"sessionId": { "$type": "string" }},
+              {"sessionDisplayName": { "$type": "string" }},
+              {"termId": { "$type": "string" }},
+              {"termDisplayName": { "$type": "string" }},
+              {"score1": { "$type": "number" }},
+              {"score2": { "$type": "number" }},
+              {"score3": { "$type": "number" }}
+            ]
+          }
+        }
+      },
+      "grades": {
+        "guests": "*",
+        "tenants": ["bolt"],
+        "options": {
+          "validator": {
+            "$and": [
+              {"label": { "$type": "string" }},
+              {"max": { "$type": "number" }}
+            ]
+          }
+        }
+      }
     },
     "hooks": {
       "bolt/app-starting": "/hook/bolt/app-starting",
       "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted"
     },
+    "permissions": {
+      "edit-school-profile": {
+        "displayName": "Permission to edit school profile",
+        "description": "This grants the permission to edit the school profile"
+      },
+      "view-school-profile": {
+        "displayName": "Permission to view school profile",
+        "description": "This grants the permission to view the school profile"
+      },
+      "create-sessions": {
+        "displayName": "Permission to create sessions",
+        "description": "This grants the permission to create new academic sessions"
+      },
+      "delete-sessions": {
+        "displayName": "Permission to delete sessions",
+        "description": "This grants the permission to delete existing academic sessions"
+      },
+      "edit-sessions": {
+        "displayName": "Permission to edit sessions",
+        "description": "This grants the permission to edit existing academic sessions"
+      },
+      "view-sessions": {
+        "displayName": "Permission to view sessions",
+        "description": "This grants the permission to view existing academic sessions"
+      },
+      "create-terms": {
+        "displayName": "Permission to create terms",
+        "description": "This grants the permission to create new academic terms"
+      },
+      "delete-terms": {
+        "displayName": "Permission to delete terms",
+        "description": "This grants the permission to delete existing academic terms"
+      },
+      "edit-terms": {
+        "displayName": "Permission to edit terms",
+        "description": "This grants the permission to edit existing academic terms"
+      },
+      "view-terms": {
+        "displayName": "Permission to view terms",
+        "description": "This grants the permission to view existing academic terms"
+      },
+      "create-grades": {
+        "displayName": "Permission to create grades",
+        "description": "This grants the permission to create new academic grades"
+      },
+      "delete-grades": {
+        "displayName": "Permission to delete grades",
+        "description": "This grants the permission to delete existing academic grades"
+      },
+      "edit-grades": {
+        "displayName": "Permission to edit grades",
+        "description": "This grants the permission to edit existing academic grades"
+      },
+      "view-grades": {
+        "displayName": "Permission to view grades",
+        "description": "This grants the permission to view existing academic grades"
+      }
+    },
+    "routers": {
+      "sms-api": {
+        "main": "routers/sms-api",
+        "root": "/sms-api"
+      }
+    },
     "dependencies": {
       "metronic-for-bolt": "*",
-      "ctl-sms-home": "*"
-    }
+      "ctl-sms-home": "*",
+      "ctl-sms-classes": "*",
+      "ctl-sms-students": "*",
+      "ctl-sms-subjects": "*"
+    },
+
+    "$comments": [
+      "'school-profile'.app is always set to 'ctl-sms-school-admin'"
+    ]
   },
   "author": "Campus Technologies Limited",
   "license": "ISC"

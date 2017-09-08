@@ -124,22 +124,21 @@
                     </table>
                 </div>
             </div>
-
-            {{else}}
-            <div class="row">
-                <div class="col-md-12 col-sm-12">
-                    <div class="note note-success">
-                        <h4 class="block">No current academic session!</h4>
-                        <p> 
-                            There is no current session. Please create a new current session or assign an existing academic session as a current session to proceed. 
-                        </p>
-                        <p>&nbsp;</p>
-                        <p>
-                            How do you wish to proceed?<br><br>
-                            <a class="btn green" href="{{app_root}}/new-session">New session</a>
-                            <a class="btn green" href="{{app_root}}/view-sessions">Existing session</a>
-                        </p>
-                    </div>
+        </div>
+        {{else}}
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="note note-success">
+                    <h4 class="block">No current academic session!</h4>
+                    <p> 
+                        There is no current session. Please create a new current session or assign an existing academic session as a current session to proceed. 
+                    </p>
+                    <p>&nbsp;</p>
+                    <p>
+                        How do you wish to proceed?<br><br>
+                        <a class="btn green" href="{{app_root}}/new-session">New session</a>
+                        <a class="btn green" href="{{app_root}}/view-sessions">Existing session</a>
+                    </p>
                 </div>
             </div>
         </div>

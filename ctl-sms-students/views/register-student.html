@@ -351,7 +351,6 @@ var FormValidationMd = function() {
                 var dob = $("#dob").val();
                 var address = $("#address").val();
                 var admission_date = $("#admission_date").val();
-                var student_status = $("#student_status").val();
                 var student_class = $("#student_class option:selected").val();
                 var guardians = []; 
                 $('#guardians :selected').each(function(i, selected){ 
@@ -409,7 +408,7 @@ var FormValidationMd = function() {
                                                                 $.ajax({
                                                                     url: '{{bolt_root}}/api/db/students/insert',
                                                                     type: 'POST',
-                                                                    data: JSON.stringify({ object: { address: address, admission_date: admission_date, displayName: displayname, displayPic: response1.body.displayPic, dob: dob, email: email, gender: gender, name: username, phone: phone, student_status: student_status  }}),
+                                                                    data: JSON.stringify({ object: { address: address, admissionDate: admission_date, displayName: displayname, displayPic: response1.body.displayPic, dob: dob, email: email, gender: gender, name: username, phone: phone, status: 'active' }}),
                                                                     //processData: false,
                                                                     dataType: 'json',
                                                                     contentType: 'application/json',
@@ -430,7 +429,7 @@ var FormValidationMd = function() {
                                                                             });
 
                                                                             $.ajax({
-                                                                                url: '{{bolt_root}}/x/ctl-sms-school-admin/action/assign-student-to-class/' + student_class + '/' + username,
+                                                                                url: '{{bolt_root}}/sms-api/assign-student-to-class/' + student_class + '/' + username,
                                                                                 type: 'POST',
                                                                                 contentType: 'application/json',
                                                                                 headers: {'X-Bolt-App-Token': '{{app_token}}'},

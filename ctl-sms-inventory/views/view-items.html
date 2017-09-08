@@ -18,7 +18,6 @@
 </div>
 <!-- END PAGE TITLE-->
 
-
 <!-- BEGIN PAGE CONTENT-->
 <div class="container-fluid">
     <div class="col-md-12">
@@ -27,6 +26,20 @@
                 <div class="caption">
                     <i class="icon-list font-green"></i>
                     <span class="caption-subject font-green sbold uppercase">List of Avaliable Items</span>
+                </div>
+            </div>
+            <div class="col-md-12 ">
+                <div class="actions text-right margin-bottom-20">
+                    <div class="btn-group">
+                        <a href="{{app_root}}/add-item" class="btn green">
+                            <i class="fa fa-plus"></i> <span class="hidden-xs"> Add Item</span>
+                        </a>
+                    </div>
+                    <div class="btn-group">
+                        <a href="" class="btn red" id="delete_btn">
+                            <i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="actions text-right">
@@ -98,9 +111,6 @@
 {{> sub_footer }}
 
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<!-- <script src="/public/metronic-for-bolt/assets/global/scripts/datatable.js" type="text/javascript"></script>
-<script src="/public/metronic-for-bolt/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
-<script src="/public/metronic-for-bolt/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script> -->
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
@@ -122,7 +132,7 @@
                     closeOnConfirm: true
                 }, function(isConfirm){
                     if (isConfirm) {
-                        window.location.href="{{app_root}}/view-categories";
+                        window.location.href="{{app_root}}/view-items";
                     }
                 });
             } else if (index >= names.length) { //this is the end
@@ -137,14 +147,14 @@
                         closeOnConfirm: true
                     }, function(isConfirm){
                         if (isConfirm) {
-                            window.location.href="{{app_root}}/view-categories";
+                            window.location.href="{{app_root}}/view-items";
                         }
                     });
                 }
             } else {
                 var name = names[index];
                 $.ajax({
-                    url: "{{bolt_root}}/api/db/categories/remove?_id=" + name,
+                    url: "{{bolt_root}}/api/db/items/remove?_id=" + name,
                     type: 'POST',
                     data: JSON.stringify({}),
                     //processData: false,
@@ -201,19 +211,7 @@
         $('.group-checkable').on('click', function() {
            $('.checkboxes:enabled').prop('checked', this.checked);
         });
-
-        /*$('#chkbtn').click(function(event) {
-            event.preventDefault(); 
-            var names = $('input[type=checkbox]:checked:enabled').map(function() {
-                return $(this).val();
-            }).get();
-            console.log(names);
-        });*/
     });
 </script>
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
-
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
-<!-- <script src="/public/metronic-for-bolt/assets/pages/scripts/table-datatables-managed.min.js" type="text/javascript"></script> -->
-<!-- END PAGE LEVEL SCRIPTS -->
 {{> footer }}

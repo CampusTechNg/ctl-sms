@@ -222,8 +222,6 @@ var FormValidationMd = function() {
                 success1.show();
                 error1.hide();
 
-                var formData = new FormData();    
-
                 var username = $("#username").val();
                 var password = $("#password").val();
                 var displayname = $("#fullname").val();
@@ -236,22 +234,21 @@ var FormValidationMd = function() {
                   wards[i] = selected.value; 
                 });
 
-                formData.append('name', username);
-                formData.append('password', password);
-                formData.append('dn', displayname);
-                formData.append('email', email);
-                formData.append('phone', phone);
+                var user = {
+                    name: username,
+                    password: password,
+                    displayName: displayname,
+                    displayPic: '{{bolt_root}}/public/bolt/uploads/user.png',
+                    email: email,
+                    phone: phone
+                };
                     
                 //create parent as a bolt user
                 $.ajax({
                     url: '{{bolt_root}}/api/users',
                     type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false, //'multipart/form-data',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-Bolt-App-Token', '{{app_token}}');
-                    },
+                    data: user,
+                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
                     success: function(response) {
                         if(response.code === 0){
                             //second, create an parent role

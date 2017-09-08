@@ -25,18 +25,59 @@
       "icon-md": "assets/pages/img/icon-md.png"
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated"
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/user-deleted": "/hook/bolt/user-deleted",
+      "bolt/user-updated": "/hook/bolt/user-updated"
+    },
+    "permissions": {
+      "create-guardians": {
+        "displayName": "Permission to create parents",
+        "description": "This grants the permission to create new parents"
+      },
+      "delete-guardians": {
+        "displayName": "Permission to delete parents",
+        "description": "This grants the permission to delete existing parents"
+      },
+      "edit-guardians": {
+        "displayName": "Permission to edit parents",
+        "description": "This grants the permission to edit existing parents"
+      },
+      "view-guardians": {
+        "displayName": "Permission to view parents",
+        "description": "This grants the permission to view existing parents"
+      }
     },
     "order": 1,
     "public": ["assets"],
     "tags": ["guardians", "guardian", "ctl", "ctl-sms", "ctl-sms-guardians", "ctl-sms-plugins"],
     "collections": {
-      "guardians": "*"
+      "guardians": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"displayName": { "$type": "string" }},
+              {"displayPic": { "$type": "string" }},
+              {"email": { "$type": "string" }},
+              {"name": { "$type": "string" }},
+              {"phone": { "$type": "string" }}
+            ]
+          }
+        }
+      }
     },
     "dependencies": {
-      "ctl-sms-home": "*"
+      "metronic-for-bolt": "*",
+      "ctl-sms-home": "*",
+      "ctl-sms-students": "*"
+    },
+
+    "$sample-guardian": {
+      "displayName": "Mr A",
+      "email": "mra@email.com",
+      "name": "mr_a",
+      "phone": "090876543",
+      "displayPic": "http://127.0.0.1:400/public/bolt/uploads/user.png"
     }
   },
   "author": "Campus Technologies Limited",

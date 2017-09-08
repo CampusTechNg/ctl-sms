@@ -23,22 +23,67 @@
       "icon": "assets/pages/img/icon.png",
       "icon-md": "assets/pages/img/icon-md.png"
     },
-    "order": 3,
+    "order": 4,
     "public": ["assets"],
     "tags": ["forum", "ctl", "ctl-sms", "ctl-sms-forum", "ctl-sms-plugins"],
     "collections": {
-      "posts": "*"
+      "posts": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"date": { "$type": "date" }},
+              {"message": { "$type": "string" }},
+              {"subject": { "$type": "string" }},
+              {"user": { "$type": "object" }}
+            ]
+          }
+        }
+      },
+      "comments": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"date": { "$type": "date" }},
+              {"message": { "$type": "string" }},
+              {"postId": { "$type": "string" }},
+              {"user": { "$type": "object" }}
+            ]
+          }
+        }
+      }
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated",
-      "bolt/app-collection-inserted": "/hooks/bolt/app-collection-inserted",
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/user-deleted": "/hook/bolt/user-deleted",
+      "bolt/user-updated": "/hook/bolt/user-updated",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted",
+      "bolt/app-collection-removed": "/hook/bolt/app-collection-removed",
 
       "ctl-sms-forum/topic-posted": "/hooks/ctl-sms-forum/topic-posted",
       "ctl-sms-forum/comment-posted": "/hooks/ctl-sms-forum/comment-posted"
     },
+    "permissions": {
+      "create-topics": {
+        "displayName": "Permission to create topics",
+        "description": "This grants the permission to create forum topics"
+      },
+      "create-comments": {
+        "displayName": "Permission to create comments",
+        "description": "This grants the permission to create comments under topics"
+      },
+      "view-topics": {
+        "displayName": "Permission to view topics",
+        "description": "This grants the permission to view forum topics"
+      },
+      "view-comments": {
+        "displayName": "Permission to view comments",
+        "description": "This grants the permission to view comments under topics"
+      }
+    },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
     }
   },

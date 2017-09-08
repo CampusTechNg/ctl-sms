@@ -39,7 +39,7 @@ app.use(function(req, res, next){
 			next();
 		}
 		else { //there is no logged-in user
-			if (req.originalUrl.indexOf('/hooks/') > 0 || req.originalUrl.indexOf('/api/') > 0) {
+			if (req.originalUrl.indexOf('/hook/') > 0 || req.originalUrl.indexOf('/action/') > 0) {
 				next();
 			}
 			else {

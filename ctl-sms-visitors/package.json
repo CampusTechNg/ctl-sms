@@ -1,7 +1,7 @@
 {
   "name": "ctl-sms-visitors",
   "version": "1.0.0",
-  "description": "Campus Technologies Limited Student Management System - Visitors' Module",
+  "description": "Campus Technologies Limited Student Management System - Visitors Module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,20 +25,59 @@
       "icon-md": "assets/pages/img/icon-md.png"
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/app-collection-inserted": "/hooks/bolt/visits-modified",
-      "bolt/app-collection-removed": "/hooks/bolt/visits-modified",
-      "bolt/app-collection-updated": "/hooks/bolt/visits-modified",
-      "bolt/app-collection-replaced": "/hooks/bolt/visits-modified"
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/app-collection-inserted": "/hook/bolt/visits-modified",
+      "bolt/app-collection-removed": "/hook/bolt/visits-modified",
+      "bolt/app-collection-updated": "/hook/bolt/visits-modified",
+      "bolt/app-collection-replaced": "/hook/bolt/visits-modified"
     },
     "order": 3,
     "public": ["assets"],
     "tags": ["visitors", "visitor", "ctl", "ctl-sms", "ctl-sms-visitors", "ctl-sms-plugins"],
     "collections": {
-      "visitors": "*",
-      "visits": "*"
+      "visitors": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"displayName": { "$type": "string" }},
+              {"email": { "$type": "string" }},
+              {"phone": { "$type": "string" }}
+            ]
+          }
+        }
+      },
+      "visits": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"visitorId": { "$type": "string" }},
+              {"displayName": { "$type": "string" }},
+              {"purpose": { "$type": "string" }},
+              {"dateIn": { "$type": "date" }},
+              {"dateOut": { "$type": "date" }}
+            ]
+          }
+        }
+      }
+    },
+    "permissions": {
+      "signin-visitors": {
+        "displayName": "Permission to sign visitors in",
+        "description": "This grants the permission to sign visitors in"
+      },
+      "signout-visitors": {
+        "displayName": "Permission to sign visitors out",
+        "description": "This grants the permission to sign visitors out"
+      },
+      "view-visitors": {
+        "displayName": "Permission to view visitors",
+        "description": "This grants the permission to view visitors"
+      }
     },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
     }
   },

@@ -28,13 +28,54 @@
     "public": ["assets"],
     "tags": ["classes", "class", "ctl", "ctl-sms", "ctl-sms-classes", "ctl-sms-class", "ctl-sms-plugins"],
     "collections": {
-      "classes": "*"
+      "classes": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"code": { "$type": "string" }},
+              {"displayName": { "$type": "string" }}
+            ]
+          }
+        }
+      }
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting"
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted",
+      "bolt/app-collection-removed": "/hook/bolt/app-collection-removed"
+    },
+    "permissions": {
+      "assign-class-subjects": {
+        "displayName": "Permission to assign subjects to classes",
+        "description": "This grants the permission to specify subjects taught in classes, and the teachers of those subjects"
+      },
+      "assign-class-teachers": {
+        "displayName": "Permission to assign teachers to classes",
+        "description": "This grants the permission to assign teachers to classes"
+      },
+      "create-classes": {
+        "displayName": "Permission to create classes",
+        "description": "This grants the permission to create new classes"
+      },
+      "delete-classes": {
+        "displayName": "Permission to delete classes",
+        "description": "This grants the permission to delete existing classes"
+      },
+      "edit-classes": {
+        "displayName": "Permission to edit classes",
+        "description": "This grants the permission to edit existing classes"
+      },
+      "view-classes": {
+        "displayName": "Permission to view classes",
+        "description": "This grants the permission to view existing classes"
+      }
     },
     "dependencies": {
-      "ctl-sms-home": "*"
+      "metronic-for-bolt": "*",
+      "ctl-sms-home": "*",
+      "ctl-sms-staff": "*",
+      "ctl-sms-subjects": "*"
     }
   },
   "author": "Campus Technologies Limited",

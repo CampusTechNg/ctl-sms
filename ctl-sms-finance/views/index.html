@@ -127,10 +127,9 @@ $(document).ready(function() {
                     if(users.length > 0) {
                         for (index = 0; index < users.length; index++) {
                             var user = users[index];
-                            if (!user.displayPic) user.displayPic = "public/bolt/users/user.png";
                             var result_row = '<tr id="result_row">' +
                                                     '<td> ' +
-                                                        '<img src="{{bolt_root}}/' + user.displayPic + '" style="height: 50px; width: 50px; border-radius: 50% !important">' +
+                                                        '<img src="' + user.displayPic + '" style="height: 50px; width: 50px; border-radius: 50% !important">' +
                                                     '</td>' +
                                                     '<td>' + user.displayName + '</td>' +
                                                     '<td>' + user.name + '</td>' +

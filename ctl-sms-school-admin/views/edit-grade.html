@@ -32,7 +32,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="score_grade" id="score_grade" type="text" maxlength="50" value="{{grade.data}}">
+                                    <input class="form-control" name="score_grade" id="score_grade" type="text" maxlength="50" value="{{grade.label}}">
                                     <label for="score_grade">
                                         Grade <span class="required">*</span>
                                     </label>
@@ -145,7 +145,7 @@ var FormValidationMd = function() {
                 error1.hide();
 
                 var grade = {};
-                grade.data = $("#score_grade").val();
+                grade.label = $("#score_grade").val();
                 grade.max = $("#max_score").val();
 
                 $.ajax({

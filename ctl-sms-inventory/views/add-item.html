@@ -359,24 +359,29 @@ jQuery(document).ready(function() {
     function isService() {
         if($('#is_service').is(":checked")){
             $("#optional_section").slideUp(function() {
-                // $('#optional_section').find("input").prop('disabled', 'disabled');    
+                $('#qty').val('');
+                $('#critical_qty').val(''); 
+                $('#uniqueid').val('');
             });
             
         } 
         else{
-            $("#optional_section").slideDown(function() {
-               // $('#optional_section').find("input").attr('enabled', '0');  
-            });
+            $("#optional_section").slideDown();
         }
     }
 
     function isUnique() {
         if($('#is_unique').is(":checked")){
             $("#unique_row").slideDown();
-            $("#qty_row").slideUp();
+            $("#qty_row").slideUp(function() {
+                $('#qty').val('');
+                $('#critical_qty').val('');
+            });
         } 
         else{
-            $("#unique_row").slideUp();
+            $("#unique_row").slideUp(function() {
+                $('#uniqueid').val('');
+            });
             $("#qty_row").slideDown();
         }
     }

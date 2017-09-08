@@ -27,14 +27,51 @@
     "public": ["assets"],
     "tags": ["staff", "ctl", "ctl-sms", "ctl-sms-staff", "ctl-sms-plugins"],
     "collections": {
-      "staff": "*"
+      "staff": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"address": { "$type": "string" }},
+              {"displayName": { "$type": "string" }},
+              {"displayPic": { "$type": "string" }},
+              {"dob": { "$type": "date" }},
+              {"email": { "$type": "string" }},
+              {"gender": { "$type": "string" }},
+              {"name": { "$type": "string" }},
+              {"phone": { "$type": "string" }}
+            ]
+          }
+        }
+      }
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated"
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted",
+      "bolt/app-collection-removed": "/hook/bolt/app-collection-removed",
+      "bolt/user-deleted": "/hook/bolt/user-deleted",
+      "bolt/user-updated": "/hook/bolt/user-updated"
+    },
+    "permissions": {
+      "create-staff": {
+        "displayName": "Permission to create staff",
+        "description": "This grants the permission to create new staff members"
+      },
+      "delete-staff": {
+        "displayName": "Permission to delete staff",
+        "description": "This grants the permission to delete existing staff members"
+      },
+      "edit-staff": {
+        "displayName": "Permission to edit staff",
+        "description": "This grants the permission to edit existing staff members"
+      },
+      "view-staff": {
+        "displayName": "Permission to view staff",
+        "description": "This grants the permission to view existing staff members"
+      }
     },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
     }
   },

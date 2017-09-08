@@ -389,7 +389,7 @@ var FormValidationMd = function() {
                                                                 $.ajax({
                                                                     url: '{{bolt_root}}/api/db/staff/insert',
                                                                     type: 'POST',
-                                                                    data: JSON.stringify({ object: { name: username, gender: gender, dob: dob, address: address }}),
+                                                                    data: JSON.stringify({ object: { address: address, displayName: displayname, displayPic: response1.body.displayPic, dob: dob, email: email, gender: gender, name: username, phone: phone }}),
                                                                     //processData: false,
                                                                     dataType: 'json',
                                                                     contentType: 'application/json',

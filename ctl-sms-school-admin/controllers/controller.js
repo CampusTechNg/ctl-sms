@@ -2,7 +2,40 @@ var request = require('request');
 
 var appname, apptoken;
 
+var middleware = {
+	getCurrentSession: function(req, res, next) {
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/sessions/findone', 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {query: {isCurrent:true}}}, 
+			function(error, response, body) {
+				req.currentSession = body.body;
+				//TODO: what to do if there is no current session
+				next();
+			});
+	},
+
+	getCurrentTerm: function(req, res, next) {
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/terms/findone', 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {query: {isCurrent:true}}}, 
+			function(error, response, body) {
+				req.currentTerm = body.body;
+				//TODO: what to do if there is no current term
+				next();
+			});
+	}
+};
+
 var controller = {
+	get403: function(req, res) {
+		res.render('403', {
+			app_root: req.app_root,
+			bolt_root: process.env.BOLT_ADDRESS
+		});
+	},
+
 	get404: function(req, res) {
 		res.render('404', {
 			app_root: req.app_root,
@@ -24,6 +57,93 @@ var controller = {
 		});
 	},
 
+	getCreateGrade: function(req, res){
+		res.render('create-grade', {
+			score_grade_menu: 'selected',
+			score_grade_active: 'active',
+			bolt_root: process.env.BOLT_ADDRESS,
+			app_root: req.app_root,
+			app_token: apptoken
+		});
+	},
+
+	getEditGrade: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/grades/findone?_id=' + req.params.id, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+			var grade = body.body;
+
+			res.render('edit-grade', {
+				view_grades_menu: 'selected',
+				view_grades_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				grade: grade
+			});
+		});
+	},
+
+	getEditSchoolProfile: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/school-profile/findone?app=' + appname, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+				var profile = body.body;
+
+				res.render('edit-school-profile', {
+					school_profile_menu: 'selected',
+					school_profile_active: 'active',
+					appname: appname,
+					app_root: req.app_root,
+					app_token: apptoken,
+					bolt_root: process.env.BOLT_ADDRESS,
+					profile: profile
+				});
+			});
+	},
+
+	getEditSession: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/sessions/findone?_id=' + req.params.id, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+			var session = body.body;
+
+			res.render('edit-session', {
+				view_sessions_menu: 'selected',
+				view_sessions_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				session: session
+			});
+		});
+	},
+
+	getEditTerm: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/terms/findone?_id=' + req.params.id, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+			var term = body.body;
+
+			res.render('edit-term', {
+				view_terms_menu: 'selected',
+				view_terms_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				term: term
+			});
+		});
+	},
+
 	getNewSession: function(req, res){
 		res.render('new-session', {
 			new_session_menu: 'selected',
@@ -31,6 +151,34 @@ var controller = {
 			app_root: req.app_root,
 			app_token: apptoken,
 			bolt_root: process.env.BOLT_ADDRESS
+		});
+	},
+
+	getNewTerm: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/sessions/find', 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {object:{}}}, 
+			function(error, response, body) {
+			var sessions = body.body;
+
+			var currentSession;
+			var thereIsCurrent = false;
+			if(sessions && sessions.length > 0){
+				thereIsCurrent = sessions.map(function(s) { if(s.isCurrent){currentSession = s;} return s.isCurrent || false; })
+				.reduce(function(or, value) {return or || value;});
+			}
+			
+			res.render('new-term', {
+				new_term_menu: 'selected',
+				new_term_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				sessions: sessions,
+				currentSession: currentSession,
+				thereIsCurrent: thereIsCurrent
+			});
 		});
 	},
 
@@ -54,6 +202,25 @@ var controller = {
 			});
 	},
 
+	getViewGrades: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/grades/find', 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+			var grades = body.body;
+
+			res.render('view-grades', {
+				view_grades_menu: 'selected',
+				view_grades_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				grades: grades
+			});
+		});
+	},
+
 	getViewSessions: function(req, res){
 		request.post({
 			url: process.env.BOLT_ADDRESS + '/api/db/sessions/find', 
@@ -73,99 +240,29 @@ var controller = {
 		});
 	},
 
-	postActionAssignStudentToClass: function(req, res) {
-		//fetch student
+	getViewTerms: function(req, res){
+		var id = "";
+		if (req.currentSession) {
+			id = req.currentSession._id;
+		}
+
 		request.post({
-			url: process.env.BOLT_ADDRESS + '/api/db/students/findone?name=' + req.params.studentname, 
+			url: process.env.BOLT_ADDRESS + '/api/db/terms/find?sessionId=' + id, 
 			headers: {'X-Bolt-App-Token': apptoken},
-			json: {app: 'ctl-sms-students'}}, 
+			json: {}}, 
 			function(error, response, body) {
-				var student = body.body;
+			var terms = body.body;
 
-				//fetch class
-				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.classid, 
-					headers: {'X-Bolt-App-Token': apptoken},
-					json: {app: 'ctl-sms-classes'}}, 
-					function(error, response, body) {
-						var _class = body.body;
-
-						if (student && _class) {
-							//ensure u dont assign a student to a class more than once in the same session
-							request.post({
-								url: process.env.BOLT_ADDRESS + '/api/db/class-students/remove', 
-								headers: {'X-Bolt-App-Token': apptoken},
-								json: {query: {'classId': _class._id, 'studentId': student._id, 'sessionId': req.currentSession._id}}}, 
-								function(error, response, body) {
-									var classStudent = {
-										classId: _class._id,
-										classDisplayName: _class.displayName,
-										studentId: student._id,
-										studentDisplayName: student.displayName,
-										sessionId: req.currentSession._id,
-										sessionDisplayName: req.currentSession.displayName,
-										dateCreated: new Date()
-									};
-
-									request.post({
-										url: process.env.BOLT_ADDRESS + '/api/db/class-students/insert', 
-										headers: {'X-Bolt-App-Token': apptoken},
-										json: {object: classStudent}}, 
-										function(error, response, body) {
-											//TODO: raise event
-
-											//get subjects belonging to that class
-											request.post({
-												url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/find', 
-												headers: {'X-Bolt-App-Token': apptoken},
-												json: {query: {'classId': _class._id}}}, 
-												function(error, response, body) {
-													var classSubjects = body.body; 
-
-													classSubjects
-													.filter(function(clsSubj) { return clsSubj.compulsory == true; })
-													.forEach(function(clsSubj) {
-														var studentSubject = {
-															classId: _class._id,
-															classDisplayName: _class.displayName,
-															subjectId: clsSubj.subjectId,
-															subjectDisplayName: clsSubj.subjectDisplayName,
-															studentId: student._id,
-															studentDisplayName: student.displayName,
-															termId: req.currentTerm._id,
-															termDisplayName: req.currentTerm.displayName,
-															sessionId: req.currentSession._id,
-															sessionDisplayName: req.currentSession.displayName,
-															scores: [0, 0, 0]
-														};
-
-														//ensure u dont assign a subject to a student more than once in the same class, term, session
-														request.post({
-															url: process.env.BOLT_ADDRESS + '/api/db/student-subjects/remove', 
-															headers: {'X-Bolt-App-Token': apptoken},
-															json: {query: {'classId': _class._id, 'subjectId': clsSubj._id, 'studentId': student._id, 'termId': req.currentTerm._id, 'sessionId': req.currentSession._id}}}, 
-															function(error, response, body) {
-																request.post({
-																	url: process.env.BOLT_ADDRESS + '/api/db/student-subjects/insert', 
-																	headers: {'X-Bolt-App-Token': apptoken},
-																	json: {object: studentSubject}}, 
-																	function(error, response, body) {
-																		//TODO: raise event
-																	});
-															});
-													});
-
-													res.send();
-												});
-										});
-								});
-						}
-						else {
-							//TODO:
-							res.send();
-						}
-					});
+			res.render('view-terms', {
+				view_terms_menu: 'selected',
+				view_terms_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				currentSession: req.currentSession,
+				terms: terms
 			});
+		});
 	},
 
 	postHookBoltAppCollectionInserted: function(req, res){
@@ -207,7 +304,9 @@ var controller = {
 		var event = req.body;
 		appname = event.body.appName;
 		apptoken = event.body.appToken;
-	}
+	},
+
+	Middleware: middleware
 };
 
 module.exports = controller;

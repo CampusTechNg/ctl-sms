@@ -23,21 +23,89 @@
       "icon": "assets/pages/img/icon.png",
       "icon-md": "assets/pages/img/icon-md.png"
     },
-    "order": 1,
+    "order": 2,
     "public": ["assets"],
     "tags": ["inventory", "ctl", "ctl-sms", "ctl-sms-inventory", "ctl-sms-plugins"],
     "collections": {
-      "categories": "*",
-      "items": "*"
+      "categories": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"parentId": { "$type": "string" }},
+              {"displayName": { "$type": "string" }},
+              {"description": { "$type": "string" }},
+              {"tags": { "$type": "string" }}
+            ]
+          }
+        }
+      },
+      "items": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"parentId": { "$type": "string" }},
+              {"displayName": { "$type": "string" }},
+              {"description": { "$type": "string" }},
+              {"price": { "$type": "number" }},
+              {"discount": { "$type": "number" }},
+              {"discountType": { "$in": ["absolute", "percentage"] }},
+              {"isService": { "$type": "bool" }},
+              {"isUnique": { "$type": "bool" }},
+              {"quantity": { "$type": "number" }},
+              {"criticalQuantity": { "$type": "number" }},
+              {"tags": { "$type": "string" }}
+            ]
+          }
+        }
+      }
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting",
-      "bolt/user-deleted": "/user-deleted",
-      "bolt/user-updated": "/user-updated"
+      "bolt/app-starting": "/hook/bolt/app-starting"
+    },
+    "permissions": {
+      "create-categories": {
+        "displayName": "Permission to create categories",
+        "description": "This grants the permission to create new categories"
+      },
+      "delete-categories": {
+        "displayName": "Permission to delete categories",
+        "description": "This grants the permission to delete existing categories"
+      },
+      "edit-categories": {
+        "displayName": "Permission to edit categories",
+        "description": "This grants the permission to edit existing categories"
+      },
+      "view-categories": {
+        "displayName": "Permission to view categories",
+        "description": "This grants the permission to view existing categories"
+      },
+      "create-items": {
+        "displayName": "Permission to create items",
+        "description": "This grants the permission to create new items"
+      },
+      "delete-items": {
+        "displayName": "Permission to delete items",
+        "description": "This grants the permission to delete existing items"
+      },
+      "edit-items": {
+        "displayName": "Permission to edit items",
+        "description": "This grants the permission to edit existing items"
+      },
+      "view-items": {
+        "displayName": "Permission to view items",
+        "description": "This grants the permission to view existing items"
+      }
     },
     "dependencies": {
+      "metronic-for-bolt": "*",
       "ctl-sms-home": "*"
-    }
+    },
+
+    "$comments": [
+      "The reason $type of category.tags (and item.tags) is set to string and not array is: https://docs.mongodb.com/manual/reference/operator/query/type/#document-querying-by-array-type"
+    ]
   },
   "author": "Campus Technologies Limited",
   "license": "ISC"

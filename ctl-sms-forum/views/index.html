@@ -74,17 +74,17 @@
                     </p>
                     <div class="blog-post-foot">
                         <div class="blog-post-meta">
-                            <img width="25" height="25" src="{{../bolt_root}}/{{user.displayPic}}" class="img-circle">
+                            <img width="25" height="25" src="{{user.displayPic}}" class="img-circle">
                             <span>{{user.displayName}}</span>
                         </div>
                         <div class="blog-post-meta">
                             <i class="icon-calendar font-blue"></i>
                             <span>{{toDate date}}</span>
                         </div>
-                        <div class="blog-post-meta">
+                        <!-- <div class="blog-post-meta">
                             <i class="icon-bubble font-blue"></i>
                             <span>{{comments.length}}</span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -141,16 +141,12 @@ $(document).ready(function() {
                     '</p>' +
                     '<div class="blog-post-foot">' +
                         '<div class="blog-post-meta">' +
-                            '<img width="25" height="25" src="{{bolt_root}}/' + post.user.displayPic + '" class="img-circle">' +
+                            '<img width="25" height="25" src="' + post.user.displayPic + '" class="img-circle">' +
                             '<span>' + post.user.displayName + '</span>' +
                         '</div>' +
                         '<div class="blog-post-meta">' +
                             '<i class="icon-calendar font-blue"></i>' +
                             '<span>' + post.date.toDateString() + '</span>' +
-                        '</div>' +
-                        '<div class="blog-post-meta">' +
-                            '<i class="icon-bubble font-blue"></i>' +
-                            '<span>' + post.comments.length + '</span>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -181,7 +177,6 @@ $(document).ready(function() {
             displayName: '{{user.displayName}}',
             displayPic: '{{user.displayPic}}'
         };
-        post.comments = [];
 
         $.ajax({
             url: '{{bolt_root}}/api/db/posts/insert',

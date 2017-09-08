@@ -30,11 +30,7 @@
                 <div class="portlet light bordered">
                     <div class="portlet-body form">
                         <div class="profile-userpic">
-                            {{#if student.displayPic}}
-                            <img class="img-responsive" src="{{bolt_root}}/{{student.displayPic}}">
-                            {{else}}
-                            <img class="img-responsive" src="{{bolt_root}}/public/bolt/users/user.png"">
-                            {{/if}}
+                            <img class="img-responsive" src="{{student.displayPic}}">
                         </div>
                         <div class="profile-usertitle">
                             <div class="profile-usertitle-name"> {{student.displayName}} </div>
