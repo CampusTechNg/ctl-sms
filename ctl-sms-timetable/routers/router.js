@@ -4,9 +4,7 @@ var router = express.Router();
 var controller = require('../controllers/controller');
 var middleware = require('../controllers/middleware');
 
-router.get('/', middleware.checkForViewScoresPermission, controller.getIndex);
-
-router.get('/score-students/:id', middleware.checkForEditScoresPermission, controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getScoreStudents);
+router.get('/', /*middleware.checkForViewClassesPermission,*/ controller.getIndex);
 
 router.post('/hook/bolt/app-starting', controller.postHookBoltAppStarting);
 

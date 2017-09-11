@@ -120,7 +120,7 @@
       },
       "student-subjects": {
         "guests": "*",
-        "tenants": ["bolt", "ctl-sms-subjects", "ctl-sms-students", "ctl-sms-scores"],
+        "tenants": ["bolt", "ctl-sms-subjects-i-teach"],
         "options": {
           "validator": {
             "$and": [
@@ -149,6 +149,22 @@
             "$and": [
               {"label": { "$type": "string" }},
               {"max": { "$type": "number" }}
+            ]
+          }
+        }
+      },
+      "timetable-slots": {
+        "guests": "*",
+        "tenants": ["bolt", "ctl-sms-classes"],
+        "options": {
+          "validator": {
+            "$and": [
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"subjectId": { "$type": "string" }},
+              {"subjectDisplayName": { "$type": "string" }},
+              {"start": { "$type": "object" }},
+              {"end": { "$type": "object" }}
             ]
           }
         }
@@ -231,7 +247,8 @@
     },
 
     "$comments": [
-      "'school-profile'.app is always set to 'ctl-sms-school-admin'"
+      "'school-profile'.app is always set to 'ctl-sms-school-admin'",
+      "The reason 'student-subjects'.scores is set to string and not array is: https://docs.mongodb.com/manual/reference/operator/query/type/#document-querying-by-array-type"
     ]
   },
   "author": "Campus Technologies Limited",

@@ -16,100 +16,117 @@
 </div>
 <!-- END PAGE TITLE-->
 
+
 <!-- BEGIN PAGE CONTENT-->
 <div class="container-fluid">
     <div class="col-md-12 ">
         <!-- BEGIN SAMPLE FORM PORTLET-->
         <div class="portlet light bordered">
-            <div class="portlet-title">
-                <div class="caption font-green">
-                    <i class="icon-magnifier font-green"></i>
-                    <span class="caption-subject bold uppercase"> Search Previous Visit</span>
-                </div>
-            </div>
             <div class="portlet-body form">
-                <form role="form" method="" autocomplete="off">
-                    <div class="form-body">
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <div class="input-group">
-                                        <div class="input-group-control">
-                                            <input class="form-control" name="search_name" id="search_name" type="text">
-                                            <label for="search_name">Visitor's name</label>
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="#tab_1" data-toggle="tab"> New Visit </a>
+                        </li>
+                        <li>
+                            <a href="#tab_2" data-toggle="tab"> Previous Visit </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                            <form role="form" id="register_visitors" autocomplete="off">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                            <div class="form-group form-md-line-input form-md-floating-label">
+                                                <input class="form-control" name="fullname" id="fullname" type="text" maxlength="60">
+                                                <label for="fullname">
+                                                    Full Name <span class="required">*</span>
+                                                </label>
+                                            </div>
                                         </div>
-                                        <span class="input-group-btn btn-right">
-                                            <button class="btn green" type="button">Search</button>
-                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="form-group form-md-line-input form-md-floating-label">
+                                                <input name="phone" type="text" class="form-control" id="phone" maxlength="20">
+                                                <label for="phone">Phone</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="form-group form-md-line-input form-md-floating-label">
+                                                <input name="email" type="email" class="form-control" id="email" maxlength="100">
+                                                <label for="email">Email</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                            <div class="form-group form-md-line-input form-md-floating-label">
+                                                <input class="form-control" name="purpose_of_visit" id="purpose_of_visit" type="text" maxlength="60">
+                                                <label for="purpose_of_visit">
+                                                    Purpose of visit <span class="required">*</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions noborder">
+                                    <button type="submit" class="btn green">Submit</button>
+                                    <button type="reset" class="btn default">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="tab_2">
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                            <div class="input-group">
+                                                <div class="input-group-control">
+                                                    <input class="form-control" name="search_name" id="search_name" type="text">
+                                                    <label for="search_name">Visitor's name</label>
+                                                </div>
+                                                <span class="input-group-btn btn-right">
+                                                    <button id="search" class="btn green" type="button">Search</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="result_section">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 font-green">
+                                        <i class="icon-doc font-green"></i>
+                                        <span class="caption-subject bold uppercase"> Search Result</span>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 text-right">
+                                        <span id="search_icon"></span> <span id="result_count"> </span>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="portlet-body form">
+                                    <div class="table-container">
+                                        <table class="table table-hover table-light">
+                                            <tbody id="result_frame">
+                                                
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-        <!-- END SAMPLE FORM PORTLET-->
-    </div>
-
-    <div class="col-md-12 ">
-        <!-- BEGIN SAMPLE FORM PORTLET-->
-        <div class="portlet light bordered">
-            <div class="portlet-title">
-                <div class="caption font-green">
-                    <i class="icon-layers font-green"></i>
-                    <span class="caption-subject bold uppercase"> Register New Visit</span>
                 </div>
             </div>
-            <div class="portlet-body form">
-                <form role="form" id="register_visitors" autocomplete="off">
-                    <div class="form-body">
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="fullname" id="fullname" type="text" maxlength="60">
-                                    <label for="fullname">
-                                        Full Name <span class="required">*</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="phone" type="text" class="form-control" id="phone" maxlength="20">
-                                    <label for="phone">Phone</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input name="email" type="email" class="form-control" id="email" maxlength="100">
-                                    <label for="email">Email</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12">
-                                <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" name="purpose_of_visit" id="purpose_of_visit" type="text" maxlength="60">
-                                    <label for="purpose_of_visit">
-                                        Purpose of visit <span class="required">*</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions noborder">
-                        <button type="submit" class="btn green">Submit</button>
-                        <button type="reset" class="btn default">Cancel</button>
-                    </div>
-                </form>
-            </div>
         </div>
-        <!-- END SAMPLE FORM PORTLET-->
     </div>
 </div>
 <!-- END PAGE CONTENT-->
+
 {{> copyright }}
  
 {{> sub_footer }}
@@ -273,6 +290,86 @@ var FormValidationMd = function() {
 jQuery(document).ready(function() {
     FormValidationMd.init();
 });
+</script>
+
+<script type="text/javascript">
+
+// $(document).ready(function() {
+    $('#result_section').hide();
+    
+    $('#search').click(function() {
+        var name = $("#search_name").val().trim();
+        if(name === "") { return; }
+        $('#result_frame').children().remove();
+        
+        $.ajax({
+            url: '{{bolt_root}}/api/db/visits/find',
+            type: 'POST',
+            data: JSON.stringify({ query: {}}),
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            beforeSend : function() {
+                $('#result_count').hide();
+                $( '#search_icon' ).fadeIn(function() {
+                    $( this ).html('<span>Searching </span> <img src="{{app_root}}/assets/pages/img/loading.gif">');
+                });  
+            },
+            success: function(response) { console.log(response);
+                if (response.code == 0) {
+                    var visitors = response.body;
+
+                    visitors = visitors.filter(function(visitor) {
+                        return visitor.displayName.toLowerCase().indexOf(name.toLowerCase()) > -1;
+                    });
+
+                    if(visitors.length > 0) {
+                        for (index = 0; index < visitors.length; index++) {
+                            var visitor = visitors[index];
+                            visitor.dateIn = new Date(visitor.dateIn);
+                            var result_row = '<tr id="result_row">' +
+                                                    '<td  width="20%">' + visitor.displayName + '</td>' +
+                                                    '<td  width="45%">' + visitor.purpose + '</td>' +
+                                                    '<td width="20%">' + visitor.dateIn.toDateString() + '</td>' +
+                                                    '<td width="15%">' +
+                                                        '<a href="payment-summary/' + visitor.visitorId + '" class="btn yellow-crusta btn-xs uppercase">' + 
+                                                            '<span class="hidden-xs">Proceed</span>' +
+                                                            ' <span><i class="fa fa-long-arrow-right"></i></span>' +
+                                                        '</a>' +
+                                                    '</td>' +
+                                                '</tr>';
+
+                            $('#result_section').show();
+                            $('#result_frame').append(result_row);
+
+                            $( '#search_icon' ).fadeOut(function() {
+                                var r = (visitors.length > 1) ? ' results' : ' result';
+                                $('#result_count').text(visitors.length + r + ' found').show();   
+                            });
+                        }
+                        
+                    }
+                    else {
+                        var result_row2 = '<tr id="result_row">' +
+                                                '<td colspan="4"> No result found! </td>' +
+                                            '</tr>';  
+
+                        $('#result_section').show();
+                        $( '#search_icon' ).fadeOut(function() {
+                            $('#result_count').hide();
+                            $('#result_frame').append(result_row2);
+                        });
+                         
+                    }
+                }
+                // $( '#search_icon' ).fadeOut();
+            },
+            error: function(xhr, status, err){
+                alert(xhr.responseText);
+            }
+        });
+    });
+// });
 </script>
 
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->

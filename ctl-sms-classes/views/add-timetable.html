@@ -1,5 +1,10 @@
 {{> header}}
 <!-- BEGIN PAGE LEVEL PLUGINS -->
+<link href="/public/metronic-for-bolt/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/metronic-for-bolt/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/metronic-for-bolt/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="/public/metronic-for-bolt/assets/global/plugins/clockface/css/clockface.css" rel="stylesheet" type="text/css" />
+
 <link href="/public/metronic-for-bolt/assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
 <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
 <!-- END PAGE LEVEL PLUGINS -->
@@ -8,24 +13,29 @@
 {{> nav }}
 
 <!-- BEGIN PAGE TITLE-->
-<!-- <div class="container-fluid">
-    <div class="col-md-12">
-        <h3 class="page-title"> Home</h3>
+<div class="container-fluid">
+    <div class="col-md-8 col-sm-8 col-xs-10 col-xs-6">
+        <h3 class="page-title"> Add Timetable </h3>
     </div>
-</div> -->
+    <div class="col-md-4 col-sm-4 col-xs-2 text-right">
+        <a href="{{app_root}}/class-settings" class="btn btn-default m-icon">
+            <i class="m-icon-swapleft"></i> <span class=" hidden-xs">Go Back</span>
+        </a>
+    </div>
+</div>
 <!-- END PAGE TITLE-->
 
 
 <!-- BEGIN PAGE CONTENT-->
-<div class="row">
+<div class="container-fluid">
     <div class="col-md-12">
         <div class="portlet light portlet-fit bordered calendar">
-            <!-- <div class="portlet-title">
+            <div class="portlet-title">
                 <div class="caption">
                     <i class=" icon-layers font-green"></i>
-                    <span class="caption-subject font-green sbold uppercase">timetable</span>
+                    <span class="caption-subject font-green sbold uppercase">Timetable for {{schClass.displayName}}</span>
                 </div>
-            </div> -->
+            </div>
             <div class="portlet-body">
                 <div class="row">
                     <div class="col-md-3 col-sm-12">
@@ -35,15 +45,48 @@
 
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group form-md-line-input">
-                                        <select name="classes" id="classes" class="form-control ">
-                                            {{#each classes}}
-                                            <option value="{{_id}}">{{displayName}}</option>
+                                        <select name="subject" id="subject" class="form-control ">
+                                            {{#each classSubjects}}
+                                            <option value="{{subjectId}}">{{subjectDisplayName}}</option>
                                             {{/each}}
                                         </select>
-                                        <label for="classes" class="control-label">Classes</label>
-                                    </div>                                
+                                        <label for="subject" class="control-label">Subject</label>
+                                    </div> 
+                                    
                                 </div>
 
+                                
+                                <br/>
+                                <label class="control-label col-md-12">Start</label>
+                                <div class="col-md-12 col-sm-12">
+                                
+                                    <div class="input-group date form_datetime">
+                                        <input id="start_time" type="text" size="16" readonly class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn default date-set" type="button">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    
+                                </div>
+                                <br/><br/><br/>
+
+                                <label class="control-label col-md-12">End</label>
+                                <div class="col-md-12 col-sm-12">
+
+                                <div class="input-group date form_datetime">
+                                        <input id="end_time" type="text" size="16" readonly class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn default date-set" type="button">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <br clear="all" /><br/>
+
+                                <input type="submit" value="Add Slot" class="btn green">
                             </form>
 
                             <hr/>
@@ -70,10 +113,16 @@
     <script src="/public/metronic-for-bolt/assets/global/plugins/moment.min.js" type="text/javascript"></script>
     <script src="/public/metronic-for-bolt/assets/global/plugins/fullcalendar/fullcalendar.js" type="text/javascript"></script>
     <script src="/public/metronic-for-bolt/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-    
+    <script src="/public/metronic-for-bolt/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+    <script src="/public/metronic-for-bolt/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+
+    <script src="/public/metronic-for-bolt/assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+
     <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
     <script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
- 
+    <script src="/public/metronic-for-bolt/assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+    <!-- END PAGE LEVEL PLUGINS -->
+
     <script type="text/javascript">
 
     function modifyDate(curr_date, curr_week){
@@ -92,6 +141,7 @@
         return start_date;
     }
 
+
     var AppCalendar = function() {
 
         return {
@@ -106,12 +156,10 @@
                     return;
                 }
 
-                var classId = $('#classes option:selected').val();
-
                 //get slots for selected class
                 var slots = [];
                 $.ajax({
-                    url:'{{bolt_root}}/api/db/timetable-slots/find?classId=' + classId,
+                    url:'{{bolt_root}}/api/db/timetable-slots/find?classId={{schClass._id}}',
                     type:'POST',   
                     data: JSON.stringify({app: 'ctl-sms-school-admin'}),             
                     dataType:'json',
@@ -168,19 +216,60 @@
 
             }
 
-        };
+    };
 
-    }();
+}();
 
 
 
 $(document).ready(function(){
 
-    AppCalendar.init();  
+    AppCalendar.init();
 
-    $('body').on('change','#classes',function(){
-        AppCalendar.init();
-    }); 
+    $('#form_schedule').on('submit',function(e){
+        e.preventDefault();
+        var slot = {
+            classId: '{{schClass._id}}',
+            classDisplayName: '{{schClass.displayName}}',
+            subjectId: $('#subject option:selected').val(),
+            subjectDisplayName: $('#subject option:selected').text(),
+        };
+
+        var start_time = $('#start_time').val();
+        slot.start = moment(start_time,'DD MMMM YYYY - HH:mm');
+
+        var end_time = $('#end_time').val();
+        slot.end = moment(end_time,'DD MMMM YYYY - HH:mm');
+
+        $.ajax({
+            url:'{{bolt_root}}/api/db/timetable-slots/insert',
+            type:'POST',   
+            data: JSON.stringify({app: 'ctl-sms-school-admin', object: slot}),             
+            dataType:'json',
+            contentType:'application/json',
+            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+            success:function(response){
+                if(response.code === 0) {
+                    swal({
+                        title: "Timetable Updated!",
+                        text: "Timetable for {{schClass.displayName}} has been updated.",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: true
+                    }, function(isConfirm){
+                        if (isConfirm) {
+                            //window.location.href="{{app_root}}/add-timetable/{{schClass._id}}";
+                            AppCalendar.init(); 
+                        }
+                    });
+                }
+            },
+            error:function(xhr,status,err){
+               alert(err);
+           }
+       });
+    })
+
 
 });
 

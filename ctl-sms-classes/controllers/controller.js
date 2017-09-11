@@ -45,6 +45,46 @@ var controller = {
 		});
 	},
 
+	getAddTimetable: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/find?classId=' + req.params.id, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {app: 'ctl-sms-school-admin'}}, 
+			function(error, response, body) {
+			var classSubjects = body.body; 
+
+			res.render('add-timetable', {
+				class_settings_menu: 'selected',
+				class_settings_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				classSubjects: classSubjects,
+				schClass: req.schClass
+			});		
+		});
+	},
+
+	getEditTimetable: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/find?classId=' + req.params.id, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {app: 'ctl-sms-school-admin'}}, 
+			function(error, response, body) {
+			var classSubjects = body.body; 
+
+			res.render('edit-timetable', {
+				class_settings_menu: 'selected',
+				class_settings_active: 'active',
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+				classSubjects: classSubjects,
+				schClass: req.schClass
+			});		
+		});
+	},
+
 	getAssignClassSubject: function(req, res){
 		request.post({
 			url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/find?classId=' + req.params.id, 

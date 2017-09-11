@@ -91,7 +91,7 @@
                                 <th> Start date </th>
                                 <th> End date </th>
                                 <th> Status </th>
-                                <th> Action </th>
+                                <th class="action"> Action </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,31 +146,39 @@
 <script type="text/javascript">
     $('#delete_btn').click(function(event) {
         event.preventDefault(); 
-        var names = $('input[type=checkbox]:checked').map(function() {
-            return $(this).val();
-        }).get();
-        
-        function deleteSession(index) {
-            if (index == -1) {
-                swal({
-                    title: "Delete Operation",
-                    text: "Delete operation terminated.",
-                    type: "warning",
-                    showCancelButton: false,
-                    closeOnConfirm: true
-                }, function(isConfirm){
-                    if (isConfirm) {
-                        window.location.href="{{app_root}}/view-sessions";
-                    }
-                });
-            } else if (index >= names.length) { //this is the end
-                //be sure something was deleted
-                if (names.length > 0) {
-                    //Sweet alert
+
+        if(!$('.checkboxes').is(':checked')) {
+            swal({
+                title: "No Selection!",
+                text: "Select at least one item",
+                type: "info",
+                showCancelButton: false,
+                closeOnConfirm: true
+            });
+            return;
+        }
+    
+        swal({
+            title: "Are you sure?",
+            text: "Proceed with delete operation?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }, function () {    
+
+            var names = $('input[type=checkbox]:checked').map(function() {
+                return $(this).val();
+            }).get();
+            
+            function deleteSession(index) {
+                if (index == -1) {
                     swal({
                         title: "Delete Operation",
-                        text: "Delete operation completed.",
-                        type: "success",
+                        text: "Delete operation terminated.",
+                        type: "warning",
                         showCancelButton: false,
                         closeOnConfirm: true
                     }, function(isConfirm){
@@ -178,67 +186,67 @@
                             window.location.href="{{app_root}}/view-sessions";
                         }
                     });
-                }
-            } else {
-                var name = names[index];
-                $.ajax({
-                    url: "{{bolt_root}}/api/db/sessions/remove?_id=" + name,
-                    type: 'POST',
-                    data: JSON.stringify({}),
-                    //processData: false,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                    success: function(response, status, xhr) {
-                        if(response.code === 0){
-                            deleteSession(++index);
-                        }
-                        else {
-                            swal({
-                                title: response.errorUserTitle,
-                                text: response.errorUserMessage,
-                                type: "error",
-                                showCancelButton: true,
-                                closeOnConfirm: true
-                            }, function(isConfirm){
-                                if (isConfirm) {
-                                    deleteSession(++index);
-                                }
-                                else {
-                                    deleteSession(-1);
-                                }
-                            });
-                        }
-                    }, 
-                    error: function(xhr, status, err){
-                        alert(xhr.responseText);
+                } else if (index >= names.length) { //this is the end
+                    //be sure something was deleted
+                    if (names.length > 0) {
+                        //Sweet alert
+                        swal({
+                            title: "Delete Operation",
+                            text: "Delete operation completed.",
+                            type: "success",
+                            showCancelButton: false,
+                            closeOnConfirm: true
+                        }, function(isConfirm){
+                            if (isConfirm) {
+                                window.location.href="{{app_root}}/view-sessions";
+                            }
+                        });
                     }
-                });
-            }
-        }
-
-        /*if (names.length == 0) {
-            sweetAlert("Delete Operation", "No student selected!", "info");
-        } else {
-            swal({
-                title: "Delete Operation",
-                text: "Delete selected students?",
-                type: "info",
-                showCancelButton: true,
-                closeOnConfirm: true
-            }, function(isConfirm){
-                if (isConfirm) {
-                    deleteSession(0);
+                } else {
+                    var name = names[index];
+                    $.ajax({
+                        url: "{{bolt_root}}/api/db/sessions/remove?_id=" + name,
+                        type: 'POST',
+                        data: JSON.stringify({}),
+                        //processData: false,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                        success: function(response, status, xhr) {
+                            if(response.code === 0){
+                                deleteSession(++index);
+                            }
+                            else {
+                                swal({
+                                    title: response.errorUserTitle,
+                                    text: response.errorUserMessage,
+                                    type: "error",
+                                    showCancelButton: true,
+                                    closeOnConfirm: true
+                                }, function(isConfirm){
+                                    if (isConfirm) {
+                                        deleteSession(++index);
+                                    }
+                                    else {
+                                        deleteSession(-1);
+                                    }
+                                });
+                            }
+                        }, 
+                        error: function(xhr, status, err){
+                            alert(xhr.responseText);
+                        }
+                    });
                 }
-            });
-        }*/
+            }
 
-        deleteSession(0);
+            deleteSession(0);
+        });
     });
 </script>
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="/public/metronic-for-bolt/assets/pages/scripts/table-datatables-managed.min.js" type="text/javascript"></script>
+<script src="/public/metronic-for-bolt/assets/pages/scripts/table-datatables-buttons.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 {{> footer }}

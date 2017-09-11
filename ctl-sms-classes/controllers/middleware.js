@@ -29,6 +29,19 @@ var middleware = {
 				}
 			});
 	},
+	checkForEditTimetablesPermission: function(req, res, next) {
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/checks/has-permission',
+			json: { app: controller.getAppName(), permission: 'edit-timetables', user: req.user.name }}, 
+			function(error, response, body) {
+				if (body.body.result) {
+					next();
+				}
+				else {
+					res.render('403');
+				}
+			});
+	},
 	checkForCreateClassesPermission: function(req, res, next) {
 		request.post({
 			url: process.env.BOLT_ADDRESS + '/api/checks/has-permission',

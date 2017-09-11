@@ -6,8 +6,6 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewGuardiansPermission, controller.getIndex);
 
-router.get('/403', controller.get403);
-
 router.get('/register-guardian', middleware.checkForCreateGuardiansPermission, controller.getRegisterGuardian);
 
 router.get('/view-guardians', middleware.checkForViewGuardiansPermission, controller.getViewGuardians);

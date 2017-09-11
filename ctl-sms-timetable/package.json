@@ -1,7 +1,7 @@
 {
   "name": "ctl-sms-timetable",
   "version": "1.0.0",
-  "description": "Campus Technologies Limited Student Management System",
+  "description": "Campus Technologies Limited Student Management System - Timetable Module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,16 +24,16 @@
       "icon-md": "assets/pages/img/icon-md.png"
     },
     "hooks": {
-      "bolt/app-starting": "/app-starting"
+      "bolt/app-starting": "hook/bolt/app-starting"
     },
-    "order": 1,
+    "order": 2,
     "public": ["assets"],
     "tags": ["timetable", "ctl", "ctl-sms", "ctl-sms-timetable", "ctl-sms-plugins"],
-    "collections": {
-      "timetable": "*"
-    },
     "dependencies": {
-      "ctl-sms-home": "*"
+      "metronic-for-bolt": "*",
+      "ctl-sms-home": "*",
+      "ctl-sms-classes": "*",
+      "ctl-sms-school-admin": "*"
     }
   },
   "author": "Campus Technologies Limited",
