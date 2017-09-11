@@ -1,0 +1,27 @@
+{{> header}}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="/public/metronic-for-bolt/assets/pages/css/error.min.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+{{> sub_header}}
+
+<div class="page-404-full-page" style="overflow: hidden; background-color: white !important;">
+    <div class="row">
+        <div class="col-md-12 page-404">
+            <div class="number font-blue error_icons"><i class="icon-info"></i></div>
+            <div class="details">
+                <h3>{{title}}</h3>
+                <h4 class="error_msg">{{message}}</h4>
+                <a href="#" onclick="window.history.back();" class="btn btn-default m-icon">
+                    <i class="m-icon-swapleft"></i> Go Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END PAGE CONTENT-->
+ 
+ {{> sub_footer }}
+
+ {{> footer }}

@@ -1,0 +1,62 @@
+{
+  "name": "ctl-sms-subjects-i-teach",
+  "version": "1.0.0",
+  "description": "Campus Technologies Limited Student Management System - Subjects I Teach Module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "^3.0.0"
+  },
+  "bolt": {
+    "displayName": "Subjects I Teach",
+    "main": "bolt-server.js",
+    "index": "/",
+    "system": true,
+    "extensions": {
+      "/attendance": "/",
+      "/scores": "/",
+      "/score": "/",
+      "/subjects": "/",
+      "/subject": "/"
+    },
+    "files": {
+      "icon": "assets/pages/img/icon.png",
+      "icon-md": "assets/pages/img/icon-md.png"
+    },
+    "order": 2,
+    "public": ["assets"],
+    "tags": ["attendance", "scores", "score", "subject", "subjects", "teach", "teacher", "ctl", "ctl-sms", "subjects-i-teach", "ctl-sms-plugins"],
+    "hooks": {
+      "bolt/app-starting": "/hook/bolt/app-starting"
+    },
+    "permissions": {
+      "edit-attendance": {
+        "displayName": "Permission to edit attendance records",
+        "description": "This grants the permission to edit attendance records"
+      },
+      "view-attendance": {
+        "displayName": "Permission to view attendance records",
+        "description": "This grants the permission to view attendance records"
+      },
+      "edit-scores": {
+        "displayName": "Permission to edit scores",
+        "description": "This grants the permission to edit scores"
+      },
+      "view-scores": {
+        "displayName": "Permission to view scores",
+        "description": "This grants the permission to view scores"
+      }
+    },
+    "dependencies": {
+      "metronic-for-bolt": "*",
+      "ctl-sms-home": "*",
+      "ctl-sms-school-admin": "*"
+    }
+  },
+  "author": "Campus Technologies Limited",
+  "license": "ISC"
+}
