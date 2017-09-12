@@ -118,6 +118,28 @@
           }
         }
       },
+      "attendance": {
+        "guests": "*",
+        "tenants": ["bolt", "ctl-sms-subjects-i-teach"],
+        "options": {
+          "validator": {
+            "$and": [
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"subjectId": { "$type": "string" }},
+              {"subjectDisplayName": { "$type": "string" }},
+              {"studentId": { "$type": "string" }},
+              {"studentDisplayName": { "$type": "string" }},
+              {"sessionId": { "$type": "string" }},
+              {"sessionDisplayName": { "$type": "string" }},
+              {"termId": { "$type": "string" }},
+              {"termDisplayName": { "$type": "string" }},
+              {"date": { "$type": "date" }},
+              {"type": { "$in": ["class", "subject"] }}
+            ]
+          }
+        }
+      },
       "student-subjects": {
         "guests": "*",
         "tenants": ["bolt", "ctl-sms-subjects-i-teach"],

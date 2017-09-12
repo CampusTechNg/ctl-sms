@@ -70,38 +70,69 @@ var controller = {
 	getMarkAttendance: function(req, res){
 		if (req.currentSession && req.currentTerm) {
 			request.post({
-				url: process.env.BOLT_ADDRESS + '/api/db/class-students/find?_id=' + req.params.id,
+				url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/findone?_id=' + req.params.id,
 				headers: {'X-Bolt-App-Token': apptoken},
 				json: {app: 'ctl-sms-school-admin'}
 			}, function(error, response, body) {
 				var classSubject = body.body;
 
 				if (classSubject) {
+					var minDate = new Date();
+					minDate.setHours(0); minDate.setMinutes(0); minDate.setSeconds(0);
+					var maxDate = new Date();
+					maxDate.setHours(23); maxDate.setMinutes(59); maxDate.setSeconds(59);
 					request.post({
-						url: process.env.BOLT_ADDRESS + '/api/db/student-subjects/find?classId=' + classSubject.classId + 
-						'&subjectId=' + classSubject.subjectId + '&sessionId=' + req.currentSession._id + 
-						'&termId=' + req.currentTerm._id,
+						url: process.env.BOLT_ADDRESS + '/api/db/attendance/find',
 						headers: {'X-Bolt-App-Token': apptoken},
-						json: {app: 'ctl-sms-school-admin'}
+						json: {app: 'ctl-sms-school-admin', query: {
+							type: 'subject',
+							classId: classSubject.classId,
+							subjectId: classSubject.subjectId,
+							sessionId: req.currentSession._id,
+							termId: req.currentTerm._id,
+							date: {'$gte': minDate, '$lte': maxDate}
+						}}
 					}, function(error2, response2, body2) {
-						var studentSubjects = body2.body;
-						
-						studentSubjects.forEach(function(ss) {
-							ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0);
-						});
+						var attendance = body2.body || [];
 
-						res.render('score-students', {
-							score_menu: 'selected',
-							score_active: 'active',
-							app_root: req.app_root,
-							app_token: apptoken,
-							bolt_root: process.env.BOLT_ADDRESS,
+						if (attendance.length > 0) {
+							res.render('attendance', {
+								score_menu: 'selected',
+								score_active: 'active',
+								app_root: req.app_root,
+								app_token: apptoken,
+								bolt_root: process.env.BOLT_ADDRESS,
 
-							classSubject: classSubject,
-							currentSession: req.currentSession,
-							currentTerm: req.currentTerm,
-							studentSubjects: studentSubjects
-						});
+								classSubject: classSubject,
+								currentSession: req.currentSession,
+								currentTerm: req.currentTerm,
+								arrayObjects: attendance
+							});
+						}
+						else {
+							request.post({
+								url: process.env.BOLT_ADDRESS + '/api/db/student-subjects/find?classId=' + classSubject.classId + 
+								'&subjectId=' + classSubject.subjectId + '&sessionId=' + req.currentSession._id + 
+								'&termId=' + req.currentTerm._id,
+								headers: {'X-Bolt-App-Token': apptoken},
+								json: {app: 'ctl-sms-school-admin'}
+							}, function(error3, response3, body3) {
+								var studentSubjects = body3.body;
+
+								res.render('attendance', {
+									score_menu: 'selected',
+									score_active: 'active',
+									app_root: req.app_root,
+									app_token: apptoken,
+									bolt_root: process.env.BOLT_ADDRESS,
+
+									classSubject: classSubject,
+									currentSession: req.currentSession,
+									currentTerm: req.currentTerm,
+									arrayObjects: studentSubjects
+								});
+							});
+						}
 					});
 				}
 				else {
@@ -144,7 +175,7 @@ var controller = {
 							ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0);
 						});
 
-						res.render('score-students', {
+						res.render('scores', {
 							score_menu: 'selected',
 							score_active: 'active',
 							app_root: req.app_root,

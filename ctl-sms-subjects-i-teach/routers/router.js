@@ -6,9 +6,9 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewScoresPermission, controller.getIndex);
 
-router.get('/mark-attendance/:id', middleware.checkForEditAttendancePermission, controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getMarkAttendance);
+router.get('/attendance/:id', middleware.checkForEditAttendancePermission, controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getMarkAttendance);
 
-router.get('/score-students/:id', middleware.checkForEditScoresPermission, controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getScoreStudents);
+router.get('/scores/:id', middleware.checkForEditScoresPermission, controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getScoreStudents);
 
 router.post('/hook/bolt/app-starting', controller.postHookBoltAppStarting);
 
