@@ -1,0 +1,191 @@
+{{> header}}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<div class="container-fluid">
+    <div class="col-md-8 col-sm-8">
+        <h3 class="page-title"> Score Sheet</h3>
+    </div>
+    <div class="col-md-4 col-sm-4 text-right hidden-xs">
+        <a href="{{app_root}}/" class="btn btn-default m-icon">
+            <i class="m-icon-swapleft"></i> Go Back
+        </a>
+    </div>
+</div>
+<!-- END PAGE TITLE-->
+
+{{#if outdatedSubjectRecords}}
+<!-- BEGIN OUTDATED SUBJECTS-->
+<div class="container-fluid hidden-print" style="color:rgba(255, 0, 0, 1)">
+    <div class="col-md-12 col-sm-12">
+        <h4>The academic records for the following subjects may be outdated</h4>
+        <ul>
+        {{#each outdatedSubjectRecords}}
+        <li>{{subjectDisplayName}}</li>
+        {{/each}}
+        </ul>
+        <p>Contact the appropriate subject teachers to update their academic records</p>
+    </div>
+</div>
+<!-- END OUTDATED SUBJECTS-->
+{{/if}}
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="container-fluid">
+    <div class="col-md-12 ">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered" id="result_section">
+            <div class="portlet-title">
+                <div class="caption font-green">
+                    <i class="icon-doc font-green"></i>
+                    <span class="caption-subject bold uppercase"> Score Sheet - {{schClass.displayName}}</span>
+                </div>
+                {{#if classRecord}}
+                <div class="actions">
+                    {{#if classRecord.outdated}}
+                    <div class="btn-group">
+                        <span class="hidden-print" style="color:rgba(255, 0, 0, 1)">Academic record may be outdated, and needs to be reprocessed.</span>
+                    </div>
+                    {{/if}}
+                    <div class="btn-group">
+                        {{#if classRecord.locked}}
+                        <a class="btn green-haze hidden-print uppercase print-btn" onclick="lock(false)">Unlock Record</a>
+                        {{else}}
+                        <a class="btn green-haze hidden-print uppercase print-btn" onclick="lock(true)">Lock Record</a>
+                        {{/if}}
+                    </div>
+                    {{#if classRecord.locked}}
+                    {{else}}
+                    <div class="btn-group">
+                        <a class="btn green-haze hidden-print uppercase print-btn" id="process">Process Record</a>
+                    </div>
+                    {{/if}}
+                    <div class="btn-group">
+                        <a class="btn green-haze hidden-print uppercase print-btn" onclick="javascript:window.print();">Print</a>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+            {{#if classRecord}}
+            <span class="hidden-print">Last processed date: {{classRecord.dateUpdated}}</span>
+            <div class="row invoice-cust-add">
+                <div class="col-xs-4">
+                    <h4 class="invoice-title uppercase">Average Score</h4>
+                    <p class="invoice-desc">{{classRecord.averageScore}}</p>
+                </div>
+                <div class="col-xs-4">
+                    <h4 class="invoice-title uppercase">Average %</h4>
+                    <p class="invoice-desc">{{classRecord.averagePercentage}}%</p>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="table-container">
+                    <table class="table table-light">
+                        <thead>
+                            <tr>
+                                <th>Student name</th>
+                                <th>Total</th>
+                                <th>Total Obtainable</th>
+                                <th>%age</th>
+                                <th>Grade</th>
+                                <th>Position</th>
+                                <th class="hidden-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each classRecord.records}}
+                            <tr class="score_row" id="{{studentId}}">
+                                <td>{{studentDisplayName}}</td>
+                                <td>{{totalScore}}</td>
+                                <td>{{totalScoreObtainable}}</td>
+                                <td>{{percentage}}%</td>
+                                <td>{{grade}}</td>
+                                <td>{{position}}</td>
+                                <td class="hidden-print">
+                                    <a href="{{../ app_root}}/report-card/{{../schClass._id}}/{{studentId}}" class="btn green btn-sm btn-outline hidden-print">Report Card <span><i class="fa fa-file-o"></i></span></a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            {{else}}
+            <div class="container-fluid">
+                <div class="col-md-12 col-sm-12">
+                    <div class="note note-success">
+                        <h4 class="block">No academic record.</h4>
+                        <p> 
+                            No academic record has been processed for this class.
+                        </p>
+                        <div class="btn-group">
+                            <button class="btn green" id="process">Process Academic Record</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>  
+    <!-- <div class="col-xs-12">
+        <a class="btn btn-lg green-haze hidden-print uppercase print-btn" onclick="javascript:window.print();">Print</a>
+    </div>  --> 
+</div>
+<!-- END PAGE CONTENT-->
+{{> copyright }}
+ 
+{{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+<script type="text/javascript">
+var schClass = {{{json schClass}}};
+
+function lock(value) {
+    $.ajax({
+        url: '{{bolt_root}}/api/db/academic-records/update?_id={{classRecord._id}}',
+        type: 'POST',
+        data: JSON.stringify({ app: 'ctl-sms-school-admin', values: {locked: value} }),
+        dataType: 'json',
+        contentType: 'application/json',
+        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+        success: function(response) {
+            window.location.href="{{app_root}}/class-record/" + schClass._id;
+        },
+        error: function(xhr, status, err){
+            alert(xhr.responseText);
+        }
+    });
+}
+
+$(document).on('click', '#process', function(){
+    $.ajax({
+        url: '{{bolt_root}}/sms-api/process-result/' + schClass._id,
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+        success: function(response) {
+            window.location.href="{{app_root}}/class-record/" + schClass._id;
+        },
+        error: function(xhr, status, err){
+            alert(xhr.responseText);
+        }
+    });
+});
+</script>
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+ 
+ {{> footer }}

@@ -1,0 +1,48 @@
+{
+  "name": "ctl-sms-class-teachers",
+  "version": "1.0.0",
+  "description": "Campus Technologies Limited Student Management System - Class Teacher Module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "^3.0.0"
+  },
+  "bolt": {
+    "displayName": "Class Teacher",
+    "main": "bolt-server.js",
+    "index": "/",
+    "system": true,
+    "extensions": {
+      "/class-teachers": "/",
+      "class-teacher": "/"
+    },
+    "files": {
+      "icon": "assets/pages/img/icon.png",
+      "icon-md": "assets/pages/img/icon-md.png"
+    },
+    "order": 1,
+    "public": ["assets"],
+    "tags": ["class-teachers", "class-teacher", "ctl", "ctl-sms", "ctl-sms-class-teachers", "ctl-sms-class-teacher", "ctl-sms-plugins"],
+    "hooks": {
+      "bolt/app-starting": "/hook/bolt/app-starting",
+      "bolt/app-collection-inserted": "/hook/bolt/app-collection-inserted",
+      "bolt/app-collection-removed": "/hook/bolt/app-collection-removed"
+    },
+    "permissions": {
+      "view-students": {
+        "displayName": "Permission to view students in a particular class",
+        "description": "This grants the permission to view students in a particular class"
+      }
+    },
+    "dependencies": {
+      "metronic-for-bolt": "*",
+      "ctl-sms-home": "*"
+    }
+  },
+  "author": "Campus Technologies Limited",
+  "license": "ISC"
+}
