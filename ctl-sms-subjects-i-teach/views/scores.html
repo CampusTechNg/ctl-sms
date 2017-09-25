@@ -55,22 +55,22 @@
                                 <td>{{studentDisplayName}}</td>
                                 <td>
                                     <div class="portlet-input input-inline input-xsmall">
-                                        <input type="number" min="0" max=""  value="{{score1}}" class="form-control" id="score_1">
+                                        <input type="number" min="0" max="{{../scoresTemplate.score1}}"  value="{{score1}}" class="form-control" id="score_1">
                                     </div>
                                 </td>
                                 <td>
                                     <div class="portlet-input input-inline input-xsmall">
-                                        <input type="number" min="0" max="" class="form-control" value="{{score2}}" id="score_2">
+                                        <input type="number" min="0" max="{{../scoresTemplate.score2}}" class="form-control" value="{{score2}}" id="score_2">
                                     </div>
                                 </td>
                                 <td>
                                     <div class="portlet-input input-inline input-xsmall">
-                                        <input type="number" min="0" max="" class="form-control" value="{{score3}}" id="score_3">
+                                        <input type="number" min="0" max="{{../scoresTemplate.score3}}" class="form-control" value="{{score3}}" id="score_3">
                                     </div>
                                 </td>
                                 <td>
                                     <div class="portlet-input input-inline input-xsmall">
-                                        <input type="number" min="0" max="" class="form-control" value="{{totalScore}}" readonly id="total_score">
+                                        <input type="number" min="0" max="100" class="form-control" value="{{totalScore}}" readonly id="total_score">
                                     </div>
                                 </td>
                             </tr>
@@ -128,33 +128,102 @@ $(document).on('change', '.score_row', function(){
 
 $(document).on('click', '#submit', function(){
     var classSubject = {{{json classSubject}}};
-    //update scores: 
-    $('.score_row').each(function(index, elem) {
-        var studentId = $(elem).prop('id');
-        var score1 = parseFloat($(elem).find('input[id=score_1]').prop('value'));
-        var score2 = parseFloat($(elem).find('input[id=score_2]').prop('value'));
-        var score3 = parseFloat($(elem).find('input[id=score_3]').prop('value'));
 
-        $.ajax({
-            url: '{{bolt_root}}/api/db/student-subjects/update?classId=' + classSubject.classId +
-            '&subjectId=' + classSubject.subjectId + '&studentId=' + studentId + 
-            '&sessionId={{currentSession._id}}&termId={{currentTerm._id}}',
-            type: 'POST',
-            data: JSON.stringify({ app: 'ctl-sms-school-admin', values: {score1: score1, score2: score2, score3: score3} }),
-            dataType: 'json',
-            contentType: 'application/json',
-            headers: {'X-Bolt-App-Token': '{{app_token}}'},
-            success: function(response) {
-                if (response.code === 0) {
-                    $(elem).prop({'style': 'background-color:rgba(192, 237, 241, 0.7)'});
-                } else  {
-                    $(elem).prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
-                }
-            },
-            error: function(xhr, status, err){
-                $(elem).prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+    $.ajax({
+        url: '{{bolt_root}}/api/db/academic-records/findone?type=class&classId=' + classSubject.classId +
+        '&sessionId={{currentSession._id}}&termId={{currentTerm._id}}',
+        type: 'POST',
+        data: JSON.stringify({ app: 'ctl-sms-school-admin' }),
+        dataType: 'json',
+        contentType: 'application/json',
+        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+        success: function(response) {
+            var classRecord = response.body;
+            if (classRecord && classRecord.locked) {
+                sweetAlert("", 
+                    "Academic record for the class " + classRecord.classDisplayName + " is locked and cannot be updated.\n" +
+                    "Please contact the class teacher or an authorized personnel to unlock the class if you must update the scores here.", 
+                    "error");
+                return;
             }
-        });
+            else {
+                //update scores: 
+                $('.score_row').each(function(index, elem) {
+                    var studentId = $(elem).prop('id');
+                    var score1 = parseFloat($(elem).find('input[id=score_1]').prop('value'));
+                    var score2 = parseFloat($(elem).find('input[id=score_2]').prop('value'));
+                    var score3 = parseFloat($(elem).find('input[id=score_3]').prop('value'));
+
+                    var total = score1 + score2 + score3;
+                    if (total >= 0 && total <= 100) {
+                        $.ajax({
+                            url: '{{bolt_root}}/api/db/student-subjects/update?classId=' + classSubject.classId +
+                            '&subjectId=' + classSubject.subjectId + '&studentId=' + studentId + 
+                            '&sessionId={{currentSession._id}}&termId={{currentTerm._id}}',
+                            type: 'POST',
+                            data: JSON.stringify({ app: 'ctl-sms-school-admin', values: {score1: score1, score2: score2, score3: score3} }),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                            success: function(response) {
+                                if (response.code === 0) {
+                                    $(elem).prop({'style': 'background-color:rgba(192, 237, 241, 0.7)'});
+                                } else  {
+                                    $(elem).prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                                }
+                            },
+                            error: function(xhr, status, err){
+                                $(elem).prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                            }
+                        });
+                    }
+                    else {
+                        $(elem).prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                    }
+                });
+
+                //update class record
+                if (classRecord) {
+                    $.ajax({
+                        url: '{{bolt_root}}/api/db/academic-records/update?_id=' + classRecord._id,
+                        type: 'POST',
+                        data: JSON.stringify({ app: 'ctl-sms-school-admin', values: {outdated: true} }),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                        success: function(response) {}
+                    });
+                }
+
+                //update subject record
+                $.ajax({
+                    url: '{{bolt_root}}/api/db/academic-records/findone?type=subject&classId=' + classSubject.classId +
+                    '&subjectId=' + classSubject.subjectId +
+                    '&sessionId={{currentSession._id}}&termId={{currentTerm._id}}',
+                    type: 'POST',
+                    data: JSON.stringify({ app: 'ctl-sms-school-admin' }),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                    success: function(response) {
+                        var subjectRecord = response.body;
+                        if (subjectRecord) {
+                            $.ajax({
+                                url: '{{bolt_root}}/api/db/academic-records/update?_id=' + subjectRecord._id,
+                                type: 'POST',
+                                data: JSON.stringify({ app: 'ctl-sms-school-admin', values: {outdated: true} }),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                success: function(response) {}
+                            });
+                        }
+                    }
+                });
+            }
+        },
+        error: function(xhr, status, err){
+        }
     });
 });
 </script>

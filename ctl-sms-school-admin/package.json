@@ -27,45 +27,70 @@
     "public": ["assets"],
     "tags": ["school-admin", "ctl", "ctl-sms", "ctl-sms-school-admin", "ctl-sms-plugins"],
     "collections": {
-      "school-profile": {
+      "academic-records": {
         "guests": "*",
+        "tenants": ["bolt", "ctl-sms-class-teachers", "ctl-sms-subjects-i-teach"],
         "options": {
           "validator": {
             "$and": [
-              {"app": { "$type": "string" }},
-              {"displayName": { "$type": "string" }},
-              {"address": { "$type": "string" }},
-              {"email": { "$type": "string" }},
-              {"logo": { "$type": "string" }},
-              {"phone": { "$type": "string" }},
-              {"website": { "$type": "string" }}
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"subjectId": { "$type": "string" }},
+              {"subjectDisplayName": { "$type": "string" }},
+              {"averageScore": { "$type": "number" }},
+              {"lowestScore": { "$type": "number" }},
+              {"highestScore": { "$type": "number" }},
+              {"averagePercentage": { "$type": "number" }},
+              {"lowestPercentage": { "$type": "number" }},
+              {"highestPercentage": { "$type": "number" }},
+              {"sessionId": { "$type": "string" }},
+              {"sessionDisplayName": { "$type": "string" }},
+              {"termId": { "$type": "string" }},
+              {"termDisplayName": { "$type": "string" }},
+              {"dateUpdated": { "$type": "date" }},
+              {"type": { "$in": ["class", "subject"] }},
+              {"locked": { "$type": "bool" }},
+              {"outdated": { "$type": "bool" }},
+              {"records": { "$type": "object" }}
             ]
           }
         }
       },
-      "sessions": {
+      "attendance": {
         "guests": "*",
+        "tenants": ["bolt", "ctl-sms-subjects-i-teach"],
         "options": {
           "validator": {
             "$and": [
-              {"displayName": { "$type": "string" }},
-              {"begin": { "$type": "date" }},
-              {"end": { "$type": "date" }},
-              {"isCurrent": { "$type": "bool" }}
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"subjectId": { "$type": "string" }},
+              {"subjectDisplayName": { "$type": "string" }},
+              {"studentId": { "$type": "string" }},
+              {"studentDisplayName": { "$type": "string" }},
+              {"sessionId": { "$type": "string" }},
+              {"sessionDisplayName": { "$type": "string" }},
+              {"termId": { "$type": "string" }},
+              {"termDisplayName": { "$type": "string" }},
+              {"date": { "$type": "date" }},
+              {"type": { "$in": ["class", "subject"] }}
             ]
           }
         }
       },
-      "terms": {
+      "class-students": {
         "guests": "*",
+        "tenants": ["bolt"],
         "options": {
           "validator": {
             "$and": [
-              {"displayName": { "$type": "string" }},
-              {"begin": { "$type": "date" }},
-              {"end": { "$type": "date" }},
-              {"isCurrent": { "$type": "bool" }},
-              {"sessionId": { "$type": "string" }}
+              {"classId": { "$type": "string" }},
+              {"classDisplayName": { "$type": "string" }},
+              {"studentId": { "$type": "string" }},
+              {"studentDisplayName": { "$type": "string" }},
+              {"sessionId": { "$type": "string" }},
+              {"sessionDisplayName": { "$type": "string" }},
+              {"dateCreated": { "$type": "date" }}
             ]
           }
         }
@@ -101,41 +126,57 @@
           }
         }
       },
-      "class-students": {
+      "grades": {
         "guests": "*",
         "tenants": ["bolt"],
         "options": {
           "validator": {
             "$and": [
-              {"classId": { "$type": "string" }},
-              {"classDisplayName": { "$type": "string" }},
-              {"studentId": { "$type": "string" }},
-              {"studentDisplayName": { "$type": "string" }},
-              {"sessionId": { "$type": "string" }},
-              {"sessionDisplayName": { "$type": "string" }},
-              {"dateCreated": { "$type": "date" }}
+              {"label": { "$type": "string" }},
+              {"max": { "$type": "number" }},
+              {"remark": { "$type": "string" }}
             ]
           }
         }
       },
-      "attendance": {
+      "school-profile": {
         "guests": "*",
-        "tenants": ["bolt", "ctl-sms-subjects-i-teach"],
         "options": {
           "validator": {
             "$and": [
-              {"classId": { "$type": "string" }},
-              {"classDisplayName": { "$type": "string" }},
-              {"subjectId": { "$type": "string" }},
-              {"subjectDisplayName": { "$type": "string" }},
-              {"studentId": { "$type": "string" }},
-              {"studentDisplayName": { "$type": "string" }},
-              {"sessionId": { "$type": "string" }},
-              {"sessionDisplayName": { "$type": "string" }},
-              {"termId": { "$type": "string" }},
-              {"termDisplayName": { "$type": "string" }},
-              {"date": { "$type": "date" }},
-              {"type": { "$in": ["class", "subject"] }}
+              {"app": { "$type": "string" }},
+              {"displayName": { "$type": "string" }},
+              {"address": { "$type": "string" }},
+              {"email": { "$type": "string" }},
+              {"logo": { "$type": "string" }},
+              {"phone": { "$type": "string" }},
+              {"website": { "$type": "string" }}
+            ]
+          }
+        }
+      },
+      "scores-template": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"app": { "$type": "string" }},
+              {"score1": { "$type": "number" }},
+              {"score2": { "$type": "number" }},
+              {"score3": { "$type": "number" }}
+            ]
+          }
+        }
+      },
+      "sessions": {
+        "guests": "*",
+        "options": {
+          "validator": {
+            "$and": [
+              {"displayName": { "$type": "string" }},
+              {"begin": { "$type": "date" }},
+              {"end": { "$type": "date" }},
+              {"isCurrent": { "$type": "bool" }}
             ]
           }
         }
@@ -163,14 +204,16 @@
           }
         }
       },
-      "grades": {
+      "terms": {
         "guests": "*",
-        "tenants": ["bolt"],
         "options": {
           "validator": {
             "$and": [
-              {"label": { "$type": "string" }},
-              {"max": { "$type": "number" }}
+              {"displayName": { "$type": "string" }},
+              {"begin": { "$type": "date" }},
+              {"end": { "$type": "date" }},
+              {"isCurrent": { "$type": "bool" }},
+              {"sessionId": { "$type": "string" }}
             ]
           }
         }
@@ -268,9 +311,42 @@
       "ctl-sms-subjects": "*"
     },
 
+    "$sample-academic-records": {
+      "type": "subject",
+      "classId": "590f36886b8a0421c83084fa",
+      "classDisplayName": "JSS 1",
+      "subjectId": "590f36886b8a0421c83084fb",
+      "subjectDisplayName": "Mathematics",
+      "sessionId": "590f36886b8a0421c83084fc",
+      "sessionDisplayName": "2017/2018",
+      "termId": "590f36886b8a0421c83084fd",
+      "termDisplayName": "1st Term",
+      "highestScore": 100,
+      "lowestScore": 10,
+      "averageScore": 50,
+      "highestPercentage": 100,
+      "lowestPercentage": 10,
+      "averagePercentage": 50,
+      "locked": false,
+      "outdated": false,
+      "dateUpdated": "2017-08-24T15:15:16.606Z",
+      "records": [{
+        "studentId": "590f36886b8a0421c83084fe",
+        "studentDisplayName": "Franklin Chieze",
+        "score1": 20,
+        "score2": 20,
+        "score3": 60,
+        "totalScore": 100,
+        "totalScoreObtainable": 100,
+        "percentage": 100,
+        "grade": "A",
+        "remark": "Excellent"
+      }]
+    },
     "$comments": [
       "'school-profile'.app is always set to 'ctl-sms-school-admin'",
-      "The reason 'student-subjects'.scores is set to string and not array is: https://docs.mongodb.com/manual/reference/operator/query/type/#document-querying-by-array-type"
+      "'scores-template'.app is always set to 'ctl-sms-school-admin'",
+      "The reason 'academic-records'.records is set to object and not array is: https://docs.mongodb.com/manual/reference/operator/query/type/#document-querying-by-array-type"
     ]
   },
   "author": "Campus Technologies Limited",

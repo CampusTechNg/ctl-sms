@@ -175,7 +175,66 @@ var controller = {
 							ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0);
 						});
 
-						res.render('scores', {
+						request.post({
+							url: process.env.BOLT_ADDRESS + '/api/db/scores-template/findone?app=ctl-sms-school-admin', 
+							headers: {'X-Bolt-App-Token': apptoken},
+							json: {app: 'ctl-sms-school-admin'}}, 
+							function(error, response, body) {
+								var scoresTemplate = body.body;
+
+								res.render('scores', {
+									score_menu: 'selected',
+									score_active: 'active',
+									app_root: req.app_root,
+									app_token: apptoken,
+									bolt_root: process.env.BOLT_ADDRESS,
+
+									classSubject: classSubject,
+									currentSession: req.currentSession,
+									currentTerm: req.currentTerm,
+									studentSubjects: studentSubjects,
+									scoresTemplate: scoresTemplate
+								});
+							});
+					});
+				}
+				else {
+					res.redirect(req.app_root + '/404');
+				}
+			});
+		}
+		else {
+			res.render('error', {
+				app_root: req.app_root,
+				app_token: apptoken,
+				bolt_root: process.env.BOLT_ADDRESS,
+
+				title: 'Oops!',
+				message: 'No current term or session'
+			});
+		}
+	},
+
+	getSubjectRecord: function(req, res){
+		if (req.currentSession && req.currentTerm) {
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/findone?_id=' + req.params.id,
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {app: 'ctl-sms-school-admin'}
+			}, function(error, response, body) {
+				var classSubject = body.body;
+
+				if (classSubject) {
+					request.post({
+						url: process.env.BOLT_ADDRESS + '/api/db/academic-records/findone?type=subject' + 
+						'&classId=' + classSubject.classId + '&subjectId=' + classSubject.subjectId + 
+						'&sessionId=' + req.currentSession._id + '&termId=' + req.currentTerm._id,
+						headers: {'X-Bolt-App-Token': apptoken},
+						json: {app: 'ctl-sms-school-admin'}
+					}, function(error2, response2, body2) {
+						var subjectRecord = body2.body;
+
+						res.render('subject-record', {
 							score_menu: 'selected',
 							score_active: 'active',
 							app_root: req.app_root,
@@ -185,7 +244,7 @@ var controller = {
 							classSubject: classSubject,
 							currentSession: req.currentSession,
 							currentTerm: req.currentTerm,
-							studentSubjects: studentSubjects
+							subjectRecord: subjectRecord
 						});
 					});
 				}

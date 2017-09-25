@@ -28,6 +28,11 @@ router.get('/edit-grade/:id', middleware.checkForEditGradesPermission, controlle
 
 router.get('/view-grades', middleware.checkForViewGradesPermission, controller.getViewGrades);
 
+router.get('/edit-scores', /*middleware.checkForCreateGradesPermission,*/ controller.getEditScores);
+
+router.get('/scores', /*middleware.checkForCreateGradesPermission,*/ controller.getScores);
+
+
 //------hooks
 router.post('/hook/bolt/app-collection-inserted', controller.postHookBoltAppCollectionInserted);
 

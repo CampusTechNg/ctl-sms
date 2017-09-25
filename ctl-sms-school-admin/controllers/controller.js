@@ -59,8 +59,8 @@ var controller = {
 
 	getCreateGrade: function(req, res){
 		res.render('create-grade', {
-			score_grade_menu: 'selected',
-			score_grade_active: 'active',
+			view_grades_menu: 'selected',
+			view_grades_active: 'active',
 			bolt_root: process.env.BOLT_ADDRESS,
 			app_root: req.app_root,
 			app_token: apptoken
@@ -106,6 +106,26 @@ var controller = {
 			});
 	},
 
+	getEditScores: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/scores-template/findone?app=' + appname, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+				var scores = body.body;
+
+				res.render('edit-scores', {
+					scores_menu: 'selected',
+					scores_active: 'active',
+					appname: appname,
+					app_root: req.app_root,
+					app_token: apptoken,
+					bolt_root: process.env.BOLT_ADDRESS,
+					scores: scores
+				});
+			});
+	},
+
 	getEditSession: function(req, res){
 		request.post({
 			url: process.env.BOLT_ADDRESS + '/api/db/sessions/findone?_id=' + req.params.id, 
@@ -146,8 +166,8 @@ var controller = {
 
 	getNewSession: function(req, res){
 		res.render('new-session', {
-			new_session_menu: 'selected',
-			new_session_active: 'active',
+			view_sessions_menu: 'selected',
+			view_sessions_active: 'active',
 			app_root: req.app_root,
 			app_token: apptoken,
 			bolt_root: process.env.BOLT_ADDRESS
@@ -198,6 +218,26 @@ var controller = {
 					app_token: apptoken,
 					bolt_root: process.env.BOLT_ADDRESS,
 					profile: profile
+				});
+			});
+	},
+
+	getScores: function(req, res){
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/scores-template/findone?app=' + appname, 
+			headers: {'X-Bolt-App-Token': apptoken},
+			json: {}}, 
+			function(error, response, body) {
+				var scores = body.body;
+
+				res.render('scores', {
+					scores_menu: 'selected',
+					scores_active: 'active',
+					appname: appname,
+					app_root: req.app_root,
+					app_token: apptoken,
+					bolt_root: process.env.BOLT_ADDRESS,
+					scores: scores
 				});
 			});
 	},

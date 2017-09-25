@@ -50,14 +50,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 25%"> Student name </th>
-                                <th style="width: 25%"> 
-                                    Present - Mark all
-                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" />
-                                        <span></span>
-                                    </label>
-                                    
-                                </th>
+                                <th style="width: 15%"> Present </th>
                                 <th style="width: 35%"> Remark </th>
                             </tr>
                         </thead>
@@ -74,7 +67,7 @@
                                 </td>
                                 <td>
                                     <div class="portlet-input input-inline input-medium">
-                                        <input type="text" class="form-control" id="remark" value="{{remark}}">
+                                        <input type="text" id="remark" value="{{remark}}">
                                     </div>
                                 </td>
                             </tr>
@@ -113,11 +106,7 @@
 
     //Select all checkboxes that are NOT disabled
     $('.group-checkable').on('click', function() {
-       // $('#present:enabled').prop('checked', this.checked);
-       $('#present:enabled').prop('checked', this.checked);
-       $('.bootstrap-switch').addClass('bootstrap-switch-on');
-       $('.bootstrap-switch-container').prop('style', 'margin-left:0px');
-
+       $('#subject_id:enabled').prop('checked', this.checked);
     });
 
     var classSubject = {{{json classSubject}}};

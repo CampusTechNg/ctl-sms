@@ -1,0 +1,150 @@
+{{> header}}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="/public/bolt-ui-sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+
+{{> sub_header}}
+
+{{> nav }}
+
+<!-- BEGIN PAGE TITLE-->
+<div class="container-fluid">
+    <div class="col-md-8 col-sm-8">
+        <h3 class="page-title"> Score Sheet</h3>
+    </div>
+    <div class="col-md-4 col-sm-4 text-right hidden-xs">
+        <a href="{{app_root}}/" class="btn btn-default m-icon">
+            <i class="m-icon-swapleft"></i> Go Back
+        </a>
+    </div>
+</div>
+<!-- END PAGE TITLE-->
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="container-fluid">
+    <div class="col-md-12 ">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered" id="result_section">
+            <div class="portlet-title">
+                <div class="caption font-green">
+                    <i class="icon-doc font-green"></i>
+                    <span class="caption-subject bold uppercase"> Score Sheet - {{classSubject.subjectDisplayName}}</span>
+                </div>
+                {{#if subjectRecord}}
+                <div class="actions">
+                    {{#if subjectRecord.outdated}}
+                    <div class="btn-group">
+                        <span class="hidden-print" style="color:rgba(255, 0, 0, 1)">Academic record may be outdated, and needs to be reprocessed.</span>
+                    </div>
+                    {{/if}}
+                    <div class="btn-group">
+                        <a class="btn green-haze hidden-print uppercase print-btn" id="process">Process Record</a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn green-haze hidden-print uppercase print-btn" onclick="javascript:window.print();">Print</a>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+            {{#if subjectRecord}}
+            <span class="hidden-print">Last processed date: {{subjectRecord.dateUpdated}}</span>
+            <div class="row invoice-cust-add">
+                <div class="col-xs-4">
+                    <h4 class="invoice-title uppercase">Average Score</h4>
+                    <p class="invoice-desc">{{subjectRecord.averageScore}}</p>
+                </div>
+                <div class="col-xs-4">
+                    <h4 class="invoice-title uppercase">Average %</h4>
+                    <p class="invoice-desc">{{subjectRecord.averagePercentage}}%</p>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="table-container">
+                    <table class="table table-light">
+                        <thead>
+                            <tr>
+                                <th>Student name</th>
+                                <th>Test 1</th>
+                                <th>Test 2</th>
+                                <th>Exams</th>
+                                <th>Total</th>
+                                <th>Total Obtainable</th>
+                                <th>%age</th>
+                                <th>Grade</th>
+                                <th>Position</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each subjectRecord.records}}
+                            <tr class="score_row" id="{{studentId}}">
+                                <td>{{studentDisplayName}}</td>
+                                <td>{{score1}}</td>
+                                <td>{{score2}}</td>
+                                <td>{{score3}}</td>
+                                <td>{{totalScore}}</td>
+                                <td>{{totalScoreObtainable}}</td>
+                                <td>{{percentage}}%</td>
+                                <td>{{grade}}</td>
+                                <td>{{position}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            {{else}}
+            <div class="container-fluid">
+                <div class="col-md-12 col-sm-12">
+                    <div class="note note-success">
+                        <h4 class="block">No academic record.</h4>
+                        <p> 
+                            No academic record has been processed for this subject.
+                        </p>
+                        <div class="btn-group">
+                            <button class="btn green" id="process">Process Record</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>  
+    <!-- <div class="col-xs-12">
+        <a class="btn btn-lg green-haze hidden-print uppercase print-btn" onclick="javascript:window.print();">Print</a>
+    </div>  --> 
+</div>
+<!-- END PAGE CONTENT-->
+{{> copyright }}
+ 
+{{> sub_footer }}
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+<script src="/public/bolt-ui-sweetalert/dist/sweetalert-dev.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+<script type="text/javascript">
+$(document).on('click', '#process', function(){
+    var classSubject = {{{json classSubject}}};
+    
+    $.ajax({
+        url: '{{bolt_root}}/sms-api/process-result/' + classSubject.classId + '/' + classSubject.subjectId,
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+        success: function(response) {
+            window.location.href="{{app_root}}/record/" + classSubject._id;
+        },
+        error: function(xhr, status, err){
+            alert(xhr.responseText);
+        }
+    });
+});
+</script>
+<!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
+ 
+ {{> footer }}

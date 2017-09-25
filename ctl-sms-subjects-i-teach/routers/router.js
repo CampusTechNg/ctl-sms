@@ -10,6 +10,8 @@ router.get('/attendance/:id', middleware.checkForEditAttendancePermission, contr
 
 router.get('/scores/:id', middleware.checkForEditScoresPermission, controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getScoreStudents);
 
+router.get('/record/:id', middleware.checkForViewScoresPermission, controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getSubjectRecord);
+
 router.post('/hook/bolt/app-starting', controller.postHookBoltAppStarting);
 
 //------404

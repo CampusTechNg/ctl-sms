@@ -26,11 +26,16 @@
                     <i class="icon-layers font-green"></i>
                     <span class="caption-subject bold uppercase"> Create Score Grade</span>
                 </div>
+                <div class="actions">
+                    <a href="{{app_root}}/view-grades" class="btn btn-default m-icon">
+                        <i class="m-icon-swapleft"></i> Go Back
+                    </a>
+                </div>
             </div>
             <div class="portlet-body form">
                 <form role="form" id="create_grade" autocomplete="off">
                         <div class="row">
-                            <div class="col-md-6 col-sm-6">
+                            <div class="col-md-4 col-sm-4">
                                 <div class="form-group form-md-line-input form-md-floating-label">
                                     <input class="form-control" name="score_grade" id="score_grade" type="text" maxlength="50">
                                     <label for="score_grade">
@@ -38,11 +43,19 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-6">
+                            <div class="col-md-4 col-sm-4">
                                 <div class="form-group form-md-line-input form-md-floating-label">
                                     <input class="form-control" name="max_score" id="max_score" type="number" maxlength="3" min="0" max="100">
                                     <label for="max_score">
                                         Maximum score <span class="required">*</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-4">
+                                <div class="form-group form-md-line-input form-md-floating-label">
+                                    <input class="form-control" name="remark" id="remark" type="text">
+                                    <label for="remark">
+                                        Remark
                                     </label>
                                 </div>
                             </div>
@@ -147,6 +160,7 @@ var FormValidationMd = function() {
                 var grade = {};
                 grade.label = $("#score_grade").val();
                 grade.max = $("#max_score").val();
+                grade.remark = $("#remark").val();
 
                 $.ajax({
                     url: '{{bolt_root}}/api/db/grades/insert',
