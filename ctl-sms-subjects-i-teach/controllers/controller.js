@@ -172,7 +172,7 @@ var controller = {
 						var studentSubjects = body2.body;
 						
 						studentSubjects.forEach(function(ss) {
-							ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0);
+							ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0) + (ss.score4 || 0);
 						});
 
 						request.post({

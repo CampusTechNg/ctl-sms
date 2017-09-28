@@ -82,6 +82,7 @@
                                 </th>
                                 <th> Test 1 </th>
                                 <th> Test 2 </th>
+                                <th> Test 3 </th>
                                 <th> Examination </th>
                                 <th class="action"> Action </th>
                             </tr>
@@ -97,6 +98,7 @@
                                 <td> {{scores.score1}} </td>
                                 <td> {{scores.score2}} </td>
                                 <td> {{scores.score3}} </td>
+                                <td> {{scores.score4}} </td>
                                 <td> 
                                     <a href="{{app_root}}/edit-scores" class="btn dark btn-xs btn-outline sbold uppercase">
                                         <i class="fa fa-edit"></i> <span class="hidden-xs"> Edit </span>
@@ -127,7 +129,7 @@
             <div class="portlet-body form">
                 <form role="form" id="create_scores" autocomplete="off">
                         <div class="row">
-                            <div class="col-md-4 col-sm-4">
+                            <div class="col-md-3 col-sm-3">
                                 <div class="form-group form-md-line-input">
                                     <input class="form-control" name="score1" id="score1" type="number" maxlength="3" min="0" max="100">
                                     <label for="score1">
@@ -135,7 +137,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-4">
+                            <div class="col-md-3 col-sm-3">
                                 <div class="form-group form-md-line-input">
                                     <input class="form-control" name="score2" id="score2" type="number" maxlength="3" min="0" max="100">
                                     <label for="score2">
@@ -143,10 +145,18 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-4">
+                            <div class="col-md-3 col-sm-3">
                                 <div class="form-group form-md-line-input">
                                     <input class="form-control" name="score3" id="score3" type="number" maxlength="3" min="0" max="100">
                                     <label for="score3">
+                                        Test 3 score <span class="required">*</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group form-md-line-input">
+                                    <input class="form-control" name="score4" id="score4" type="number" maxlength="3" min="0" max="100">
+                                    <label for="score4">
                                         Exam score <span class="required">*</span>
                                     </label>
                                 </div>
@@ -203,6 +213,9 @@ var FormValidationMd = function() {
                     required: 'Maximum score for test 2 required',
                 },
                 score3: {
+                    required: 'Maximum score for test 3 required',
+                },
+                score4: {
                     required: 'Maximum score for exam required',
                 }
             },
@@ -214,6 +227,9 @@ var FormValidationMd = function() {
                     required: true
                 },
                 score3: {
+                    required: true
+                },
+                score4: {
                     required: true
                 }
             },
@@ -258,10 +274,11 @@ var FormValidationMd = function() {
                 scores.score1 = parseFloat($("#score1").val());
                 scores.score2 = parseFloat($("#score2").val());
                 scores.score3 = parseFloat($("#score3").val());
+                scores.score4 = parseFloat($("#score4").val());
 
-                var total = scores.score1 + scores.score2 + scores.score3;
+                var total = scores.score1 + scores.score2 + scores.score3 + scores.score4;
                 if (total != 100) {
-                    sweetAlert("Invalid Scores", "The sum of the scores for Test 1, Test 2, Exam must be 100", "error");
+                    sweetAlert("Invalid Scores", "The sum of the scores for Test 1, Test 2, Test 3, Exam must be 100", "error");
                     return;
                 }
                     

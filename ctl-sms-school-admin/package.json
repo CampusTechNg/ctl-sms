@@ -43,6 +43,9 @@
               {"averagePercentage": { "$type": "number" }},
               {"lowestPercentage": { "$type": "number" }},
               {"highestPercentage": { "$type": "number" }},
+              {"averageGrade": { "$type": "string" }},
+              {"lowestGrade": { "$type": "string" }},
+              {"highestGrade": { "$type": "string" }},
               {"sessionId": { "$type": "string" }},
               {"sessionDisplayName": { "$type": "string" }},
               {"termId": { "$type": "string" }},
@@ -163,7 +166,8 @@
               {"app": { "$type": "string" }},
               {"score1": { "$type": "number" }},
               {"score2": { "$type": "number" }},
-              {"score3": { "$type": "number" }}
+              {"score3": { "$type": "number" }},
+              {"score4": { "$type": "number" }}
             ]
           }
         }

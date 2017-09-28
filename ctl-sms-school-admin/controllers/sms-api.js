@@ -122,7 +122,8 @@ var controller = {
 															sessionDisplayName: req.currentSession.displayName,
 															score1: 0,
 															score2: 0,
-															score3: 0
+															score3: 0,
+															score4: 0
 														};
 
 														//ensure u dont assign a subject to a student more than once in the same class, term, session
@@ -199,7 +200,7 @@ var controller = {
 									if (studentSubjects.length > 0) {
 										var studentSubjectsGroups = new Map(); //group student-subjects by studentId
 										studentSubjects.forEach(function(ss) {
-											ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0);
+											ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0) + (ss.score4 || 0);
 
 											var group = {};
 											if (studentSubjectsGroups.has(ss.studentId)) {
@@ -207,6 +208,7 @@ var controller = {
 												group.score1 += ss.score1;
 												group.score2 += ss.score2;
 												group.score3 += ss.score3;
+												group.score4 += ss.score4;
 												group.totalScore += ss.totalScore;
 												group.totalScoreObtainable += 100;
 											}
@@ -217,6 +219,7 @@ var controller = {
 													score1: ss.score1,
 													score2: ss.score2,
 													score3: ss.score3,
+													score4: ss.score4,
 													totalScore: ss.totalScore,
 													totalScoreObtainable: 100,
 												};
@@ -263,6 +266,7 @@ var controller = {
 												score1: group.score1,
 												score2: group.score2,
 												score3: group.score3,
+												score4: group.score4,
 												totalScore: group.totalScore,
 												totalScoreObtainable: group.totalScoreObtainable,
 												percentage: percentage,
@@ -272,6 +276,12 @@ var controller = {
 										}
 										classRecord.averageScore = totalScores / studentSubjectsGroups.size;
 										classRecord.averagePercentage = totalPercentages / studentSubjectsGroups.size;
+										var grade = req.grades.find(function(g){return g.max >= classRecord.averagePercentage}) || {label:'',remark:''};
+										classRecord.averageGrade = grade.label;
+										grade = req.grades.find(function(g){return g.max >= classRecord.lowestPercentage}) || {label:'',remark:''};
+										classRecord.lowestGrade = grade.label;
+										grade = req.grades.find(function(g){return g.max >= classRecord.highestPercentage}) || {label:'',remark:''};
+										classRecord.highestGrade = grade.label;
 										//sort records in desc order of percentage
 										classRecord.records.sort(function(a, b){
 											return parseInt(b.percentage, 10) - parseInt(a.percentage, 10);
@@ -387,7 +397,7 @@ var controller = {
 
 												var totalScores = 0, totalPercentages = 0;
 												studentSubjects.forEach(function(ss) {
-													ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0);
+													ss.totalScore = (ss.score1 || 0) + (ss.score2 || 0) + (ss.score3 || 0) + (ss.score4 || 0);
 
 													var percentage = ss.totalScore;
 													var grade = req.grades.find(function(g){return g.max >= percentage}) || {label:'',remark:''};
@@ -406,6 +416,7 @@ var controller = {
 														score1: ss.score1,
 														score2: ss.score2,
 														score3: ss.score3,
+														score4: ss.score4,
 														totalScore: ss.totalScore,
 														totalScoreObtainable: 100,
 														percentage: percentage,
@@ -415,6 +426,12 @@ var controller = {
 												});
 												subjectRecord.averageScore = totalScores / studentSubjects.length;
 												subjectRecord.averagePercentage = totalPercentages / studentSubjects.length;
+												var grade = req.grades.find(function(g){return g.max >= subjectRecord.averagePercentage}) || {label:'',remark:''};
+												subjectRecord.averageGrade = grade.label;
+												grade = req.grades.find(function(g){return g.max >= subjectRecord.lowestPercentage}) || {label:'',remark:''};
+												subjectRecord.lowestGrade = grade.label;
+												grade = req.grades.find(function(g){return g.max >= subjectRecord.highestPercentage}) || {label:'',remark:''};
+												subjectRecord.highestGrade = grade.label;
 												//sort records in desc order of percentage
 												subjectRecord.records.sort(function(a, b){
 													return parseInt(b.percentage, 10) - parseInt(a.percentage, 10);

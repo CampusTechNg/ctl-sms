@@ -45,6 +45,7 @@
                                 <th>Student name</th>
                                 <th>Test 1</th>
                                 <th>Test 2</th>
+                                <th>Test 3</th>
                                 <th>Exams</th>
                                 <th>Total</th>
                             </tr>
@@ -66,6 +67,11 @@
                                 <td>
                                     <div class="portlet-input input-inline input-xsmall">
                                         <input type="number" min="0" max="{{../scoresTemplate.score3}}" class="form-control" value="{{score3}}" id="score_3">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="portlet-input input-inline input-xsmall">
+                                        <input type="number" min="0" max="{{../scoresTemplate.score4}}" class="form-control" value="{{score4}}" id="score_4">
                                     </div>
                                 </td>
                                 <td>
@@ -103,6 +109,7 @@ $(document).on('change', '.score_row', function(){
     var score_1 = $(this).find('input[id=score_1]').val();
     var score_2 = $(this).find('input[id=score_2]').val();
     var score_3 = $(this).find('input[id=score_3]').val();
+    var score_4 = $(this).find('input[id=score_4]').val();
 
     var total_score = $(this).find('input[id=total_score]').val();
 
@@ -120,8 +127,13 @@ $(document).on('change', '.score_row', function(){
         $(this).find('input[id=score_3]').prop({'value': 0});
         sweetAlert("Invalid score!", "Please enter a valid number", "warning");
     }
+
+    if(!$.isNumeric(score_4)) {
+        $(this).find('input[id=score_4]').prop({'value': 0});
+        sweetAlert("Invalid score!", "Please enter a valid number", "warning");
+    }
     
-    var sum = parseFloat(score_1) + parseFloat(score_2) + parseFloat(score_3);
+    var sum = parseFloat(score_1) + parseFloat(score_2) + parseFloat(score_3) + parseFloat(score_4);
     $(this).find('input[id=total_score]').prop({'value': sum});   
     
 });
@@ -153,15 +165,16 @@ $(document).on('click', '#submit', function(){
                     var score1 = parseFloat($(elem).find('input[id=score_1]').prop('value'));
                     var score2 = parseFloat($(elem).find('input[id=score_2]').prop('value'));
                     var score3 = parseFloat($(elem).find('input[id=score_3]').prop('value'));
+                    var score4 = parseFloat($(elem).find('input[id=score_4]').prop('value'));
 
-                    var total = score1 + score2 + score3;
+                    var total = score1 + score2 + score3 + score4;
                     if (total >= 0 && total <= 100) {
                         $.ajax({
                             url: '{{bolt_root}}/api/db/student-subjects/update?classId=' + classSubject.classId +
                             '&subjectId=' + classSubject.subjectId + '&studentId=' + studentId + 
                             '&sessionId={{currentSession._id}}&termId={{currentTerm._id}}',
                             type: 'POST',
-                            data: JSON.stringify({ app: 'ctl-sms-school-admin', values: {score1: score1, score2: score2, score3: score3} }),
+                            data: JSON.stringify({ app: 'ctl-sms-school-admin', values: {score1: score1, score2: score2, score3: score3, score4: score4} }),
                             dataType: 'json',
                             contentType: 'application/json',
                             headers: {'X-Bolt-App-Token': '{{app_token}}'},

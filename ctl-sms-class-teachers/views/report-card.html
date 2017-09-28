@@ -72,6 +72,7 @@
                                 <th class="invoice-title uppercase">Subject</th>
                                 <th class="invoice-title uppercase text-center">Test 1</th>
                                 <th class="invoice-title uppercase text-center">Test 2</th>
+                                <th class="invoice-title uppercase text-center">Test 3</th>
                                 <th class="invoice-title uppercase text-center">Exam</th>
                                 <th class="invoice-title uppercase text-center">Total</th>
                                 <th class="invoice-title uppercase text-center">Total Obtainable</th>
@@ -89,6 +90,7 @@
                                 <td class="text-center sbold">{{score1}}</td>
                                 <td class="text-center sbold">{{score2}}</td>
                                 <td class="text-center sbold">{{score3}}</td>
+                                <td class="text-center sbold">{{score4}}</td>
                                 <td class="text-center sbold">{{totalScore}}</td>
                                 <td class="text-center sbold">{{totalScoreObtainable}}</td>
                                 <td class="text-center sbold">{{percentage}}%</td>
@@ -121,9 +123,13 @@
                     <h2 class="invoice-title uppercase">%</h2>
                     <p class="invoice-desc grand-total">{{personalClassRecord.percentage}}%</p>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-xs-1">
                     <h2 class="invoice-title uppercase">Class Average %</h2>
                     <p class="invoice-desc">{{classRecord.averagePercentage}}%</p>
+                </div>
+                <div class="col-xs-1">
+                    <h2 class="invoice-title uppercase">Class Average Grade</h2>
+                    <p class="invoice-desc">{{classRecord.averageGrade}}</p>
                 </div>
             </div>
             <div class="row invoice-subtotal">

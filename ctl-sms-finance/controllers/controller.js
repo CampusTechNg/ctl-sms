@@ -42,7 +42,7 @@ var controller = {
 				var student = body.body;
 
 				request.post({
-					url: process.env.BOLT_ADDRESS + '/api/db/invoices/find?student=' + student.name, 
+					url: process.env.BOLT_ADDRESS + '/api/db/invoices/find?studentName=' + student.name, 
 					headers: {'X-Bolt-App-Token': apptoken},
 					json: {}}, 
 					function(error, response, body) {
@@ -89,7 +89,7 @@ var controller = {
 						var student = body.body;
 
 						request.post({
-							url: process.env.BOLT_ADDRESS + '/api/db/invoices/find?student=' + student.name, 
+							url: process.env.BOLT_ADDRESS + '/api/db/invoices/find?studentName=' + student.name, 
 							headers: {'X-Bolt-App-Token': apptoken},
 							json: {}}, 
 							function(error, response, body) {
