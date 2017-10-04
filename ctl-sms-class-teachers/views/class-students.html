@@ -11,10 +11,10 @@
 <!-- BEGIN PAGE TITLE-->
 <div class="container-fluid">
     <div class="col-md-8 col-sm-8">
-        <h3 class="page-title"> Avaliable Students in JSS 2A</h3>
+        <h3 class="page-title"> Avaliable Students in {{schClass.displayName}}</h3>
     </div>
     <div class="col-md-4 col-sm-4 text-right hidden-xs">
-        <a href="{{app_root}}/teacher-classes" class="btn btn-default m-icon">
+        <a href="{{app_root}}" class="btn btn-default m-icon">
             <i class="m-icon-swapleft"></i> Go Back
         </a>
     </div>
@@ -29,7 +29,7 @@
             <div class="portlet-title">
                 <div class="caption font-green">
                     <i class="icon-doc font-green"></i>
-                    <span class="caption-subject bold uppercase"> Students in - JSS 2A</span>
+                    <span class="caption-subject bold uppercase"> Students in {{schClass.displayName}}</span>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -46,7 +46,7 @@
                             <tr>
                                 <td>{{studentDisplayName}}</td>
                                 <td>
-                                    <a href="{{../ app_root}}/assign-subjects/{{studentId}}" class="btn dark btn-outline btn-xs uppercase">
+                                    <a href="{{../ app_root}}/assign-subjects/{{classId}}/{{studentId}}" class="btn dark btn-outline btn-xs uppercase">
                                         <span class="hidden-xs"> Assign Subject</span>
                                         <span><i class="fa fa-doc"></i></span>
                                     </a>

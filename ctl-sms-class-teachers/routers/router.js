@@ -6,15 +6,13 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', /*middleware.checkForViewSubjectsPermission,*/ controller.getIndex);
 
-router.get('/assign-subjects/:id', controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getAssignSubject);
-
-router.get('/class-students/:id', controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getClassStudents);
+router.get('/assign-subjects/:classid/:studentid', controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getAssignSubjects);
 
 router.get('/report-card/:classid/:studentid', controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.Middleware.getSchoolProfile, controller.getReportCard);
 
 router.get('/class-record/:id', controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getClassRecord);
 
-router.get('/teacher-classes', /*middleware.checkForEditSubjectsPermission,*/ controller.getTeacherClasses);
+router.get('/class-students/:id', controller.Middleware.getCurrentSession, controller.Middleware.getCurrentTerm, controller.getClassStudents);
 
 /*router.get('/view-subjects', middleware.checkForViewSubjectsPermission, controller.getViewSubjects);*/
 

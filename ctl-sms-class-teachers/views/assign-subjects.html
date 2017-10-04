@@ -11,10 +11,10 @@
 <!-- BEGIN PAGE TITLE-->
 <div class="container-fluid">
     <div class="col-md-8 col-sm-8">
-        <h3 class="page-title"> Assign Subjects to Henry Ford</h3>
+        <h3 class="page-title"> Assign Subjects</h3>
     </div>
     <div class="col-md-4 col-sm-4 text-right hidden-xs">
-        <a href="{{app_root}}/teacher-classes" class="btn btn-default m-icon">
+        <a href="{{app_root}}/class-students/{{schClass._id}}" class="btn btn-default m-icon">
             <i class="m-icon-swapleft"></i> Go Back
         </a>
     </div>
@@ -29,7 +29,13 @@
             <div class="portlet-title">
                 <div class="caption font-green">
                     <i class="icon-doc font-green"></i>
-                    <span class="caption-subject bold uppercase"> Subjects offered by - Henry Ford</span>
+                    <span class="caption-subject bold uppercase"> Subjects offered by {{student.displayName}} </span>
+                </div>
+
+                <div class="actions">
+                    <div class="btn-group">
+                        <button class="btn green" id="submit">Submit</button>
+                    </div>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -37,23 +43,35 @@
                     <table class="table table-light">
                         <thead>
                             <tr>
+                                <td><strong>Student name:</strong> {{student.displayName}}</td>
+                                <td><strong>Student class:</strong> {{schClass.displayName}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <hr>
+                </div>
+                <div class="table-container">
+                    <table class="table table-light">
+                        <thead>
+                            <tr>
                                 <th>Subject name</th>
-                                <th>Compulsory</th>
+                                <th>Offering</th>
                                 <th>Score status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each subjects}}
+                            {{#each classSubjects}}
                             <tr>
-                                <td>{{subjectDisplayName}}</td>
+                                <td id="subject_display_name">{{subjectDisplayName}}</td>
                                 <td>
                                     <div class="col-md-6">
                                         <div class="row">
-                                            <input type="checkbox" class="make-switch" data-on-color="success" data-off-color="danger" data-size="small" disabled  data-on-text="Yes" data-off-text="No" id="compulsory" checked>
+                                            <input type="checkbox" class="make-switch" data-on-color="success" data-off-color="danger" data-size="small"  data-on-text="Yes" data-off-text="No" id="subject_offered" 
+                                            {{#if compulsoryAndOffering}}disabled{{/if}} {{#if offering}}checked{{/if}} value="{{subjectId}}">
                                         </div> 
                                     </div>
                                 </td>
-                                <td>Already have scores</td>
+                                <td>{{#if hasScores}}Already has scores{{/if}}</td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -77,7 +95,80 @@
 
 <!-- BEGIN UNIQUE SCRIPT FOR ONLY THIS PAGE -->
 <script type="text/javascript">
+    $(document).ready(function() {
+        var studentSubjectIds = {{{json studentSubjectIds}}};
 
+        $('#submit').on('click', function() {
+
+            $('#subject_offered:checked').each(function(index, elem) {
+                var id = $(elem).val();
+                if (studentSubjectIds.indexOf(id) == -1) {
+                    var newStudentSubject = {
+                        classId: "{{schClass._id}}",
+                        classDisplayName: "{{schClass.displayName}}",
+                        subjectId: id,
+                        subjectDisplayName: $(elem).closest('tr').find('td#subject_display_name').text(),
+                        studentId: "{{student._id}}",
+                        studentDisplayName: "{{student.displayName}}",
+                        termId: "{{currentTerm._id}}",
+                        termDisplayName: "{{currentTerm.displayName}}",
+                        sessionId: "{{currentSession._id}}",
+                        sessionDisplayName: "{{currentSession.displayName}}",
+                        score1: 0,
+                        score2: 0,
+                        score3: 0,
+                        score4: 0
+                    };
+                    $.ajax({
+                        url: '{{bolt_root}}/api/db/student-subjects/insert',
+                        type: 'POST',
+                        data: JSON.stringify({ app: 'ctl-sms-school-admin', object: newStudentSubject }),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                        success: function(response) {
+                            if (response.code === 0) {
+                                $(elem).closest('tr').prop({'style': 'background-color:rgba(192, 237, 241, 0.7)'});
+                                studentSubjectIds.push(id);
+                            } else  {
+                                $(elem).closest('tr').prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                            }
+                        },
+                        error: function(xhr, status, err){
+                            $(elem).closest('tr').prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                        }
+                    });
+                }
+                
+            });
+            $('#subject_offered:not(:checked)').each(function(index, elem) {
+                var id = $(elem).val();
+                if (studentSubjectIds.indexOf(id) > -1) {
+                    $.ajax({
+                        url: '{{bolt_root}}/api/db/student-subjects/remove?classId={{schClass._id}}' +
+                        '&subjectId=' + id + '&studentId={{student._id}}' + 
+                        '&sessionId={{currentSession._id}}&termId={{currentTerm._id}}',
+                        type: 'POST',
+                        data: JSON.stringify({ app: 'ctl-sms-school-admin' }),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                        success: function(response) {
+                            if (response.code === 0) {
+                                $(elem).closest('tr').prop({'style': 'background-color:rgba(249, 228, 145, 0.7)'});
+                                studentSubjectIds.splice(studentSubjectIds.indexOf(id), 1);
+                            } else  {
+                                $(elem).closest('tr').prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                            }
+                        },
+                        error: function(xhr, status, err){
+                            $(elem).closest('tr').prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                        }
+                    });
+                }
+            });
+        });
+    });
 </script>
 <!-- END UNIQUE SCRIPT FOR ONLY THIS PAGE -->
  

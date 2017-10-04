@@ -54,6 +54,10 @@
         "displayName": "Permission to assign teachers to classes",
         "description": "This grants the permission to assign teachers to classes"
       },
+      "edit-timetables": {
+        "displayName": "Permission to edit timetables",
+        "description": "This grants the permission to edit timetables"
+      },
       "create-classes": {
         "displayName": "Permission to create classes",
         "description": "This grants the permission to create new classes"

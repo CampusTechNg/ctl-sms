@@ -61,60 +61,82 @@ var controller = {
 		return appname;
 	},
 
-	getAssignSubject: function(req, res){
+	getAssignSubjects: function(req, res){
 		if (req.currentSession && req.currentTerm) {				
 			request.post({
-				url: process.env.BOLT_ADDRESS + '/api/db/student-subjects/find?studentId=' + req.params.id + '&sessionId=' + req.currentSession._id,
+				url: process.env.BOLT_ADDRESS + '/api/db/students/findone?_id=' + req.params.studentid, 
 				headers: {'X-Bolt-App-Token': apptoken},
-				json: {app: 'ctl-sms-school-admin'}
-			}, function(error, response, body) {
-				var subjects = body.body;
+				json: {app: 'ctl-sms-students'}}, 
+				function(error, response, body) {
+					var student = body.body;
 
-				res.render('assign-subjects', {
-					student_subject_menu: 'selected',
-					student_subject_active: 'active',
-					app_root: req.app_root,
-					app_token: apptoken,
-					bolt_root: process.env.BOLT_ADDRESS,
+					request.post({
+						url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.classid, 
+						headers: {'X-Bolt-App-Token': apptoken},
+						json: {app: 'ctl-sms-classes'}}, 
+						function(error, response, body) {
+							var schClass = body.body;
 
-					currentSession: req.currentSession,
-					subjects: subjects
+							if (student && schClass) {
+								request.post({
+									url: process.env.BOLT_ADDRESS + '/api/db/class-subjects/find?classId=' + schClass._id,
+									headers: {'X-Bolt-App-Token': apptoken},
+									json: {app: 'ctl-sms-school-admin'}
+								}, function(error, response, body) {
+									var classSubjects = body.body || [];
+									var classSubjectIds = classSubjects.map(function (cs) { return cs.subjectId; });
+
+									request.post({
+										url: process.env.BOLT_ADDRESS + '/api/db/student-subjects/find?classId=' + schClass._id + 
+										'&studentId=' + student._id +
+										'&sessionId=' + req.currentSession._id + '&termId=' + req.currentTerm._id,
+										headers: {'X-Bolt-App-Token': apptoken},
+										json: {app: 'ctl-sms-school-admin'}
+									}, function(error, response, body) {
+										var studentSubjects = body.body || [];
+										var studentSubjectIds = studentSubjects.map(function (ss) { return ss.subjectId; });
+
+										classSubjects.forEach(function (cs) {
+											//cs.offering = studentSubjectIds.indexOf(cs.subjectId) > -1;
+											var found = studentSubjects.find(function (ss) { return ss.subjectId == cs.subjectId; });
+											if (found) {
+												cs.offering = true;
+												cs.compulsoryAndOffering = cs.compulsory && cs.offering;
+												cs.hasScores = (found.score1 + found.score2 + found.score3 + found.score4) > 0;
+											}
+										});
+
+										res.render('assign-subjects', {
+											class_teacher_menu: 'selected',
+											class_teacher_active: 'active',
+											app_root: req.app_root,
+											app_token: apptoken,
+											bolt_root: process.env.BOLT_ADDRESS,
+
+											currentSession: req.currentSession,
+											currentTerm: req.currentTerm,
+											schClass: schClass,
+											student: student,
+											classSubjects: classSubjects,
+											classSubjectIds: classSubjectIds,
+											studentSubjects: studentSubjects,
+											studentSubjectIds: studentSubjectIds
+										});
+									});
+								});
+							}
+							else {
+								res.render('error', {
+									app_root: req.app_root,
+									app_token: apptoken,
+									bolt_root: process.env.BOLT_ADDRESS,
+
+									title: 'Oops!',
+									message: 'Cannot find specified student or class'
+								});
+							}
+						});
 				});
-			});
-
-		}
-		else {
-			res.render('error', {
-				app_root: req.app_root,
-				app_token: apptoken,
-				bolt_root: process.env.BOLT_ADDRESS,
-
-				title: 'Oops!',
-				message: 'No current term or session'
-			});
-		}
-	},
-
-	getClassStudents: function(req, res){
-		if (req.currentSession && req.currentTerm) {				
-			request.post({
-				url: process.env.BOLT_ADDRESS + '/api/db/class-students/find?classId=' + req.params.id + '&sessionId=' + req.currentSession._id,
-				headers: {'X-Bolt-App-Token': apptoken},
-				json: {app: 'ctl-sms-school-admin'}
-			}, function(error, response, body) {
-				var classStudents = body.body;
-
-				res.render('class-students', {
-					student_subject_menu: 'selected',
-					student_subject_active: 'active',
-					app_root: req.app_root,
-					app_token: apptoken,
-					bolt_root: process.env.BOLT_ADDRESS,
-
-					currentSession: req.currentSession,
-					classStudents: classStudents
-				});
-			});
 
 		}
 		else {
@@ -248,23 +270,59 @@ var controller = {
 		}
 	},
 
-	getTeacherClasses: function(req, res){
-		request.post({ 
-			url: process.env.BOLT_ADDRESS + '/api/db/class-teachers/find?teacherName=' + req.user.name,
-			headers: {'X-Bolt-App-Token': apptoken},
-			json: {app: 'ctl-sms-school-admin'}}, 
-			function(error, response, body) {
-			var classSubjects = body.body; 
+	getClassStudents: function(req, res){
+		if (req.currentSession && req.currentTerm) {	
+			request.post({
+				url: process.env.BOLT_ADDRESS + '/api/db/classes/findone?_id=' + req.params.id, 
+				headers: {'X-Bolt-App-Token': apptoken},
+				json: {app: 'ctl-sms-classes'}}, 
+				function(error, response, body) {
+					var schClass = body.body;
 
-			res.render('teacher-classes', {
-				student_subject_menu: 'selected',
-				student_subject_active: 'active',
+					if (schClass) {
+						request.post({
+							url: process.env.BOLT_ADDRESS + '/api/db/class-students/find?classId=' + req.params.id + '&sessionId=' + req.currentSession._id,
+							headers: {'X-Bolt-App-Token': apptoken},
+							json: {app: 'ctl-sms-school-admin'}
+						}, function(error, response, body) {
+							var classStudents = body.body;
+
+							res.render('class-students', {
+								class_teacher_menu: 'selected',
+								class_teacher_active: 'active',
+								app_root: req.app_root,
+								app_token: apptoken,
+								bolt_root: process.env.BOLT_ADDRESS,
+
+								currentSession: req.currentSession,
+								currentTerm: req.currentTerm,
+								classStudents: classStudents,
+								schClass: schClass
+							});
+						});
+					}
+					else {
+						res.render('error', {
+							app_root: req.app_root,
+							app_token: apptoken,
+							bolt_root: process.env.BOLT_ADDRESS,
+
+							title: 'Oops!',
+							message: 'Cannot find specified class'
+						});
+					}
+				});	
+		}
+		else {
+			res.render('error', {
 				app_root: req.app_root,
 				app_token: apptoken,
 				bolt_root: process.env.BOLT_ADDRESS,
-				classSubjects: classSubjects
+
+				title: 'Oops!',
+				message: 'No current term or session'
 			});
-		});
+		}
 	},
 
 	getClassRecord: function(req, res){

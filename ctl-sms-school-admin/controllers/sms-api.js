@@ -45,6 +45,26 @@ var middleware = {
 };
 
 var controller = {
+	getCurrentSession: function(req, res) {
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/sessions/findone', 
+			headers: {'X-Bolt-App-Token': req.bolt.token},
+			json: {app: 'ctl-sms-school-admin', query: {isCurrent:true}}}, 
+			function(error, response, body) {
+				res.send(body);
+			});
+	},
+
+	getCurrentTerm: function(req, res, next) {
+		request.post({
+			url: process.env.BOLT_ADDRESS + '/api/db/terms/findone', 
+			headers: {'X-Bolt-App-Token': req.bolt.token},
+			json: {app: 'ctl-sms-school-admin', query: {isCurrent:true}}}, 
+			function(error, response, body) {
+				res.send(body);
+			});
+	},
+
 	postAssignStudentToClass: function(req, res) {
 		if (!req.currentSession) {
 			//TODO: return an error response

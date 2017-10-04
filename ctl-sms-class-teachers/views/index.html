@@ -25,7 +25,7 @@
             <div class="portlet-title">
                 <div class="caption font-green">
                     <i class="icon-doc font-green"></i>
-                    <span class="caption-subject bold uppercase"> List of My Subjects</span>
+                    <span class="caption-subject bold uppercase"> List of My Classes</span>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -35,7 +35,12 @@
                             {{#each classSubjects}}
                             <tr>
                                 <td width="30%">{{classDisplayName}}</td>
-                                <td width="50%"></td>
+                                <td width="30%"></td>
+                                <td width="20%">
+                                    <a href="{{../ app_root}}/class-students/{{classId}}" class="btn green btn-sm btn-outline">
+                                        <span class="hidden-xs">Class Students</span>
+                                    </a>
+                                </td>
                                 <td width="20%">
                                     <a href="{{../ app_root}}/class-record/{{classId}}" class="btn green btn-sm btn-outline">
                                         <span class="hidden-xs">Academic Record</span>
@@ -56,9 +61,9 @@
 <div class="container-fluid">
     <div class="col-md-12 col-sm-12">
         <div class="note note-success">
-            <h4 class="block">No assigned subjects.</h4>
+            <h4 class="block">No assigned classes.</h4>
             <p> 
-                No subjects have been assigned to you. Please contact an authorized personnel to assign subjects to you.
+                No classes have been assigned to you. Please contact an authorized personnel to assign classes to you.
             </p>
         </div>
     </div>

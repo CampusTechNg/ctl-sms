@@ -108,7 +108,10 @@
 
     $('tbody tr').find('#compulsory').prop('class', 'make-switch');
 
+    var schClass = {{{json schClass}}};
     var classSubjects = {{{json classSubjects}}};
+    var classSubjectIds = {{{json classSubjectIds}}};
+
     var table= $('#assign_subject');
 
     if (classSubjects) {
@@ -126,9 +129,9 @@
             if (subjectIds.indexOf(elem.value) > -1) {
                 var idx = subjectIds.indexOf(elem.value);
                 elem.checked = true;
-                $(this).closest('tbody tr').find('#compulsory').attr('checked', compulsories[idx]);
+                $(elem).closest('tbody tr').find('#compulsory').attr('checked', compulsories[idx]);
                 var tName = teacherNames[idx];
-                if (tName) $(this).closest('tbody tr').find('#teacher option[value=' + tName + ']').attr('selected', true);
+                if (tName) $(elem).closest('tbody tr').find('#teacher option[value=' + tName + ']').attr('selected', true);
             }
         });
     }
@@ -140,64 +143,178 @@
 
     $('.send').on('click', function() {
         var table= $('#assign_subject');
-        var arrayOfValues = [];
 
-        $('tbody input:checkbox#subject_id:checked', table).each(function() {
-            var schClass = {{{json schClass}}};
-            var object = {};
-            object.compulsory = $(this).closest('tbody tr').find('#compulsory').is(':checked');
-            object.subjectId = $(this).val();
-            object.subjectDisplayName = $(this).closest('tbody tr').find('#subjectName').text();
-            object.classId = schClass._id;
-            object.classDisplayName = schClass.displayName;
-            object.teacherName = $(this).closest('tbody tr').find('#teacher option:selected').val();
-            object.teacherDisplayName = $(this).closest('tbody tr').find('#teacher option:selected').text();
-            
-            arrayOfValues.push(object); 
-        });
-        
-        var schClass = {{{json schClass}}};
-        $.ajax({
-            url: '{{bolt_root}}/api/db/class-subjects/remove?classId={{schClass._id}}',
-            type: 'POST',
-            data: JSON.stringify({ app:'ctl-sms-school-admin' }),
-            dataType: 'json',
-            contentType: 'application/json',
-            headers: {'X-Bolt-App-Token': '{{app_token}}'},
-            success: function(response) {
-                if(response.code === 0){
-                    arrayOfValues.forEach(function (a) {
-                        $.ajax({
-                            url: '{{bolt_root}}/api/db/class-subjects/insert',
-                            type: 'POST',
-                            data: JSON.stringify({app:'ctl-sms-school-admin', object: a}),
-                            dataType: 'json',
-                            contentType: 'application/json',
-                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
-                            success: function(response2, status2, xhr2){},
-                            error: function(xhr2, status2, err2) {}
-                        });
-                    });
+        $('tbody input:checkbox#subject_id:checked', table).each(function(index, elem) {
+            var id = $(elem).val();
+            if (classSubjectIds.indexOf(id) == -1) {
+                //create class-subject
+                var newClassSubject = {
+                    classId: schClass._id,
+                    classDisplayName: schClass.displayName,
+                    subjectId: id,
+                    subjectDisplayName: $(elem).closest('tbody tr').find('#subjectName').text(),
+                    compulsory: $(elem).closest('tbody tr').find('#compulsory').is(':checked'),
+                    teacherName: $(elem).closest('tbody tr').find('#teacher option:selected').val(),
+                    teacherDisplayName: $(elem).closest('tbody tr').find('#teacher option:selected').text()
+                };
+                $.ajax({
+                    url: '{{bolt_root}}/api/db/class-subjects/insert',
+                    type: 'POST',
+                    data: JSON.stringify({ app: 'ctl-sms-school-admin', object: newClassSubject }),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                    success: function(response) {
+                        if (response.code === 0) {
+                            $(elem).closest('tbody tr').prop({'style': 'background-color:rgba(192, 237, 241, 0.7)'});
+                            classSubjectIds.push(id);
+                        } else  {
+                            $(elem).closest('tbody tr').prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                        }
+                    },
+                    error: function(xhr, status, err){
+                        $(elem).closest('tbody tr').prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                    }
+                });
 
-                    //Sweet alert
-                    swal({
-                        title: "Class Updated!",
-                        text: schClass.displayName + " has been updated.",
-                        type: "success",
-                        showCancelButton: false,
-                        closeOnConfirm: true
-                    }, function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href="{{app_root}}/class-settings";
+                //create student-subject for each student in the class
+                if (newClassSubject.compulsory) {
+                    //find the current session
+                    $.ajax({
+                        url: '{{bolt_root}}/sms-api/current-session',
+                        type: 'GET',
+                        contentType: 'application/json',
+                        headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                        success: function(response) {
+                            var currentSession = response.body;
+                            if (currentSession) {
+                                //find the current term
+                                $.ajax({
+                                    url: '{{bolt_root}}/sms-api/current-term',
+                                    type: 'GET',
+                                    contentType: 'application/json',
+                                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                    success: function(response) {
+                                        var currentTerm = response.body;
+                                        if (currentTerm) {
+                                            //find students currently in this class
+                                            $.ajax({
+                                                url: '{{bolt_root}}/api/db/class-students/find?classId={{schClass._id}}&sessionId=' + currentSession._id,
+                                                type: 'POST',
+                                                data: JSON.stringify({ app: 'ctl-sms-school-admin' }),
+                                                dataType: 'json',
+                                                contentType: 'application/json',
+                                                headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                                success: function(response) {
+                                                    var classStudents = response.body || [];
+                                                    classStudents.forEach(function(cs) {
+                                                        //create student-subject
+                                                        var newStudentSubject = {
+                                                            classId: "{{schClass._id}}",
+                                                            classDisplayName: "{{schClass.displayName}}",
+                                                            subjectId: id,
+                                                            subjectDisplayName: $(elem).closest('tbody tr').find('#subjectName').text(),
+                                                            studentId: cs.studentId,
+                                                            studentDisplayName: cs.studentDisplayName,
+                                                            termId: currentTerm._id,
+                                                            termDisplayName: currentTerm.displayName,
+                                                            sessionId: currentSession._id,
+                                                            sessionDisplayName: currentSession.displayName,
+                                                            score1: 0,
+                                                            score2: 0,
+                                                            score3: 0,
+                                                            score4: 0
+                                                        };
+                                                        $.ajax({
+                                                            url: '{{bolt_root}}/api/db/student-subjects/insert',
+                                                            type: 'POST',
+                                                            data: JSON.stringify({ app: 'ctl-sms-school-admin', object: newStudentSubject }),
+                                                            dataType: 'json',
+                                                            contentType: 'application/json',
+                                                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                                            success: function(response) {
+                                                            }
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
                         }
                     });
                 }
-                else {
-                    sweetAlert(response.errorUserTitle, response.errorUserMessage, "error");
-                }
-            },
-            error: function(xhr, status, err){
-                alert(xhr.responseText);
+            }
+        });
+
+        $('tbody input:checkbox#subject_id:not(:checked)', table).each(function(index, elem) {
+            var id = $(elem).val();
+            if (classSubjectIds.indexOf(id) > -1) {
+                //create class-subject
+                var newClassSubject = {
+                    compulsory: $(elem).closest('tbody tr').find('#compulsory').is(':checked'),
+                    subjectId: id,
+                    subjectDisplayName: $(elem).closest('tbody tr').find('#subjectName').text(),
+                    classId: schClass._id,
+                    classDisplayName: schClass.displayName,
+                    teacherName: $(elem).closest('tbody tr').find('#teacher option:selected').val(),
+                    teacherDisplayName: $(elem).closest('tbody tr').find('#teacher option:selected').text()
+                };
+                $.ajax({
+                    url: '{{bolt_root}}/api/db/class-subjects/remove?classId={{schClass._id}}&subjectId=' + id,
+                    type: 'POST',
+                    data: JSON.stringify({ app: 'ctl-sms-school-admin' }),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                    success: function(response) {
+                        if (response.code === 0) {
+                            $(elem).closest('tbody tr').prop({'style': 'background-color:rgba(249, 228, 145, 0.7)'});
+                            classSubjectIds.splice(classSubjectIds.indexOf(id), 1);
+                        } else  {
+                            $(elem).closest('tbody tr').prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                        }
+                    },
+                    error: function(xhr, status, err){
+                        $(elem).closest('tbody tr').prop({'style': 'background-color:rgba(251, 225, 227, 0.7)'});
+                    }
+                });
+
+                //delete student-subject for each student in the class
+                $.ajax({
+                    url: '{{bolt_root}}/sms-api/current-session',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                    success: function(response) {
+                        var currentSession = response.body;
+                        if (currentSession) {
+                            //find the current term
+                            $.ajax({
+                                url: '{{bolt_root}}/sms-api/current-term',
+                                type: 'GET',
+                                contentType: 'application/json',
+                                headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                success: function(response) {
+                                    var currentTerm = response.body;
+                                    if (currentTerm) {
+                                        $.ajax({
+                                            url: '{{bolt_root}}/api/db/student-subjects/remove?classId={{schClass._id}}' + '&subjectId=' + id + '&sessionId=' + currentSession._id + '&termId=' + currentTerm._id,
+                                            type: 'POST',
+                                            data: JSON.stringify({ app: 'ctl-sms-school-admin' }),
+                                            dataType: 'json',
+                                            contentType: 'application/json',
+                                            headers: {'X-Bolt-App-Token': '{{app_token}}'},
+                                            success: function(response) {
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
     });

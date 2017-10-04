@@ -92,34 +92,36 @@ var controller = {
 			json: {app: 'ctl-sms-school-admin'}}, 
 			function(error, response, body) {
 			var classSubjects = body.body; 
+			var classSubjectIds = classSubjects.map(function (cs) { return cs.subjectId; });
 
 				request.post({
-				url: process.env.BOLT_ADDRESS + '/api/db/subjects/find', 
-				headers: {'X-Bolt-App-Token': apptoken, },
-				json: {object:{}, app: 'ctl-sms-subjects'}}, 
-				function(error, response, body) {
-				var subjects = body.body;
-					request.post({
-					url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
+					url: process.env.BOLT_ADDRESS + '/api/db/subjects/find', 
 					headers: {'X-Bolt-App-Token': apptoken, },
-					json: {object:{}, app: 'ctl-sms-staff'}}, 
+					json: {object:{}, app: 'ctl-sms-subjects'}}, 
 					function(error, response, body) {
-					var teachers = body.body;
+							var subjects = body.body;
+							request.post({
+							url: process.env.BOLT_ADDRESS + '/api/db/staff/find', 
+							headers: {'X-Bolt-App-Token': apptoken, },
+							json: {object:{}, app: 'ctl-sms-staff'}}, 
+							function(error, response, body) {
+							var teachers = body.body;
 
-					res.render('assign-class-subject', {
-						class_settings_menu: 'selected',
-						class_settings_active: 'active',
-						app_root: req.app_root,
-						app_token: apptoken,
-						bolt_root: process.env.BOLT_ADDRESS,
-						classSubjects: classSubjects,
-						schClass: req.schClass,
-						subjects: subjects,
-						teachers: teachers
+							res.render('assign-class-subject', {
+								class_settings_menu: 'selected',
+								class_settings_active: 'active',
+								app_root: req.app_root,
+								app_token: apptoken,
+								bolt_root: process.env.BOLT_ADDRESS,
+								classSubjects: classSubjects,
+								classSubjectIds: classSubjectIds,
+								schClass: req.schClass,
+								subjects: subjects,
+								teachers: teachers
+							});
+						});
 					});
-				});
-			});		
-		});
+			});
 	},
 
 	getAssignFormTeacher: function(req, res){

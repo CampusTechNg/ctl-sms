@@ -187,7 +187,7 @@
       },
       "student-subjects": {
         "guests": "*",
-        "tenants": ["bolt", "ctl-sms-subjects-i-teach"],
+        "tenants": ["bolt", "ctl-sms-classes", "ctl-sms-class-teachers", "ctl-sms-subjects-i-teach"],
         "options": {
           "validator": {
             "$and": [
@@ -203,7 +203,8 @@
               {"termDisplayName": { "$type": "string" }},
               {"score1": { "$type": "number" }},
               {"score2": { "$type": "number" }},
-              {"score3": { "$type": "number" }}
+              {"score3": { "$type": "number" }},
+              {"score4": { "$type": "number" }}
             ]
           }
         }

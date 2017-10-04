@@ -3,6 +3,10 @@ var router = express.Router();
 
 var smsApiController = require('../controllers/sms-api');
 
+router.get('/current-session', smsApiController.getCurrentSession);
+
+router.get('/current-term', smsApiController.getCurrentTerm);
+
 router.post('/assign-student-to-class/:classid/:studentname', smsApiController.Middleware.getCurrentSession, smsApiController.Middleware.getCurrentTerm, smsApiController.postAssignStudentToClass);
 
 router.post('/process-result/:classid', smsApiController.Middleware.getGrades, smsApiController.Middleware.getCurrentSession, smsApiController.Middleware.getCurrentTerm, smsApiController.postProcessClass);

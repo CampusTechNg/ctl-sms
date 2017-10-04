@@ -6,6 +6,8 @@ var middleware = require('../controllers/middleware');
 
 router.get('/', middleware.checkForViewClassesPermission, controller.getIndex);
 
+router.get('/403', controller.get403);
+
 router.get('/add-timetable/:id', middleware.checkForEditTimetablesPermission, controller.Middleware.getClassById, controller.getAddTimetable);
 
 router.get('/edit-timetable/:id', middleware.checkForEditTimetablesPermission, controller.Middleware.getClassById, controller.getEditTimetable);
