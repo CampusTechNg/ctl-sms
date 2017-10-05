@@ -38,17 +38,17 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6"> 
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" value="{{subject.code}}" name="subject_code" id="subject_code" type="text" maxlength="100">
-                                    <label for="subject_code">
-                                        Subject code <span class="required">*</span>
+                                    <input class="form-control" value="{{subject.displayName}}" name="subject_name" id="subject_name" type="text" maxlength="200">
+                                    <label for="subject_name">
+                                        Subject name <span class="required">*</span>
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6"> 
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" value="{{subject.displayName}}" name="subject_name" id="subject_name" type="text" maxlength="200">
-                                    <label for="subject_name">
-                                        Subject name <span class="required">*</span>
+                                    <input class="form-control" value="{{subject.code}}" name="subject_code" id="subject_code" type="text" maxlength="100">
+                                    <label for="subject_code">
+                                        Subject code <span class="required">*</span>
                                     </label>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script type="text/javascript">
 window.onload = function() {
-    document.getElementById("subject_code").focus();
+    document.getElementById("subject_name").focus();
 };
 </script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
