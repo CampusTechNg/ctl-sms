@@ -38,17 +38,17 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-12"> 
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" value="{{schClass.code}}" name="class_code" id="class_code" type="text" maxlength="100">
-                                    <label for="class_code">
-                                        Class code
+                                    <input class="form-control" value="{{schClass.displayName}}" name="class_name" id="class_name" type="text" maxlength="100">
+                                    <label for="class_name">
+                                        Class name
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12"> 
                                 <div class="form-group form-md-line-input form-md-floating-label">
-                                    <input class="form-control" value="{{schClass.displayName}}" name="class_name" id="class_name" type="text" maxlength="100">
-                                    <label for="class_name">
-                                        Class name
+                                    <input class="form-control" value="{{schClass.code}}" name="class_code" id="class_code" type="text" maxlength="100">
+                                    <label for="class_code">
+                                        Class code
                                     </label>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script type="text/javascript">
 window.onload = function() {
-    document.getElementById("class_code").focus();
+    document.getElementById("class_name").focus();
 };
 </script>
 <script src="/public/bolt-ui-sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>

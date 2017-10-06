@@ -20,96 +20,63 @@
 {{#if scores}}
 <!-- BEGIN PAGE CONTENT-->
 <div class="container-fluid">
-    <div class="col-md-12">
-        <div class="portlet light portlet-fit portlet-datatable bordered">
+
+
+    <div class="col-md-12 ">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <div class="portlet light bordered">
             <div class="portlet-title">
-                <div class="caption">
-                    <i class="icon-list font-green"></i>
-                    <span class="caption-subject font-green sbold uppercase">Scores Template</span>
-                </div>
-                <div class="actions">
-                    <div class="btn-group">
-                        <a href="" class="btn red" id="delete_btn">
-                            <i class="fa fa-trash-o"></i> <span class="hidden-xs">Delete</span>
-                        </a>
-                    </div>
-                    <div class="btn-group">
-                        <a class="btn blue" href="javascript:;" data-toggle="dropdown">
-                            <i class="fa fa-cog"></i>
-                            <span class="hidden-xs"> Tools </span>
-                            <i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right" id="sample_3_tools">
-                            <li>
-                                <a href="javascript:;" data-action="0" class="tool-action">
-                                    <i class="icon-printer"></i> Print</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" data-action="1" class="tool-action">
-                                    <i class="icon-check"></i> Copy</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" data-action="2" class="tool-action">
-                                    <i class="icon-doc"></i> PDF</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" data-action="3" class="tool-action">
-                                    <i class="icon-paper-clip"></i> Excel</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" data-action="4" class="tool-action">
-                                    <i class="icon-cloud-upload"></i> CSV</a>
-                            </li>
-                            <li class="divider"> </li>
-                            <li>
-                                <a href="javascript:;" data-action="5" class="tool-action">
-                                    <i class="icon-refresh"></i> Reload</a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="caption font-green">
+                    <i class="icon-layers font-green"></i>
+                    <span class="caption-subject bold uppercase">Scores Template</span>
                 </div>
             </div>
-            <div class="portlet-body">
-                <div class="table-container">
-                    <table class="table table-striped table-bordered table-hover" id="sample_3">
-                        <thead>
-                            <tr>
-                                <th class="table-checkbox" width="5%">
-                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="group-checkable" data-set="#sample_3 .checkboxes" />
-                                        <span></span>
+            <div class="portlet-body form">
+                <form role="form" id="create_scores" autocomplete="off">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group form-md-line-input">
+                                    <input class="form-control" readonly value="{{scores.score1}}">
+                                    <label for="score1">
+                                        Test 1 score <span class="required">*</span>
                                     </label>
-                                </th>
-                                <th> Test 1 </th>
-                                <th> Test 2 </th>
-                                <th> Test 3 </th>
-                                <th> Examination </th>
-                                <th class="action"> Action </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="checkboxes" value="{{_id}}" />
-                                        <span></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group form-md-line-input">
+                                    <input class="form-control" readonly value="{{scores.score2}}">
+                                    <label for="score2">
+                                        Test 2 score <span class="required">*</span>
                                     </label>
-                                </td>
-                                <td> {{scores.score1}} </td>
-                                <td> {{scores.score2}} </td>
-                                <td> {{scores.score3}} </td>
-                                <td> {{scores.score4}} </td>
-                                <td> 
-                                    <a href="{{app_root}}/edit-scores" class="btn dark btn-xs btn-outline sbold uppercase">
-                                        <i class="fa fa-edit"></i> <span class="hidden-xs"> Edit </span>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group form-md-line-input">
+                                    <input class="form-control" readonly value="{{scores.score3}}">
+                                    <label for="score3">
+                                        Test 3 score <span class="required">*</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <div class="form-group form-md-line-input">
+                                    <input class="form-control" readonly value="{{scores.score4}}">
+                                    <label for="score4">
+                                        Exam score <span class="required">*</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions noborder">
+                        <a href="{{app_root}}/edit-scores" class="btn green sbold uppercase">
+                            <i class="fa fa-edit"></i> <span class="hidden-xs"> Edit </span>
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
+        <!-- END SAMPLE FORM PORTLET-->
     </div>
 </div>
 <!-- END PAGE CONTENT-->
